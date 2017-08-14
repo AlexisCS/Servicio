@@ -17,7 +17,12 @@ public class Admin_level0 : MonoBehaviour {
 		}
 	}
 	 
+	void Awake(){
+		if (window != null)
+			window.SetActive (false);
+	}
 
+	//Salir y 
 	// Use this for initialization
 	void Start () {
 		
