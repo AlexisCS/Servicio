@@ -14,7 +14,7 @@ public class Genera_Ing : MonoBehaviour {
 	public TextMesh muestraContador;
 	private float countdown;
 	private int contador;
-	private int numIngre = 3;
+	private int numIngre = 10;
 
 	void Start () {
 		NotificationCenter.DefaultCenter().AddObserver(this, "IncCant_Ing");

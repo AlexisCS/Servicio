@@ -21,6 +21,7 @@ public class GeneraReceta : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.UpArrow) && numeroGenerador == 1 ) {
 			pan = (GameObject) Instantiate (obj [0], transform.position, Quaternion.identity);
 			pan.gameObject.tag = newtag;
+
 		}
 	}
 }
