@@ -31,10 +31,10 @@ public class PruebaUI : MonoBehaviour {
 			dedos [i].SetActive (false); 
 		}
 		manoTratamiento = Menu_Ini_Btons.mano;
-		NotificationCenter.DefaultCenter().AddObserver(this, "iniJamon");
+		/*NotificationCenter.DefaultCenter().AddObserver(this, "iniJamon");
 		NotificationCenter.DefaultCenter().AddObserver(this, "iniQueso");
 		NotificationCenter.DefaultCenter().AddObserver(this, "iniJitoma");
-		NotificationCenter.DefaultCenter().AddObserver(this, "finLevel");
+		NotificationCenter.DefaultCenter().AddObserver(this, "finLevel");*/
 	}
 	
 	// Update is called once per frame

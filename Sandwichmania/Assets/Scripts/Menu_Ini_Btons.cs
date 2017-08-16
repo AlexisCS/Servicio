@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Menu_Ini_Btons : MonoBehaviour {
@@ -25,7 +26,8 @@ public class Menu_Ini_Btons : MonoBehaviour {
 
 	public void cargaEscena(int valor)
 	{
-		Application.LoadLevel (1);
+		//Application.LoadLevel (1);
+		SceneManager.LoadScene (1);
 		mano = valor;
 	}
 
@@ -33,3 +35,5 @@ public class Menu_Ini_Btons : MonoBehaviour {
 		manejadorSonido.Stop ();
 	}
 }
+//cerrar se
+//salir
