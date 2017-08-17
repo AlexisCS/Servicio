@@ -6,6 +6,9 @@ using UnityEngine.UI;
 using NUnit.Framework.Internal.Filters;
 
 public class Admin_level0 : MonoBehaviour {
+
+	public static InfoPartida datos;
+
 	public InputField id;
 	public InputField password;
 	public Text message;
@@ -20,8 +23,9 @@ public class Admin_level0 : MonoBehaviour {
 		
 	//Salir y 
 	// Use this for initialization
-	void Start () {
-		
+	void Awake () {
+		datos = new InfoPartida ();
+
 	}
 	
 	// Update is called once per frame
