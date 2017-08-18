@@ -16,6 +16,7 @@ public class Admin_level0 : MonoBehaviour {
 	public void Setget (){
 		if (!(id.text.ToString().Equals ("alexis")) || !(password.text.ToString ().Equals ("contraseña"))) {
 			message.text = "Usuario o contraseña incorrecta";
+			Admin_level0.datos.id = 1;
 		} else {
 			SceneManager.LoadScene (1);
 		}

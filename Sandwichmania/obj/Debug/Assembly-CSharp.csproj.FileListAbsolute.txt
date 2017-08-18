@@ -29,3 +29,5 @@ C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Temp\bin\Debug\UnityEng
 C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\obj\Debug\Assembly-CSharp.dll
 C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Alexis\Documents\GitHub\Servicio\Sandwichmania\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
+C:\Users\Alexis\Documents\GitHub\Servicio\Sandwichmania\obj\Debug\Assembly-CSharp.dll
