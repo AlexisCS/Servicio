@@ -53,7 +53,6 @@ public class AdminMenu : MonoBehaviour {
 		panels [0].SetActive(false);
 		panels [2].SetActive(false);
 		panels [3].SetActive(true);
-		panels [4].SetActive(false);
 	}
 
 	public void LogOutYes(){
@@ -64,7 +63,6 @@ public class AdminMenu : MonoBehaviour {
 		panels [0].SetActive(true);
 		panels [2].SetActive(true);
 		panels [3].SetActive(false);
-		panels [4].SetActive(false);
 	}
 
 	public void Calibrar(){

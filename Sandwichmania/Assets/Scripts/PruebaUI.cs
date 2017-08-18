@@ -30,7 +30,8 @@ public class PruebaUI : MonoBehaviour {
 		for (int i = 0; i < dedos.Length; i++) {
 			dedos [i].SetActive (false); 
 		}
-		manoTratamiento = Menu_Ini_Btons.mano;
+		manoTratamiento = Admin_level0.datos.mano;
+		//manoTratamiento = Menu_Ini_Btons.mano;
 		/*NotificationCenter.DefaultCenter().AddObserver(this, "iniJamon");
 		NotificationCenter.DefaultCenter().AddObserver(this, "iniQueso");
 		NotificationCenter.DefaultCenter().AddObserver(this, "iniJitoma");

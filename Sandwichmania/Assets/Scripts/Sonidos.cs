@@ -1,56 +1,44 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Sonidos : MonoBehaviour {
 
-//	public AudioClip[] sonidos;
-//	private AudioSource manejadorSonido;
-//	private string mensajeRecibido;
-//
-//	// Use this for initialization
-//	void Start () {
-//		NotificationCenter.DefaultCenter().AddObserver(this, "musicPlay");
-//		manejadorSonido = GetComponent<AudioSource> ();
-//	}
-//	// Update is called once per frame
-//	void Update () {
-//	
-//	}
-//
-//	public void musicPlay(Notification notificacion){
-////		mensajeRecibido = notificacion.data.ToString();
-////		print (mensajeRecibido);
-////		if(mensajeRecibido=="inicio"){
-////			manejadorSonido.Stop ();
-////			manejadorSonido.clip = sonidos [0];
-////			manejadorSonido.loop = true;
-////			manejadorSonido.Play ();
-////		}
-////		if(mensajeRecibido=="sonidoAmbiental"){
-////			if(Application.loadedLevel!=2){
-////				NotificationCenter.DefaultCenter ().PostNotification(this,"altoMusicaInicio");
-////			}
-////			manejadorSonido.Stop ();
-////			manejadorSonido.clip = sonidos [1];
-////			manejadorSonido.loop = true;
-////			manejadorSonido.Play ();
-////		}
-////		if(mensajeRecibido=="Exito"){
-////			manejadorSonido.Stop ();
-////			manejadorSonido.clip = sonidos [2];
-////			manejadorSonido.loop = false;
-////			manejadorSonido.Play ();
-////		}
-//	}
-	//public AudioSource manejadorSonido;
+	public static Sonidos manejador;
 	public AudioClip[] sonidos;
-	AudioSource manejadorSonido;
+	public AudioSource _audioDeEscena;
+
+	void OnEnable(){
+		SceneManager.sceneLoaded += OnLoadScene;
+	}
+
+	void OnDisable(){
+		SceneManager.sceneLoaded -= OnLoadScene;
+	}
+
+	void OnLoadScene(Scene scene,LoadSceneMode mode){
+		//_audioDeEscena = GameObject.Find ("MainCamera").GetComponent<AudioSource> ();
+		Debug.Log ("Funciona");
+		if (scene.buildIndex == 0 && !_audioDeEscena.isPlaying) {
+			_audioDeEscena.clip = sonidos [0];
+			_audioDeEscena.Play ();
+			_audioDeEscena.loop=true;
+		} 
+	}
 
 	void Awake(){
-		manejadorSonido = this.GetComponent<AudioSource> ();
-		manejadorSonido.clip = sonidos [1];
-		manejadorSonido.Play ();
+		if (manejador == null) {
+			DontDestroyOnLoad (this.transform);
+			manejador = this;
+		}
+		else if (manejador != this) {
+			Destroy (gameObject);
+		}
+//		manejadorSonido = this.GetComponent<AudioSource> ();
+//		manejadorSonido.clip = sonidos [1];
+//		manejadorSonido.Play ();
 	}
+		
 
 	void Update(){
 //		if (condicion) {

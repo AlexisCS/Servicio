@@ -12,7 +12,7 @@ public class ControladorNivelDos : MonoBehaviour {
 	public string estadoActual;
 	//private int enableMusic = 0;
 	private string mensajeEnviar;
-	private int manoTratamiento = 1;
+	private int manoTratamiento;
 	private string ingrediente;
 	private int contador=-1;
 	
@@ -32,7 +32,7 @@ public class ControladorNivelDos : MonoBehaviour {
 		for (int i = 0; i < dedos.Length; i++) {
 			dedos [i].SetActive (false); 
 		}
-		manoTratamiento = Menu_Ini_Btons.mano;
+		manoTratamiento = Admin_level0.datos.mano;
 		mensajeEnviar = "inicio";
 		NotificationCenter.DefaultCenter().AddObserver(this, "CambiaIngrediente");
 		NotificationCenter.DefaultCenter().PostNotification(this,"musicPlay",mensajeEnviar);

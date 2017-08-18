@@ -14,7 +14,7 @@ public class Admin_level0 : MonoBehaviour {
 	public Text message;
 
 	public void Setget (){
-		if (!(id.text.ToString().Equals ("alexis")) || !(password.text.ToString ().Equals ("contraseña"))) {
+		if (!(id.text.ToString().Equals ("a")) || !(password.text.ToString ().Equals ("123"))) {
 			message.text = "Usuario o contraseña incorrecta";
 			Admin_level0.datos.id = 1;
 		} else {
@@ -26,7 +26,6 @@ public class Admin_level0 : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		datos = new InfoPartida ();
-
 	}
 	
 	// Update is called once per frame
