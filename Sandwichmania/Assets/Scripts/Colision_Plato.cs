@@ -20,8 +20,8 @@ public class Colision_Plato : MonoBehaviour {
 		//cuando colisionan por primera vez
 		if(ejec == 0 && this.gameObject.tag == nuevoTag && ejec == 0){
 			//print("he colisionado con algo");
-			NotificationCenter.DefaultCenter ().PostNotification(this,"IncCant_Ing",contadorIng);
-			GetComponent<AudioSource>().Play();
+			//NotificationCenter.DefaultCenter ().PostNotification(this,"IncCant_Ing",contadorIng);
+			//GetComponent<AudioSource>().Play();
 		}
 
 		ejec ++;

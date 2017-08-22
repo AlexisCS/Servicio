@@ -20,7 +20,7 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 950, y: 592}
+  m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &2
 MonoBehaviour:
@@ -106,10 +106,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 947
-  m_MinSize: {x: 713, y: 542}
+  m_MinSize: {x: 713, y: 563}
   m_MaxSize: {x: 18008, y: 14042}
   vertical: 0
-  controlID: 15914
+  controlID: 9
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -130,10 +130,10 @@ MonoBehaviour:
     y: 0
     width: 1613
     height: 947
-  m_MinSize: {x: 436, y: 542}
+  m_MinSize: {x: 436, y: 563}
   m_MaxSize: {x: 14006, y: 14042}
   vertical: 1
-  controlID: 15915
+  controlID: 10
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -157,7 +157,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 15916
+  controlID: 11
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -176,8 +176,8 @@ MonoBehaviour:
     y: 0
     width: 1103
     height: 383
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -229,10 +229,10 @@ MonoBehaviour:
     y: 383
     width: 1613
     height: 564
-  m_MinSize: {x: 436, y: 321}
+  m_MinSize: {x: 436, y: 342}
   m_MaxSize: {x: 14006, y: 10021}
   vertical: 0
-  controlID: 16000
+  controlID: 97
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -253,10 +253,10 @@ MonoBehaviour:
     y: 0
     width: 1103
     height: 564
-  m_MinSize: {x: 202, y: 321}
-  m_MaxSize: {x: 4002, y: 8021}
+  m_MinSize: {x: 202, y: 342}
+  m_MaxSize: {x: 4002, y: 8042}
   vertical: 1
-  controlID: 16001
+  controlID: 98
 --- !u!114 &12
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -275,8 +275,8 @@ MonoBehaviour:
     y: 0
     width: 1103
     height: 352
-  m_MinSize: {x: 202, y: 221}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 200, y: 200}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -350,8 +350,8 @@ MonoBehaviour:
     y: 0
     width: 307
     height: 947
-  m_MinSize: {x: 277, y: 71}
-  m_MaxSize: {x: 4002, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 22}
   m_Panes:
   - {fileID: 22}
@@ -501,7 +501,7 @@ MonoBehaviour:
     m_Target: 1
     speed: 2
     m_Value: 1
-  m_LastSceneViewRotation: {x: 0.08717229, y: -0.89959055, z: 0.21045254, w: 0.3726226}
+  m_LastSceneViewRotation: {x: -0.08717229, y: 0.89959055, z: -0.21045254, w: -0.3726226}
   m_LastSceneViewOrtho: 0
   m_ReplacementShader: {fileID: 0}
   m_ReplacementString: 
@@ -561,28 +561,28 @@ MonoBehaviour:
     height: 362
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: f4260000
-    m_LastClickedID: 0
-    m_ExpandedIDs: e227feffb22bfeffcc2cfeff862dfeffa02efeffa62ffeffc23bfeff8c44feff705afeffe06ffeffb880feffb296feff3eaefeff5eaffeffece4feff7eebfeff9410ffff9e71ffff6c8dffff74eaffff7ceaffff86eaffff96eaffffa6eaffffb0eaffffc8ebffffa8f3ffff8afbfffff4ffffff000000000e3000006a4e000054960000ec9600000897000006a10000
+    m_SelectedIDs: a0270000
+    m_LastClickedID: 10144
+    m_ExpandedIDs: a2f9ffffe0fbffff0000000086270000a0270000ba270000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Fondo_Cocina
-      m_OriginalName: Fondo_Cocina
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 43350
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 0
       m_ClientGUIView: {fileID: 9}
     m_SearchString: 
   m_ExpandedScenes:
-  - Nivel2
+  - pruebas
   m_CurrenRootInstanceID: 0
   m_Locked: 0
   m_CurrentSortingName: TransformSorting
@@ -649,33 +649,33 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scenes
+    - Assets/Scripts/pruebas
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scenes
+  - Assets/Scripts/pruebas
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: be260000
-    m_LastClickedID: 9918
-    m_ExpandedIDs: 00000000382600007626000000ca9a3bffffff7f
+    m_SelectedIDs: 26250000
+    m_LastClickedID: 9510
+    m_ExpandedIDs: 00000000d22400002825000000ca9a3bffffff7f
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: Nivel 3
-      m_OriginalName: Nivel 3
+      m_Name: 
+      m_OriginalName: 
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 9982
+      m_UserData: 0
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 0
+      m_OriginalEventType: 11
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 14}
     m_SearchString: 
@@ -689,7 +689,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000382600007626000000ca9a3bffffff7f
+    m_ExpandedIDs: 00000000d224000028250000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
