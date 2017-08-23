@@ -5,7 +5,11 @@ using UnityEngine.UI;
 
 public class AdminNivel1 : MonoBehaviour {
 
-	public Text CantidadText;
+	public GameObject[] Ingredientes;
+	public Text CantidadPanText;
+	public Text CantidadJamonText;
+	public Text CantidadQuesoText;
+	public Text CantidadJitomateText;
 
 	private int Cantidad;
 
@@ -27,15 +31,19 @@ public class AdminNivel1 : MonoBehaviour {
 
 	void Start () {
 		Cantidad = 0;
+		//StartCoroutine (SpawPan ());
+		InvokeRepeating("SpawnPan",1f,2f);
+		//CancelInvoke ("SpawnPan");
 	}
 		
 	void ActualizaCantidadPan (){
 		Cantidad += 1;
-		CantidadText.text = "Pan:" + Cantidad;
+		CantidadPanText.text = "Pan:" + Cantidad;
 		Debug.Log ("Evento Activado");
 	}
 
 	void ActualizaCantidadJamon (){
+		
 	
 	}
 
@@ -46,9 +54,22 @@ public class AdminNivel1 : MonoBehaviour {
 	void ActualizaCantidadJitomate (){
 
 	}
+
+	void SpawnPan(){
+		Vector3 Posicion = new Vector3 (6.6f, 7.6f, 0);
+		Instantiate (Ingredientes [0], Posicion, Quaternion.identity);
+	}
+
+//	IEnumerator SpawPan () {
+//		while (true) {
+//			Vector3 Posicion = new Vector3 (-36.6f, 23f, 0);
+//			Instantiate (Ingredientes [0], Posicion, Quaternion.identity);
+//		}
+//	}
 		
 	// Update is called once per frame
 	void Update () {
 		
 	}
 }
+
