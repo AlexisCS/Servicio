@@ -1,40 +1,43 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DetectaColision : MonoBehaviour {
 
 	//Crear eventos:
 	public delegate void IngredienteAction(); 
 	public static event IngredienteAction OnPanApilado;
+	public static event IngredienteAction OnJamonApilado;
 	public static event IngredienteAction OnQuesoApilado;
 	public static event IngredienteAction OnJitomateApilado;
-	public static event IngredienteAction OnJamonApilado;
 
-	private string TagActual;
-	private string TagFinal;
-	private int count = 0;
-
-	void Start (){
-		TagActual = "Pan";
-		TagFinal = "Estatico";
-	}
-		
 	void OnCollisionEnter2D (Collision2D other){
-		Debug.Log ("Colisione");
-		if (this.gameObject.tag == TagActual) {
-			Debug.Log ("Entre al if");
-			Debug.Log (this.gameObject.tag);
-			this.gameObject.tag = TagFinal;
-			//virificando que existan suscriptores
+		Debug.Log ("Colision");
+		switch (this.gameObject.tag) {
+		case "Pan":
+			this.gameObject.tag = "Estatico";
 			if (OnPanApilado != null) {
 				OnPanApilado ();
 			}
-		} 
-		Debug.Log ("Fuera del if");
-		Debug.Log (this.gameObject.tag);
-		//other.gameObject.tag = TagFinal;
+			break;
+		case "Jamon":
+			this.gameObject.tag = "Estatico";
+			if (OnJamonApilado != null) {
+				OnJamonApilado ();
+			}
+			break;
+		case "Queso":
+			this.gameObject.tag = "Estatico";
+			if (OnQuesoApilado != null) {
+				OnQuesoApilado ();
+			}
+			break;
+		case "Jitomate":
+			this.gameObject.tag = "Estatico";
+			if (OnJitomateApilado != null) {
+				OnJitomateApilado ();
+			}
+			break;
+		}
 	}
-
 }

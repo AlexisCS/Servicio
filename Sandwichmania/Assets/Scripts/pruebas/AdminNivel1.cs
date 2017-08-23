@@ -3,33 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GenerarIngredientes : MonoBehaviour {
-	//public GameObject Ingrediente;
+public class AdminNivel1 : MonoBehaviour {
+
 	public Text CantidadText;
 
 	private int Cantidad;
-	//public Rigidbody2D rb2D;
-	// Use this for initialization
 
 	void OnEnable(){
 		//suscribiendonos al evento
 		DetectaColision.OnPanApilado += ActualizaCantidadPan;
-		//DetectaColision.OnJitomateApilado += ActualizaCantidad;
+		DetectaColision.OnJamonApilado += ActualizaCantidadJamon;
+		DetectaColision.OnQuesoApilado += ActualizaCantidadQueso;
+		DetectaColision.OnJitomateApilado += ActualizaCantidadJitomate;
 	}
 
 	void OnDisable(){
 		//nos desuscribimos unicamente cuando este script se desactiva (al cambiar de escena, cerrar la app, etc)
-		DetectaColision.OnPanApilado -= ActualizaCantidad;
+		DetectaColision.OnPanApilado -= ActualizaCantidadPan;
+		DetectaColision.OnJamonApilado -= ActualizaCantidadJamon;
+		DetectaColision.OnQuesoApilado -= ActualizaCantidadQueso;
+		DetectaColision.OnJitomateApilado -= ActualizaCantidadJitomate;
 	}
 
 	void Start () {
 		Cantidad = 0;
-		//ActualizaCantidad ();
-		//rb2D = GetComponent<Rigidbody2D> ();
-		//count = 0;
 	}
 		
 	void ActualizaCantidadPan (){
+		Cantidad += 1;
 		CantidadText.text = "Pan:" + Cantidad;
 		Debug.Log ("Evento Activado");
 	}
@@ -42,7 +43,9 @@ public class GenerarIngredientes : MonoBehaviour {
 
 	}
 
+	void ActualizaCantidadJitomate (){
 
+	}
 		
 	// Update is called once per frame
 	void Update () {
