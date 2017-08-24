@@ -59,22 +59,22 @@ public class AdminNivel1 : MonoBehaviour {
 
 	void SpawnPan(){
 		Vector3 PosicionPan = new Vector3 (6.6f, 7.6f, 0.0f);
-		_ingredienteClon=(GameObject) Instantiate (Ingredientes [0], PosicionPan, Quaternion.identity);
+		_ingredienteClon = (GameObject) Instantiate (Ingredientes [0], PosicionPan, Quaternion.identity);
 	}
 
 	void SpawnJamon(){
 		Vector3 PosicionJamon = new Vector3 (2.2f, 7.7f, 0.0f);
-		Instantiate (Ingredientes [1], PosicionJamon, Quaternion.identity);
+		_ingredienteClon = (GameObject) Instantiate (Ingredientes [1], PosicionJamon, Quaternion.identity);
 	}
 
 	void SpawnQueso(){
 		Vector3 PosicionQueso = new Vector3 (-2.0f, 7.9f, 0.0f);
-		Instantiate (Ingredientes [2], PosicionQueso, Quaternion.identity);
+		_ingredienteClon = (GameObject) Instantiate (Ingredientes [2], PosicionQueso, Quaternion.identity);
 	}
 
 	void SpawnJitomate(){
 		Vector3 PosicionJitomate = new Vector3 (-7.2f, 7.9f, 0.0f);
-		Instantiate (Ingredientes [3], PosicionJitomate, Quaternion.identity);
+		_ingredienteClon = (GameObject) Instantiate (Ingredientes [3], PosicionJitomate, Quaternion.identity);
 	}
 	// Update is called once per frame
 	void Update () {
@@ -89,12 +89,21 @@ public class AdminNivel1 : MonoBehaviour {
 		}
 			
 		if (Input.GetKeyUp (KeyCode.UpArrow) && _ingredienteClon != null){
-		//if (_ingredienteClon != null) {
-			//if (Input.GetKeyUp (KeyCode.UpArrow) && Ingredientes [0].tag == "Pan") {
-				Destroy(_ingredienteClon);
-				_ingredienteClon = null;
-				//DestroyImmediate (Ingredientes [0].gameObject);	
-				Debug.Log ("Debo de destruir");
+			Destroy(_ingredienteClon);
+			_ingredienteClon = null;
+			Debug.Log ("Debo de destruir");
+		} else if (Input.GetKeyUp (KeyCode.RightArrow) && _ingredienteClon != null){
+			Destroy(_ingredienteClon);
+			_ingredienteClon = null;
+			Debug.Log ("Debo de destruir");
+		} else if (Input.GetKeyUp (KeyCode.DownArrow) && _ingredienteClon != null){
+			Destroy(_ingredienteClon);
+			_ingredienteClon = null;
+			Debug.Log ("Debo de destruir");
+		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null){
+			Destroy(_ingredienteClon);
+			_ingredienteClon = null;
+			Debug.Log ("Debo de destruir");
 		}
 			
 	}
