@@ -45,16 +45,17 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void ActualizaCantidadJamon (){
+		_ingredienteClon = null;
 		Cantidad += 1;
 		CantidadJamonText.text = "Jamon:" + Cantidad;
 	}
 
 	void ActualizaCantidadQueso (){
-
+		_ingredienteClon = null;
 	}
 
 	void ActualizaCantidadJitomate (){
-
+		_ingredienteClon = null;
 	}
 
 	void SpawnPan(){
