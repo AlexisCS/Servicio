@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class AdminNivel1 : MonoBehaviour {
 
+	//Mensaje de finalizar: Lo que sea, boton escena regresa al menu
+	//
 	public GameObject[] Ingredientes;
 	public Text CantidadPanText;
 	public Text CantidadJamonText;
@@ -49,8 +51,6 @@ public class AdminNivel1 : MonoBehaviour {
 			Cantidad = 0;
 			PanListo = true;
 			JamonListo = false;
-//			QuesoListo = false;
-//			JitomateListo = false;
 			Debug.Log ("Ya no debo crecer");
 		}
 		//Debug.Log ("Evento Activado");
@@ -85,6 +85,7 @@ public class AdminNivel1 : MonoBehaviour {
 
 	void ActualizaCantidadJitomate (){
 		_ingredienteClon = null;
+		Cantidad += 1;
 		CantidadJitomateText.text = "Jitomate:" + Cantidad;
 		if (Cantidad == umbral) {
 			Cantidad = 0;
@@ -117,7 +118,7 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.UpArrow) && PanListo == false){// && JamonListo == true && QuesoListo == true && JitomateListo == true) {
+		if (Input.GetKeyDown(KeyCode.UpArrow) && PanListo == false){
 			SpawnPan ();
 		} else if (Input.GetKeyDown (KeyCode.RightArrow) && JamonListo == false) {
 			SpawnJamon ();
@@ -127,19 +128,19 @@ public class AdminNivel1 : MonoBehaviour {
 			SpawnJitomate ();
 		}
 			
-		if (Input.GetKeyUp (KeyCode.UpArrow) && _ingredienteClon != null && PanListo == false){// && JamonListo == true && QuesoListo == true && JitomateListo == true){
+		if (Input.GetKeyUp (KeyCode.UpArrow) && _ingredienteClon != null && PanListo == false) {
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 			Debug.Log ("Debo de destruir");
-		} else if (Input.GetKeyUp (KeyCode.RightArrow) && _ingredienteClon != null && JamonListo == false){// && PanListo == true  && QuesoListo == false && JitomateListo == false){
+		} else if (Input.GetKeyUp (KeyCode.RightArrow) && _ingredienteClon != null && JamonListo == false) {
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 			Debug.Log ("Debo de destruir");
-		} else if (Input.GetKeyUp (KeyCode.DownArrow) && _ingredienteClon != null && QuesoListo == false){// && PanListo == false && JamonListo == true  && JitomateListo == false){
+		} else if (Input.GetKeyUp (KeyCode.DownArrow) && _ingredienteClon != null && QuesoListo == false) { 
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 			Debug.Log ("Debo de destruir");
-		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null && JitomateListo == false){// && PanListo == false && JamonListo == false && QuesoListo == true ){
+		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null && JitomateListo == false) {
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 			Debug.Log ("Debo de destruir");
