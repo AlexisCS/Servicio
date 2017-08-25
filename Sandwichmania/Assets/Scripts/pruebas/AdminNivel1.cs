@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class AdminNivel1 : MonoBehaviour {
 
 	//Mensaje de finalizar: Lo que sea, boton escena regresa al menu
 	//
 	public GameObject[] Ingredientes;
+	public GameObject[] Interfaz;
 	public Text CantidadPanText;
 	public Text CantidadJamonText;
 	public Text CantidadQuesoText;
 	public Text CantidadJitomateText;
 
 	public int umbral;
+	public int mano;
 
 	private int Cantidad;
 	private GameObject _ingredienteClon;
-	private bool PanListo, JamonListo, QuesoListo, JitomateListo;
+	private bool PanListo, JamonListo, QuesoListo, JitomateListo, ExitoBandera;
 
 	void OnEnable(){
 		//suscribiendonos al evento
@@ -40,6 +43,7 @@ public class AdminNivel1 : MonoBehaviour {
 		JamonListo = true;
 		QuesoListo = true;
 		JitomateListo = true;
+		ExitoBandera = false;
 		Cantidad = 0;
 	}
 		
@@ -51,7 +55,6 @@ public class AdminNivel1 : MonoBehaviour {
 			Cantidad = 0;
 			PanListo = true;
 			JamonListo = false;
-			Debug.Log ("Ya no debo crecer");
 		}
 		//Debug.Log ("Evento Activado");
 	}
@@ -65,7 +68,7 @@ public class AdminNivel1 : MonoBehaviour {
 			PanListo = true;
 			JamonListo = true;
 			QuesoListo = false;
-			Debug.Log ("Ya no debo crecer");
+				
 		}
 	}
 
@@ -79,7 +82,6 @@ public class AdminNivel1 : MonoBehaviour {
 			JamonListo = true;
 			QuesoListo = true;
 			JitomateListo = false;
-			Debug.Log ("Ya no debo crecer");
 		}
 	}
 
@@ -93,10 +95,15 @@ public class AdminNivel1 : MonoBehaviour {
 			JamonListo = true;
 			QuesoListo = true;
 			JitomateListo = true;
-			Debug.Log ("Ya no debo crecer");
+			Interfaz [10].SetActive (true);
+			ExitoBandera = true;
 		}
 	}
 
+	void Exito () {
+		SceneManager.LoadScene (1);
+	}
+		
 	void SpawnPan(){
 		Vector3 PosicionPan = new Vector3 (6.6f, 7.6f, 0.0f);
 		_ingredienteClon = (GameObject) Instantiate (Ingredientes [0], PosicionPan, Quaternion.identity);
@@ -145,7 +152,15 @@ public class AdminNivel1 : MonoBehaviour {
 			_ingredienteClon = null;
 			Debug.Log ("Debo de destruir");
 		}
+
+		if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && ExitoBandera == true) {
+			Exito ();
+		}
 			
 	}
 }
 
+/* Indice -> Pan
+ * Jamon -> Medio
+ * Queso -> Anular
+ * Jitomate -> Meñique*/
