@@ -6,8 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class AdminNivel1 : MonoBehaviour {
 
-	//Mensaje de finalizar: Lo que sea, boton escena regresa al menu
-	//
 	public GameObject[] Ingredientes;
 	public GameObject[] Interfaz;
 	public Text CantidadPanText;
@@ -18,6 +16,7 @@ public class AdminNivel1 : MonoBehaviour {
 	public int umbral;
 	public int mano;
 
+	private int bandera;
 	private int Cantidad;
 	private GameObject _ingredienteClon;
 	private bool PanListo, JamonListo, QuesoListo, JitomateListo, ExitoBandera;
@@ -44,6 +43,9 @@ public class AdminNivel1 : MonoBehaviour {
 		QuesoListo = true;
 		JitomateListo = true;
 		ExitoBandera = false;
+		Interfaz [0].gameObject.SetActive (true);
+		Interfaz [1].gameObject.SetActive (true);
+		bandera = 0;
 		Cantidad = 0;
 	}
 		
@@ -55,20 +57,21 @@ public class AdminNivel1 : MonoBehaviour {
 			Cantidad = 0;
 			PanListo = true;
 			JamonListo = false;
+			bandera = 3;
 		}
 		//Debug.Log ("Evento Activado");
 	}
 
 	void ActualizaCantidadJamon (){
-		_ingredienteClon = null;
+	    _ingredienteClon = null;
 		Cantidad += 1;
 		CantidadJamonText.text = "Jamon:" + Cantidad;
 		if (Cantidad == umbral) {
 			Cantidad = 0;
+			bandera = 5;
 			PanListo = true;
 			JamonListo = true;
 			QuesoListo = false;
-				
 		}
 	}
 
@@ -82,6 +85,7 @@ public class AdminNivel1 : MonoBehaviour {
 			JamonListo = true;
 			QuesoListo = true;
 			JitomateListo = false;
+			bandera = 7;
 		}
 	}
 
@@ -103,6 +107,51 @@ public class AdminNivel1 : MonoBehaviour {
 	void Exito () {
 		SceneManager.LoadScene (1);
 	}
+
+	void ActivaPanel(int mano){
+		Debug.Log (bandera);
+		switch (this.mano) {
+		case 0:
+			if (bandera == 1) {
+				Interfaz [6].gameObject.SetActive (true);
+			} else if (bandera == 2) {
+				Interfaz [6].gameObject.SetActive (false);
+			} else if (bandera == 3) {
+				Interfaz [7].gameObject.SetActive (true);
+			} else if (bandera == 4) {
+				Interfaz [7].gameObject.SetActive (false);
+			} else if (bandera == 5) {
+				Interfaz [8].gameObject.SetActive (true);
+			} else if (bandera == 6) {
+				Interfaz [8].gameObject.SetActive (false);
+			} else if (bandera == 7) {
+				Interfaz [9].gameObject.SetActive (true);
+			} else if (bandera == 8) {
+				Interfaz [9].gameObject.SetActive (false);
+			}
+			break; 
+		case 1: 
+			if (bandera == 1) {
+				Interfaz [2].gameObject.SetActive (true);
+			} else if (bandera == 2) {
+				Interfaz [2].gameObject.SetActive (false);
+			} else if (bandera == 3) {
+				Interfaz [3].gameObject.SetActive (true);
+			} else if (bandera == 4) {
+				Interfaz [3].gameObject.SetActive (false);
+			} else if (bandera == 5) {
+				Interfaz [4].gameObject.SetActive (true);
+			} else if (bandera == 6) {
+				Interfaz [4].gameObject.SetActive (false);
+			} else if (bandera == 7) {
+				Interfaz [5].gameObject.SetActive (true);
+			} else if (bandera == 8) {
+				Interfaz [5].gameObject.SetActive (false);
+			}			
+			break;
+		}
+		
+	}
 		
 	void SpawnPan(){
 		Vector3 PosicionPan = new Vector3 (6.6f, 7.6f, 0.0f);
@@ -123,15 +172,20 @@ public class AdminNivel1 : MonoBehaviour {
 		Vector3 PosicionJitomate = new Vector3 (-7.2f, 7.9f, 0.0f);
 		_ingredienteClon = (GameObject) Instantiate (Ingredientes [3], PosicionJitomate, Quaternion.identity);
 	}
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.UpArrow) && PanListo == false){
+			bandera = 2;
 			SpawnPan ();
 		} else if (Input.GetKeyDown (KeyCode.RightArrow) && JamonListo == false) {
+			bandera = 4;
 			SpawnJamon ();
-		} else if (Input.GetKeyDown (KeyCode.DownArrow) && QuesoListo == false ) {
+		} else if (Input.GetKeyDown (KeyCode.DownArrow) && QuesoListo == false) {
+			bandera = 6;
 			SpawnQueso ();		
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && JitomateListo == false) {
+			bandera = 8;
 			SpawnJitomate ();
 		}
 			
@@ -155,6 +209,15 @@ public class AdminNivel1 : MonoBehaviour {
 
 		if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && ExitoBandera == true) {
 			Exito ();
+		}
+
+		if(Input.GetKeyDown(KeyCode.DownArrow) && bandera == 0){
+			Interfaz [1].SetActive (false);
+			bandera = 1;
+		}
+
+		if (bandera == 1 || bandera == 2 || bandera == 3 || bandera == 4 || bandera == 5  || bandera == 6 || bandera == 7 || bandera == 8) {
+			ActivaPanel (mano);
 		}
 			
 	}
