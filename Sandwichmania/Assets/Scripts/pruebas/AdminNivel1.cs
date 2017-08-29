@@ -21,19 +21,6 @@ public class AdminNivel1 : MonoBehaviour {
 	private GameObject _ingredienteClon;
 	private bool PanListo, JamonListo, QuesoListo, JitomateListo, ExitoBandera, Comienzo;
 
-	public void BotonSi(){
-		SceneManager.LoadScene (2);
-	}
-
-	public void BotonNo(){
-		Interfaz [11].gameObject.SetActive (false);
-	}
-
-	public void BotonRegresar(){
-		Interfaz [11].gameObject.SetActive (true);
-	}
-
-
 	void OnEnable(){
 		//suscribiendonos al evento
 		DetectaColision.OnPanApilado += ActualizaCantidadPan;
@@ -51,6 +38,9 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void Awake () {
+		if (Interfaz [11].gameObject != null) {
+			Interfaz [11].gameObject.SetActive (false);
+		}
 		PanListo = false;
 		JamonListo = true;
 		QuesoListo = true;
@@ -150,7 +140,7 @@ public class AdminNivel1 : MonoBehaviour {
 				Interfaz [2].gameObject.SetActive (true);
 			} else if (bandera == 2) {
 				Interfaz [2].gameObject.SetActive (false);
-			} else if (bandera == 2) {
+			} else if (bandera == 3) {
 				Interfaz [3].gameObject.SetActive (true);
 			} else if (bandera == 4) {
 				Interfaz [3].gameObject.SetActive (false);
@@ -162,7 +152,9 @@ public class AdminNivel1 : MonoBehaviour {
 				Interfaz [5].gameObject.SetActive (true);
 			} else if (bandera == 8) {
 				Interfaz [5].gameObject.SetActive (false);
-			}			
+			} else if (bandera == 9) {
+				Interfaz [1].gameObject.SetActive (false);
+			}
 			break;
 		}
 		
@@ -189,6 +181,19 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 		
 
+	public void BotonSi(){
+		SceneManager.LoadScene (1);
+	}
+	
+	public void BotonNo(){
+		Interfaz [11].gameObject.SetActive (false);
+	}
+	
+	public void BotonRegresar(){
+		Interfaz [11].gameObject.SetActive (true);
+	}
+	
+	
 	// Update is called once per frame
 	void Update () {
 		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && Comienzo == true && bandera == 0){
