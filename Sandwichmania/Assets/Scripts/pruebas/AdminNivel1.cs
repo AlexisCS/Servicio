@@ -19,7 +19,20 @@ public class AdminNivel1 : MonoBehaviour {
 	private int bandera;
 	private int Cantidad;
 	private GameObject _ingredienteClon;
-	private bool PanListo, JamonListo, QuesoListo, JitomateListo, ExitoBandera;
+	private bool PanListo, JamonListo, QuesoListo, JitomateListo, ExitoBandera, Comienzo;
+
+	public void BotonSi(){
+		SceneManager.LoadScene (2);
+	}
+
+	public void BotonNo(){
+		Interfaz [11].gameObject.SetActive (false);
+	}
+
+	public void BotonRegresar(){
+		Interfaz [11].gameObject.SetActive (true);
+	}
+
 
 	void OnEnable(){
 		//suscribiendonos al evento
@@ -43,6 +56,7 @@ public class AdminNivel1 : MonoBehaviour {
 		QuesoListo = true;
 		JitomateListo = true;
 		ExitoBandera = false;
+		Comienzo = true;
 		Interfaz [0].gameObject.SetActive (true);
 		Interfaz [1].gameObject.SetActive (true);
 		bandera = 0;
@@ -109,7 +123,6 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void ActivaPanel(int mano){
-		Debug.Log (bandera);
 		switch (this.mano) {
 		case 0:
 			if (bandera == 1) {
@@ -128,6 +141,8 @@ public class AdminNivel1 : MonoBehaviour {
 				Interfaz [9].gameObject.SetActive (true);
 			} else if (bandera == 8) {
 				Interfaz [9].gameObject.SetActive (false);
+			} else if (bandera == 9) {
+				Interfaz [1].gameObject.SetActive (false);
 			}
 			break; 
 		case 1: 
@@ -135,7 +150,7 @@ public class AdminNivel1 : MonoBehaviour {
 				Interfaz [2].gameObject.SetActive (true);
 			} else if (bandera == 2) {
 				Interfaz [2].gameObject.SetActive (false);
-			} else if (bandera == 3) {
+			} else if (bandera == 2) {
 				Interfaz [3].gameObject.SetActive (true);
 			} else if (bandera == 4) {
 				Interfaz [3].gameObject.SetActive (false);
@@ -172,10 +187,25 @@ public class AdminNivel1 : MonoBehaviour {
 		Vector3 PosicionJitomate = new Vector3 (-7.2f, 7.9f, 0.0f);
 		_ingredienteClon = (GameObject) Instantiate (Ingredientes [3], PosicionJitomate, Quaternion.identity);
 	}
+		
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown(KeyCode.UpArrow) && PanListo == false){
+		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && Comienzo == true && bandera == 0){
+			Comienzo = false;
+			bandera = 9;
+		}
+		if (bandera == 1 || bandera == 2 || bandera == 3 || bandera == 4 || bandera == 5  || bandera == 6 || bandera == 7 || bandera == 8 || bandera == 9) {
+			ActivaPanel (mano);
+		}
+		if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && ExitoBandera == true) {
+			Exito ();
+		}
+
+		if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && Comienzo == false){
+			Comienzo = true;
+			bandera = 1;
+		} else if (Input.GetKeyDown(KeyCode.UpArrow) && PanListo == false && Comienzo == true) {
 			bandera = 2;
 			SpawnPan ();
 		} else if (Input.GetKeyDown (KeyCode.RightArrow) && JamonListo == false) {
@@ -205,19 +235,6 @@ public class AdminNivel1 : MonoBehaviour {
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 			Debug.Log ("Debo de destruir");
-		}
-
-		if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && ExitoBandera == true) {
-			Exito ();
-		}
-
-		if(Input.GetKeyDown(KeyCode.DownArrow) && bandera == 0){
-			Interfaz [1].SetActive (false);
-			bandera = 1;
-		}
-
-		if (bandera == 1 || bandera == 2 || bandera == 3 || bandera == 4 || bandera == 5  || bandera == 6 || bandera == 7 || bandera == 8) {
-			ActivaPanel (mano);
 		}
 			
 	}
