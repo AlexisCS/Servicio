@@ -21,8 +21,6 @@ public class Sonidos : MonoBehaviour {
 	}
 
 	void OnLoadScene(Scene scene,LoadSceneMode mode){
-		//_audioDeEscena = GameObject.Find ("MainCamera").GetComponent<AudioSource> ();
-//		Debug.Log ("Funciona");
 		if ((scene.buildIndex == 0 || scene.buildIndex == 1 )) {
 			_audioDeEscena.clip = sonidos [0];
 			_audioDeEscena.loop = true;

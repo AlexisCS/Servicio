@@ -12,7 +12,7 @@ public class DetectaColision : MonoBehaviour {
 	public static event IngredienteAction OnJitomateApilado;
 
 	void OnCollisionEnter2D (Collision2D other){
-		Debug.Log ("Colision");
+		//Debug.Log ("Colision");
 		switch (this.gameObject.tag) {
 		case "Pan":
 			this.gameObject.tag = "Estatico";
