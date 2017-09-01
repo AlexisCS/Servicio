@@ -9,9 +9,11 @@ public class AdminNivel2 : MonoBehaviour {
 	public GameObject[] ingredientes;
 	public GameObject[] interzas;
 
+	public int mano;
+
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
-	private int _contadorCapa, _sandwich, _instruccion;
+	private int _contadorCapa, _sandwich, _activaPanel;
 	private bool _primerPan, _ultimoPan, _jamon, _queso, _jitomate;
 
 	void Awake(){
@@ -23,7 +25,7 @@ public class AdminNivel2 : MonoBehaviour {
 		_queso = true;
 		_jitomate = true;
 		_ultimoPan = true;
-		_instruccion = 0;
+		_activaPanel = 0;
 
 	}
 		
@@ -46,46 +48,57 @@ public class AdminNivel2 : MonoBehaviour {
 		_ingredienteClon = null;
 		if (_primerPan == false && _sandwich == 0) {
 			Debug.Log ("Entre primer if");
+			_activaPanel = 4;
 			_primerPan = true;
 			_jamon = false;
+			PanelDedos (mano);
 		}
 		if (_ultimoPan == false && _sandwich == 0) {
 			Debug.Log ("Entre segundo if");
+			_activaPanel = 8;
 			_primerPan = true;
 			_jamon = true;
 			_queso = true;
 			_jitomate = true;
 			_ultimoPan = true;
+			PanelDedos (mano);
+			PanelDeExito ();
 		}
 	}
 
 	void AgregaJamon(){
 		_ingredienteClon = null;
 		if (_sandwich == 0) {
+			_activaPanel = 5;
 			_primerPan = true;
 			_jamon = true;
 			_queso = false;
+			PanelDedos (mano);
 		}
 	}
 
 	void AgregaQueso(){
 		_ingredienteClon = null;
 		if (_sandwich == 0) {
+			_activaPanel = 6;
 			_primerPan = true;
 			_jamon = true;
 			_queso = true;
 			_jitomate = false;
+			PanelDedos (mano);
 		}
 	}
 
 	void AgregaJitomate(){
 		_ingredienteClon = null;
 		if (_sandwich == 0) {
+			_activaPanel = 7;
 			_primerPan = true;
 			_jamon = true;
 			_queso = true;
 			_jitomate = true;
 			_ultimoPan = false;
+			PanelDedos (mano);
 		}
 	}
 
@@ -94,23 +107,87 @@ public class AdminNivel2 : MonoBehaviour {
 		_ingredienteClon.gameObject.GetComponent<Renderer>().sortingOrder = _contadorCapa;
 	}
 
+	void PanelDedos(int mano){
+		switch (mano) {
+		case 0:
+			if (_activaPanel == 3) {
+				interzas [6].gameObject.SetActive (true);
+			} else if (_activaPanel == 4) {
+				interzas [6].gameObject.SetActive (false);
+				interzas [7].gameObject.SetActive (true);
+			} else if (_activaPanel == 5) {
+				interzas [7].gameObject.SetActive (false);
+				interzas [8].gameObject.SetActive (true);
+			} else if (_activaPanel == 6) {
+				interzas [8].gameObject.SetActive (false);
+				interzas [9].gameObject.SetActive (true);
+			} else if (_activaPanel == 7) {
+				interzas [9].gameObject.SetActive (false);
+				interzas [6].gameObject.SetActive (true);
+			} else if (_activaPanel == 8) {
+				interzas[6].gameObject.SetActive (false);	
+			}
+			break;
+		case 1:
+			if (_activaPanel == 3) {
+				interzas [2].gameObject.SetActive (true);
+			} else if (_activaPanel == 4) {
+				interzas [2].gameObject.SetActive (false);
+				interzas [3].gameObject.SetActive (true);
+			} else if (_activaPanel == 5) {
+				interzas [3].gameObject.SetActive (false);
+				interzas [4].gameObject.SetActive (true);
+			} else if (_activaPanel == 6) {
+				interzas [4].gameObject.SetActive (false);
+				interzas [5].gameObject.SetActive (true);
+			} else if (_activaPanel == 7) {
+				interzas [5].gameObject.SetActive (false);
+				interzas [2].gameObject.SetActive (true);
+			} else if (_activaPanel == 8) {
+				interzas[2].gameObject.SetActive (false);	
+			}
+			break;
+
+		}
+	
+	}
+
 	void PanelDeIntrucciones(){
-		switch (_instruccion) {
+		switch (_activaPanel) {
 		case 1:
 			interzas [0].gameObject.SetActive (false);
 			interzas [1].gameObject.SetActive (true);
-			_instruccion = 2;
+			_activaPanel = 2;
 			break;
 		case 2:
 			interzas [1].gameObject.SetActive (false);
-			_instruccion = 3;
+			_activaPanel = 3;
+			PanelDedos (mano);
 			break;
 		}
 	}
 
-	void LimpiaPlato(){
+	void PanelDeExito(){
+		switch (_activaPanel) {
+		case 8:
+			interzas [6].gameObject.SetActive (false);
+			interzas [2].gameObject.SetActive (false);	
+			interzas [10].gameObject.SetActive (true);
+			break;
+		case 9:
+			interzas [10].gameObject.SetActive (false);
+			break;
+		}
+	
+	}
+	void Reinicio(){
+		_primerPan = false;
+		_jamon = true;
+		_queso = true;
+		_jitomate = true;
+		_ultimoPan = true;
 		_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
-		for (int i = 0; i <= _destruir.Length; i++) {
+		for (int i = 0; i <= _destruir.Length - 1; i++) {
 			Destroy (_destruir[i]);
 		}
 	}
@@ -146,15 +223,23 @@ public class AdminNivel2 : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && (_instruccion == 0 || _instruccion == 1 || _instruccion == 2)){
-			if (_instruccion == 0) {
-				_instruccion = 1;
+		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && (_activaPanel == 0 || _activaPanel == 1 || _activaPanel == 2 || _activaPanel == 8 || _activaPanel == 9)){
+			if (_activaPanel == 0) {
+				_activaPanel = 1;
 				PanelDeIntrucciones ();
-			} else
+			} else {
 				PanelDeIntrucciones ();
+			}
+
+			if (_activaPanel == 8) {
+				_activaPanel = 9;
+				PanelDedos (mano);
+				Reinicio ();
+				PanelDeExito ();
+			}
 		}
 			
-		if (Input.GetKeyDown (KeyCode.UpArrow) && _primerPan == false && _instruccion == 3) {
+		if (Input.GetKeyDown (KeyCode.UpArrow) && _primerPan == false && _activaPanel == 3) {
 			SpawnPan ();
 		} else if (Input.GetKeyDown (KeyCode.RightArrow) && _jamon == false) {
 			SpawnJamon ();
