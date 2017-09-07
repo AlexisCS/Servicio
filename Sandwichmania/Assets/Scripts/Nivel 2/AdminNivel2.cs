@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.Collections;
 
 public class AdminNivel2 : MonoBehaviour {
 
@@ -14,12 +15,13 @@ public class AdminNivel2 : MonoBehaviour {
 	public GameObject[] interzas;
 	public AudioClip AudioColision;
 
-	public int mano;
+	public int mano, numeroDeRepeticiones;
 
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
+	private List<ActivaPanelDedos> _secuencia;
 	private AudioSource _audioSource;
-	private int _contadorCapa, _sandwich;
+	private int _contadorCapa, _sandwich, _count;
 	private bool _pan, _jamon, _queso, _jitomate;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoPrimerSandwich, SegundoInicio, Exito}
@@ -32,6 +34,7 @@ public class AdminNivel2 : MonoBehaviour {
 	Ingredientes CantidadDeIngredientes;
 
 	void Awake(){
+		_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Anular, ActivaPanelDedos.Anular, ActivaPanelDedos.Medio, ActivaPanelDedos.Meñique, ActivaPanelDedos.Meñique, ActivaPanelDedos.Indice};
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		CantidadDeIngredientes = Ingredientes.SinIngredientes;
@@ -39,8 +42,8 @@ public class AdminNivel2 : MonoBehaviour {
 		interzas [12].gameObject.SetActive (false);
 		_audioSource = GetComponent <AudioSource> ();
 		_contadorCapa = 0;
-		_sandwich = 0;
-		_pan = false;
+		_count = 0;
+		_pan = true;
 		_jamon = true;
 		_queso = true;
 		_jitomate = true;
@@ -57,142 +60,78 @@ public class AdminNivel2 : MonoBehaviour {
 		DetectaColision.OnPanApilado -= AgregaPan;
 		DetectaColision.OnJamonApilado -= AgregaJamon;
 		DetectaColision.OnQuesoApilado -= AgregaQueso;
-		DetectaColision.OnJitomateApilado += AgregaJitomate;
+		DetectaColision.OnJitomateApilado -= AgregaJitomate;
+	}
+
+	void DecideSecuencia(){
+		if(_count==_secuencia.Count){ 
+			PanelActivado = ActivaPanelInteractivo.ExitoPrimerSandwich;
+			PanelInteractivo ();
+			return;
+		}
+
+		switch (_secuencia[_count]) {
+		case ActivaPanelDedos.Indice:
+			PanelDedosActivo = ActivaPanelDedos.Indice;
+			PanelDedos (mano);
+			_pan = false;
+			_jamon = true;
+			_queso = true;
+			_jitomate = true;
+			break;
+		case ActivaPanelDedos.Medio:
+			PanelDedosActivo = ActivaPanelDedos.Medio;
+			PanelDedos (mano);
+			_pan = true;
+			_jamon = false;
+			_queso = true;
+			_jitomate = true;
+			break;
+		case ActivaPanelDedos.Anular:
+			PanelDedosActivo = ActivaPanelDedos.Anular;
+			PanelDedos (mano);
+			_pan = true;
+			_jamon = true;
+			_queso = false;
+			_jitomate = true;
+			break;
+		case ActivaPanelDedos.Meñique:
+			PanelDedosActivo = ActivaPanelDedos.Meñique;
+			PanelDedos (mano);
+			_pan = true;
+			_jamon = true;
+			_queso = true;
+			_jitomate = false;
+			break;
+		}
+		if(_count <_secuencia.Count){
+			Debug.Log (_count+"y"+_secuencia.Count);
+			_count += 1;
+		}
 	}
 
 	void AgregaPan(){
 		_audioSource.PlayOneShot (AudioColision, 1.0f);
 		_ingredienteClon = null;
-		if (_pan == false && _sandwich == 0 && CantidadDeIngredientes == Ingredientes.PrimerIngrediente) {
-			PanelDedosActivo = ActivaPanelDedos.Medio;
-			_pan = true;
-			_jamon = false;
-			PanelDedos (mano);
-		} else if (_pan == false && _sandwich == 0 && CantidadDeIngredientes == Ingredientes.SegundoIngrediente) {
-			PanelActivado = ActivaPanelInteractivo.ExitoPrimerSandwich;
-			_pan = true;
-			_jamon = true;
-			_queso = true;
-			_jitomate = true;
-			PanelInteractivo ();
-		}
-
-		if (_pan == false && _sandwich == 1 && CantidadDeIngredientes == Ingredientes.PrimerIngrediente) {
-			PanelDedosActivo = ActivaPanelDedos.Meñique;
-			_pan = true;
-			_jitomate = false;
-			PanelDedos (mano);
-		} else if (_pan == false && _sandwich == 1 && CantidadDeIngredientes == Ingredientes.SegundoIngrediente) {
-			PanelDedosActivo = ActivaPanelDedos.Anular;
-			_pan = true;
-			_jamon = true;
-			_queso = false;
-			_jitomate = true;
-			PanelDedos (mano);
-		} else if (_pan == false && _sandwich == 1 && CantidadDeIngredientes == Ingredientes.TercerIngrediente) {
-			PanelActivado = ActivaPanelInteractivo.Exito;
-			_pan = true;
-			_jamon = true;
-			_queso = true;
-			_jitomate = true;
-			PanelInteractivo ();
-		}
+		DecideSecuencia ();
 	}
 
 	void AgregaJamon(){
 		_audioSource.PlayOneShot (AudioColision, 1.0f);
 		_ingredienteClon = null;
-		if (_sandwich == 0) {
-			PanelDedosActivo = ActivaPanelDedos.Anular;
-			_pan = true;
-			_jamon = true;
-			_queso = false;
-			PanelDedos (mano);
-		}
-			
-		if (_sandwich == 1 && CantidadDeIngredientes == Ingredientes.PrimerIngrediente) {
-			PanelDedosActivo = ActivaPanelDedos.Anular;
-			_pan = true;
-			_jamon = true;
-			_queso = false;	
-			_jitomate = true;
-			PanelDedos (mano);
-		} else if (_sandwich == 1 && CantidadDeIngredientes == Ingredientes.SegundoIngrediente) {
-			PanelDedosActivo = ActivaPanelDedos.Indice;
-			_pan = false;
-			_jamon = true;
-			_queso = true;	
-			_jitomate = true;
-			PanelDedos (mano);
-		} else if (_sandwich == 1 && CantidadDeIngredientes == Ingredientes.TercerIngrediente) {
-			PanelDedosActivo = ActivaPanelDedos.Indice;
-			_pan = false;
-			_jamon = true;
-			_queso = true;	
-			_jitomate = true;
-			PanelDedos (mano);
-		}
+		DecideSecuencia ();
 	}
 
 	void AgregaQueso(){
 		_audioSource.PlayOneShot (AudioColision, 1.0f);
 		_ingredienteClon = null;
-		if (_sandwich == 0) {
-			PanelDedosActivo = ActivaPanelDedos.Meñique;
-			_pan = true;
-			_jamon = true;
-			_queso = true;
-			_jitomate = false;
-			PanelDedos (mano);
-		}
-
-		if (_sandwich == 1 && CantidadDeIngredientes == Ingredientes.PrimerIngrediente) {
-			CantidadDeIngredientes = Ingredientes.SegundoIngrediente;
-			PanelDedosActivo = ActivaPanelDedos.Medio;
-			_pan = true;
-			_jamon = false;
-			_queso = true;	
-			_jitomate = true;
-			PanelDedos (mano);
-		} else if (_sandwich == 1 && CantidadDeIngredientes == Ingredientes.SegundoIngrediente) {
-			PanelDedosActivo = ActivaPanelDedos.Meñique;
-			_pan = true;
-			_jamon = true;
-			_queso = true;	
-			_jitomate = false;
-			PanelDedos (mano);
-		} 
-			
+		DecideSecuencia ();
 	}
 
 	void AgregaJitomate(){
 		_audioSource.PlayOneShot (AudioColision, 1.0f);
 		_ingredienteClon = null;
-		if (_sandwich == 0) {
-			CantidadDeIngredientes = Ingredientes.SegundoIngrediente;
-			PanelDedosActivo = ActivaPanelDedos.Indice;
-			_pan = false;
-			_jamon = true;
-			_queso = true;
-			_jitomate = true;
-			PanelDedos (mano);
-		}
-
-		if (_sandwich == 1 && CantidadDeIngredientes == Ingredientes.PrimerIngrediente) {
-			PanelDedosActivo = ActivaPanelDedos.Medio;
-			_pan = true;
-			_jamon = false;
-			_jitomate = true;
-			PanelDedos (mano);
-		} else if (_sandwich == 1 && CantidadDeIngredientes == Ingredientes.SegundoIngrediente) {
-			CantidadDeIngredientes = Ingredientes.TercerIngrediente;
-			PanelDedosActivo = ActivaPanelDedos.Medio;
-			_pan = true;
-			_jamon = false;
-			_queso = true;
-			_jitomate = true;
-			PanelDedos (mano);
-		}
+		DecideSecuencia ();
 	}
 
 	void ActualizaCapa(){
@@ -252,7 +191,7 @@ public class AdminNivel2 : MonoBehaviour {
 	}
 		
 	//Contiene los mensajes de instrucciones y de exito
-	void PanelInteractivo (){ 
+	void PanelInteractivo (){ // Cambiar a verbo
 		switch (PanelActivado) {
 		case ActivaPanelInteractivo.Siguiente:
 			interzas [0].gameObject.SetActive (false);
@@ -262,7 +201,7 @@ public class AdminNivel2 : MonoBehaviour {
 		case ActivaPanelInteractivo.Inicio:
 			interzas [1].gameObject.SetActive (false);
 			PanelActivado = ActivaPanelInteractivo.Juegue;
-			PanelDedosActivo = ActivaPanelDedos.Indice;
+			PanelDedosActivo = _secuencia [0];
 			CantidadDeIngredientes = Ingredientes.PrimerIngrediente;
 			PanelDedos (mano);
 			break;
@@ -287,11 +226,11 @@ public class AdminNivel2 : MonoBehaviour {
 
 
 	void Reinicio(){
-		_pan = false;
+		_pan = true;
 		_jamon = true;
 		_queso = true;
 		_jitomate = true;
-		_sandwich = 1;
+		_count = 0;
 		PanelActivado = ActivaPanelInteractivo.Juegue; 
 		_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
 		for (int i = 0; i <= _destruir.Length - 1; i++) {
@@ -310,7 +249,7 @@ public class AdminNivel2 : MonoBehaviour {
 	public void BotonNo(){
 		interzas [12].gameObject.SetActive (false);
 	}
-
+		
 	void Exito(){
 		SceneManager.LoadScene (1);
 	}
@@ -349,13 +288,16 @@ public class AdminNivel2 : MonoBehaviour {
 			if (PanelActivado == ActivaPanelInteractivo.Bienvenido) {
 				PanelActivado = ActivaPanelInteractivo.Siguiente;
 				PanelInteractivo ();
-			} else 
+			} else {
 				PanelInteractivo ();
-	
-			if (PanelActivado == ActivaPanelInteractivo.ExitoPrimerSandwich && _sandwich == 0) {
+				DecideSecuencia ();
+			}
+
+			if (PanelActivado == ActivaPanelInteractivo.ExitoPrimerSandwich) {
 				PanelActivado = ActivaPanelInteractivo.SegundoInicio;
 				PanelInteractivo ();
 				Reinicio ();
+				DecideSecuencia ();
 			}
 		}
 
