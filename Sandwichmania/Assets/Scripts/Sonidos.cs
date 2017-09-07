@@ -12,12 +12,16 @@ public class Sonidos : MonoBehaviour {
 		SceneManager.sceneLoaded += OnLoadScene;
 		AdminNivel1.MusicaAmbiente += InicioMusicaAmbiente;
 		AdminNivel1.AudioExito += InicioAudioExito;
+		AdminNivel2.AudioDeJuego += InicioMusicaAmbiente;
+		AdminNivel2.AudiodeExito += InicioAudioExito;
 	}
 
 	void OnDisable(){
 		SceneManager.sceneLoaded -= OnLoadScene;
 		AdminNivel1.MusicaAmbiente -= InicioMusicaAmbiente;
 		AdminNivel1.AudioExito -= InicioAudioExito;
+		AdminNivel2.AudioDeJuego -= InicioMusicaAmbiente;
+		AdminNivel2.AudiodeExito -= InicioAudioExito;
 	}
 
 	void OnLoadScene(Scene scene,LoadSceneMode mode){
