@@ -13,15 +13,16 @@ public class AdminNivel2 : MonoBehaviour {
 
 	public GameObject[] ingredientes;
 	public GameObject[] interzas;
+	public Text mensajeFelicitacion;
 	public AudioClip AudioColision;
 
-	public int mano, numeroDeRepeticiones;
+	public int numeroDeRepeticiones;
 
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
 	private List<ActivaPanelDedos> _secuencia;
 	private AudioSource _audioSource;
-	private int _contadorCapa, _sandwich, _count;
+	private int _contadorCapa, _count, _limite, _mano;
 	private bool _pan, _jamon, _queso, _jitomate;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoPrimerSandwich, SegundoInicio, Exito}
@@ -30,19 +31,17 @@ public class AdminNivel2 : MonoBehaviour {
 	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
 
-	enum Ingredientes {SinIngredientes, PrimerIngrediente, SegundoIngrediente, TercerIngrediente}
-	Ingredientes CantidadDeIngredientes;
-
 	void Awake(){
-		_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Anular, ActivaPanelDedos.Anular, ActivaPanelDedos.Medio, ActivaPanelDedos.Meñique, ActivaPanelDedos.Meñique, ActivaPanelDedos.Indice};
+		_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Medio, ActivaPanelDedos.Anular, ActivaPanelDedos.Meñique};
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
-		CantidadDeIngredientes = Ingredientes.SinIngredientes;
 		interzas [0].gameObject.SetActive (true);
 		interzas [12].gameObject.SetActive (false);
 		_audioSource = GetComponent <AudioSource> ();
+		_mano = Admin_level0.datos.mano;
 		_contadorCapa = 0;
 		_count = 0;
+		_limite = 1;
 		_pan = true;
 		_jamon = true;
 		_queso = true;
@@ -64,16 +63,21 @@ public class AdminNivel2 : MonoBehaviour {
 	}
 
 	void DecideSecuencia(){
-		if(_count==_secuencia.Count){ 
-			PanelActivado = ActivaPanelInteractivo.ExitoPrimerSandwich;
+		if(_count == _secuencia.Count && _limite == numeroDeRepeticiones){ 
+			PanelActivado = ActivaPanelInteractivo.Exito;
 			PanelInteractivo ();
 			return;
 		}
 
+		if(_count == _secuencia.Count && _limite < numeroDeRepeticiones){
+			PanelActivado = ActivaPanelInteractivo.ExitoPrimerSandwich;
+			PanelInteractivo ();
+			return;
+		}
 		switch (_secuencia[_count]) {
 		case ActivaPanelDedos.Indice:
 			PanelDedosActivo = ActivaPanelDedos.Indice;
-			PanelDedos (mano);
+			PanelDedos (_mano);
 			_pan = false;
 			_jamon = true;
 			_queso = true;
@@ -81,7 +85,7 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		case ActivaPanelDedos.Medio:
 			PanelDedosActivo = ActivaPanelDedos.Medio;
-			PanelDedos (mano);
+			PanelDedos (_mano);
 			_pan = true;
 			_jamon = false;
 			_queso = true;
@@ -89,7 +93,7 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		case ActivaPanelDedos.Anular:
 			PanelDedosActivo = ActivaPanelDedos.Anular;
-			PanelDedos (mano);
+			PanelDedos (_mano);
 			_pan = true;
 			_jamon = true;
 			_queso = false;
@@ -97,7 +101,7 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		case ActivaPanelDedos.Meñique:
 			PanelDedosActivo = ActivaPanelDedos.Meñique;
-			PanelDedos (mano);
+			PanelDedos (_mano);
 			_pan = true;
 			_jamon = true;
 			_queso = true;
@@ -108,6 +112,7 @@ public class AdminNivel2 : MonoBehaviour {
 			Debug.Log (_count+"y"+_secuencia.Count);
 			_count += 1;
 		}
+
 	}
 
 	void AgregaPan(){
@@ -189,6 +194,18 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		}
 	}
+
+
+	void DesactivaIngredientes(){
+		interzas [2].gameObject.SetActive (false);
+		interzas [3].gameObject.SetActive (false);
+		interzas [4].gameObject.SetActive (false);
+		interzas [5].gameObject.SetActive (false);
+		interzas [6].gameObject.SetActive (false);
+		interzas [7].gameObject.SetActive (false);
+		interzas [8].gameObject.SetActive (false);
+		interzas [9].gameObject.SetActive (false);
+	}
 		
 	//Contiene los mensajes de instrucciones y de exito
 	void PanelInteractivo (){ // Cambiar a verbo
@@ -200,43 +217,50 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		case ActivaPanelInteractivo.Inicio:
 			interzas [1].gameObject.SetActive (false);
+			interzas [10].gameObject.SetActive (false);
 			PanelActivado = ActivaPanelInteractivo.Juegue;
 			PanelDedosActivo = _secuencia [0];
-			CantidadDeIngredientes = Ingredientes.PrimerIngrediente;
-			PanelDedos (mano);
+			PanelDedos (_mano);
 			break;
 		case ActivaPanelInteractivo.ExitoPrimerSandwich:
-			interzas [6].gameObject.SetActive (false);
-			interzas [2].gameObject.SetActive (false);	
+			DesactivaIngredientes ();
+			mensajeFelicitacion.text = "¡Lo estas haciendo genial, sigue asi!\n\n\n" + _limite  + "  de  " + numeroDeRepeticiones; 
 			interzas [10].gameObject.SetActive (true);
 			break;
-		case ActivaPanelInteractivo.SegundoInicio:
-			interzas [10].gameObject.SetActive (false);
-			PanelDedosActivo = ActivaPanelDedos.Indice;
-			CantidadDeIngredientes = Ingredientes.PrimerIngrediente;
-			PanelDedos (mano);
-			break;
-		case ActivaPanelInteractivo.Exito: 
-			interzas [6].gameObject.SetActive (false);
-			interzas [2].gameObject.SetActive (false);	
+		case ActivaPanelInteractivo.Exito:
+			if (AudiodeExito != null) {
+				AudiodeExito ();
+			}
+			DesactivaIngredientes ();
 			interzas [11].gameObject.SetActive (true);
 			break;
 		}
 	}
 
-
-	void Reinicio(){
-		_pan = true;
-		_jamon = true;
-		_queso = true;
-		_jitomate = true;
-		_count = 0;
-		PanelActivado = ActivaPanelInteractivo.Juegue; 
-		_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
-		for (int i = 0; i <= _destruir.Length - 1; i++) {
-			Destroy (_destruir[i]);
+	/*Se hace porque asi lo quise ... Porque al tener varias repeticiones entra al caso ActivaPanelInteractivo.Inicio en la funcion "PanelInteractivo"
+	Y para que la musica del juego no se reinicie creamos la funcion*/
+	void ActivaMusicaDeJuego(){
+		if (AudioDeJuego != null && PanelActivado == ActivaPanelInteractivo.Inicio) {
+			AudioDeJuego ();
 		}
 	}
+
+
+	void Reinicio(){ 
+		if (_limite < numeroDeRepeticiones) {
+			_pan = true;
+			_jamon = true;
+			_queso = true;
+			_jitomate = true;
+			_count = 0;
+			_limite += 1;
+			PanelActivado = ActivaPanelInteractivo.Juegue;
+			_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
+			for (int i = 0; i <= _destruir.Length - 1; i++) {
+				Destroy (_destruir [i]);
+			}
+		}
+	} 
 
 	public void BotonRegresar(){
 		interzas [12].gameObject.SetActive (true);
@@ -277,28 +301,28 @@ public class AdminNivel2 : MonoBehaviour {
 		_ingredienteClon = (GameObject) Instantiate (ingredientes [3], PosicionJitomate, Quaternion.identity);
 		ActualizaCapa ();
 	}
-
-
+		
 	// Update is called once per frame
 	void Update () {
 		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && 
 		   (PanelActivado == ActivaPanelInteractivo.Bienvenido || PanelActivado == ActivaPanelInteractivo.Siguiente || PanelActivado == ActivaPanelInteractivo.Inicio || 
 			PanelActivado == ActivaPanelInteractivo.ExitoPrimerSandwich)){
-
 			if (PanelActivado == ActivaPanelInteractivo.Bienvenido) {
 				PanelActivado = ActivaPanelInteractivo.Siguiente;
 				PanelInteractivo ();
 			} else {
+				ActivaMusicaDeJuego ();
 				PanelInteractivo ();
 				DecideSecuencia ();
-			}
+			}	
 
 			if (PanelActivado == ActivaPanelInteractivo.ExitoPrimerSandwich) {
-				PanelActivado = ActivaPanelInteractivo.SegundoInicio;
+				PanelActivado = ActivaPanelInteractivo.Inicio;
 				PanelInteractivo ();
 				Reinicio ();
 				DecideSecuencia ();
 			}
+
 		}
 
 		if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) 
