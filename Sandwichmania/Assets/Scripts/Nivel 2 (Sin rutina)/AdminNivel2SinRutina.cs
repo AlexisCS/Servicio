@@ -64,13 +64,34 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 
 	void GeneraSecuenciaAleatoria(){
-		int uno = 0;
-		for (int i = 1; i <= numeroDeIngredientes; i++) {
-			uno = Random.Range (0, 4);
-			_secuencia.Add (SeleccionaIngredienteAleatorio (uno));
+		int ingredienteAnterior = 0; 
+		int numeroAleatorio = 0; 
+		_secuencia.Add (SeleccionaIngredienteAleatorio (0));
+		for (int i = 3; i <= numeroDeIngredientes; i++) {
+			ingredienteAnterior = numeroAleatorio;
+			numeroAleatorio = Random.Range (0, 4);
+			if (numeroAleatorio == ingredienteAnterior) {
+				numeroAleatorio=(numeroAleatorio==0)?1:(numeroAleatorio--);
+				ingredienteAnterior=numeroAleatorio;
+			}
+//			if ((i == 2 && numeroAleatorio == 0) || (i == (numeroDeIngredientes - 2) && numeroAleatorio == 0)) {
+//					numeroAleatorio = Random.Range (1, 4);
+//			} 
+			if (i == 3 || i == numeroDeIngredientes) {
+				_secuencia.Add (SeleccionaIngredienteAleatorio (Random.Range (1,4)));
+			} else {						
+				_secuencia.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
+			}
+			/*if (temporal != numeroAleatorio) {
+				_secuencia.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
+			} else {
+				//numeroAleatorio = Random.Range (0, 4);
+				i--;
+			}*/
 		}
+		_secuencia.Add (SeleccionaIngredienteAleatorio (0));
 	}
-
+		
 	ActivaPanelDedos SeleccionaIngredienteAleatorio(int semilla){
 		switch (semilla) {
 		case 0:

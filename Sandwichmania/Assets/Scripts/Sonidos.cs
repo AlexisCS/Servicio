@@ -14,6 +14,8 @@ public class Sonidos : MonoBehaviour {
 		AdminNivel1.AudioExito += InicioAudioExito;
 		AdminNivel2.AudioDeJuego += InicioMusicaAmbiente;
 		AdminNivel2.AudiodeExito += InicioAudioExito;
+		AdminNivel2SinRutina.AudioDeJuego += InicioMusicaAmbiente;
+		AdminNivel2SinRutina.AudiodeExito += InicioAudioExito;
 	}
 
 	void OnDisable(){
@@ -22,6 +24,8 @@ public class Sonidos : MonoBehaviour {
 		AdminNivel1.AudioExito -= InicioAudioExito;
 		AdminNivel2.AudioDeJuego -= InicioMusicaAmbiente;
 		AdminNivel2.AudiodeExito -= InicioAudioExito;
+		AdminNivel2SinRutina.AudioDeJuego -= InicioMusicaAmbiente;
+		AdminNivel2SinRutina.AudiodeExito -= InicioAudioExito;
 	}
 
 	void OnLoadScene(Scene scene,LoadSceneMode mode){
