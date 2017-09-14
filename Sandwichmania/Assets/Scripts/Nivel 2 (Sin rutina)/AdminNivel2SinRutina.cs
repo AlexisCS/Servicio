@@ -68,26 +68,20 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		int numeroAleatorio = 0; 
 		_secuencia.Add (SeleccionaIngredienteAleatorio (0));
 		for (int i = 3; i <= numeroDeIngredientes; i++) {
-			ingredienteAnterior = numeroAleatorio;
-			numeroAleatorio = Random.Range (0, 4);
-			if (numeroAleatorio == ingredienteAnterior) {
-				numeroAleatorio=(numeroAleatorio==0)?1:(numeroAleatorio--);
-				ingredienteAnterior=numeroAleatorio;
-			}
-//			if ((i == 2 && numeroAleatorio == 0) || (i == (numeroDeIngredientes - 2) && numeroAleatorio == 0)) {
-//					numeroAleatorio = Random.Range (1, 4);
-//			} 
 			if (i == 3 || i == numeroDeIngredientes) {
-				_secuencia.Add (SeleccionaIngredienteAleatorio (Random.Range (1,4)));
-			} else {						
-				_secuencia.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
-			}
-			/*if (temporal != numeroAleatorio) {
-				_secuencia.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
+				numeroAleatorio = Random.Range (1, 4);
+				if (numeroAleatorio == ingredienteAnterior) {
+					numeroAleatorio = (numeroAleatorio == ingredienteAnterior) ? (numeroAleatorio + 1) : numeroAleatorio;
+				}
+				//numeroAleatorio = (numeroAleatorio == ingredienteAnterior) ? (numeroAleatorio + 1):numeroAleatorio;
 			} else {
-				//numeroAleatorio = Random.Range (0, 4);
-				i--;
-			}*/
+				numeroAleatorio = Random.Range (0, 4);
+				if (numeroAleatorio == ingredienteAnterior) {
+					numeroAleatorio = (numeroAleatorio == 0) ? 1 : (numeroAleatorio-1);
+				} 			
+			}
+			_secuencia.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
+			ingredienteAnterior = numeroAleatorio;
 		}
 		_secuencia.Add (SeleccionaIngredienteAleatorio (0));
 	}

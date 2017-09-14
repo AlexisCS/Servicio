@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Nivel2(Sin rutina).unity
+- path: "Assets/Scenes/Selecci\xF3n_Nivel.unity"
   isLoaded: 1
   isActive: 1
