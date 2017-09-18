@@ -16,14 +16,14 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	public Text mensajeFelicitacion;
 	public AudioClip AudioColision;
 
-	public int numeroDeRepeticiones, numeroDeIngredientes, mano;
+	//public int _numeroDeRepeticiones, _numeroDeIngredientes, _mano;
 
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
 	private List<ActivaPanelDedos> _secuencia;
 	private List<ActivaPanelDedos> _guardaIngredientes;
 	private AudioSource _audioSource;
-	private int _contadorCapa, _count, _limite, _mano;
+	private int _contadorCapa, _count, _limite, _mano, _numeroDeRepeticiones, _numeroDeIngredientes;
 	private bool _pan, _jamon, _queso, _jitomate;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoParcial, SegundoInicio, Exito}
@@ -39,6 +39,9 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		interzas [0].gameObject.SetActive (true);
 		interzas [12].gameObject.SetActive (false);
 		_audioSource = GetComponent <AudioSource> ();
+		_mano = Admin_level0.datos.mano;
+		_numeroDeIngredientes = Admin_level0.datos.numeroDeIngredientes;
+		_numeroDeRepeticiones = Admin_level0.datos.numeroDeRepeticiones;
 		_contadorCapa = 0;
 		_count = 0;
 		_limite = 1;
@@ -67,13 +70,12 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		int ingredienteAnterior = 0; 
 		int numeroAleatorio = 0; 
 		_secuencia.Add (SeleccionaIngredienteAleatorio (0));
-		for (int i = 3; i <= numeroDeIngredientes; i++) {
-			if (i == 3 || i == numeroDeIngredientes) {
+		for (int i = 3; i <= _numeroDeIngredientes; i++) {
+			if (i == 3 || i == _numeroDeIngredientes) {
 				numeroAleatorio = Random.Range (1, 4);
 				if (numeroAleatorio == ingredienteAnterior) {
 					numeroAleatorio = (numeroAleatorio == ingredienteAnterior) ? (numeroAleatorio + 1) : numeroAleatorio;
 				}
-				//numeroAleatorio = (numeroAleatorio == ingredienteAnterior) ? (numeroAleatorio + 1):numeroAleatorio;
 			} else {
 				numeroAleatorio = Random.Range (0, 4);
 				if (numeroAleatorio == ingredienteAnterior) {
@@ -106,13 +108,13 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 
 	void DecideSecuencia(){
-		if(_count == _secuencia.Count && _limite == numeroDeRepeticiones){ 
+		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){ 
 			PanelActivado = ActivaPanelInteractivo.Exito;
 			PanelInteractivo ();
 			return;
 		}
 
-		if(_count == _secuencia.Count && _limite < numeroDeRepeticiones){
+		if(_count == _secuencia.Count && _limite < _numeroDeRepeticiones){
 			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
 			PanelInteractivo ();
 			return;
@@ -267,7 +269,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
 			DesactivaIngredientes ();
-			mensajeFelicitacion.text = "¡Lo estas haciendo genial, sigue asi!\n\n\n" + _limite  + "  de  " + numeroDeRepeticiones; 
+			mensajeFelicitacion.text = "¡Lo estas haciendo genial, sigue asi!\n\n\n" + _limite  + "  de  " + _numeroDeRepeticiones; 
 			interzas [10].gameObject.SetActive (true);
 			break;
 		case ActivaPanelInteractivo.Exito:
@@ -290,7 +292,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 
 	void Reinicio(){ 
-		if (_limite < numeroDeRepeticiones) {
+		if (_limite < _numeroDeRepeticiones) {
 			_pan = true;
 			_jamon = true;
 			_queso = true;
