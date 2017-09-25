@@ -12,7 +12,7 @@ public class AdminMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//solo para probar   !!!!!!!!!!!!!!!!!!!!!!!!
-		Admin_level0.datos = new InfoPartida ();
+		//Admin_level0.datos = new InfoPartida ();
 		//BORRAR!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 	
@@ -22,11 +22,8 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	void Awake(){
-		if (panels[1] != null && panels[3] != null){
-			panels [1].SetActive (false);
-			panels [3].SetActive (false);
-		}
-		//buttons [1].gameObject.SetActive(false);
+		panels [0].gameObject.SetActive (true);
+		panels [5].gameObject.SetActive (true);
 	}
 
 	public void SelecNivel(int nivel){
@@ -51,17 +48,14 @@ public class AdminMenu : MonoBehaviour {
 		Admin_level0.datos.mano = mano;
 		Calibrar ();
 	}
-
-	public void Regresa(){
-
-	}
+		
 
 	public void DecideTipoDeRutina(int rutina){
 		Admin_level0.datos.rutina = rutina;
 		switch (rutina) {
 		case 0:
 			panels [1].gameObject.SetActive (false);
-			panels [4].gameObject.SetActive (true);
+			panels [2].gameObject.SetActive (true);
 			break;
 		case 1:
 			panels [1].gameObject.SetActive (false);
@@ -70,18 +64,66 @@ public class AdminMenu : MonoBehaviour {
 		}
 	}
 
+	public void IngresaRutina(){
+		panels [2].gameObject.SetActive (false);
+		panels [4].gameObject.SetActive (true);
+	}
+
+
 	public void IngresaInfoDeRutina(){
-		if ((int.Parse (cantidadDeIngredientes.text) < 5) || (int.Parse (cantidadDeIngredientes.text) > 15)) {
+		if (cantidadDeIngredientes.text.Length.Equals (0)) {
 			Advertencia.text = "El minimo de ingredientes es 5 y el maximo de 15 ...";
-		} else {
-			if ((int.Parse (cantidadDeRepeticiones.text) == 0) || (int.Parse (cantidadDeRepeticiones.text) >100)) {
-				Advertencia.text = "El minimo de repeticiones es 1 y el maximo de 100 ...";
-			} else {
-				Admin_level0.datos.numeroDeRepeticiones = int.Parse (cantidadDeRepeticiones.text);
-				Admin_level0.datos.numeroDeIngredientes = int.Parse (cantidadDeIngredientes.text);
-				panels [3].gameObject.SetActive (false);
-				panels [4].gameObject.SetActive (true);
+			return;
+		}
+		if (cantidadDeRepeticiones.text.Length.Equals (0)) {
+			Advertencia.text = "El minimo de repeticiones es 1 y el maximo de 100 ...";
+			return;
+		}
+		int cantidadDeIngredientesTemp=int.Parse (cantidadDeIngredientes.text);
+		if (cantidadDeIngredientesTemp < 5 || cantidadDeIngredientesTemp > 15) {
+			Advertencia.text = "El minimo de ingredientes es 5 y el maximo de 15 ...";
+			return;
+		}
+		int cantidadDeRepeticionesTemp=int.Parse (cantidadDeRepeticiones.text);
+		if (cantidadDeRepeticionesTemp == 0 || cantidadDeRepeticionesTemp > 100) {
+			Advertencia.text = "El minimo de repeticiones es 1 y el maximo de 100 ...";
+			return;
+		} 
+		Admin_level0.datos.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
+		Admin_level0.datos.numeroDeIngredientes = cantidadDeIngredientesTemp;
+		panels [3].gameObject.SetActive (false);
+		panels [4].gameObject.SetActive (true);
+	}
+
+	public void RegresaBoton (int seccion) {
+		switch (seccion) {
+		case 0:
+			panels [0].gameObject.SetActive (true);
+			panels [1].gameObject.SetActive (false);
+			break;
+		case 1:
+			panels [1].gameObject.SetActive (true);
+			panels [2].gameObject.SetActive (false);
+			break;
+		case 2:
+			panels [1].gameObject.SetActive (true);
+			panels [3].gameObject.SetActive (false);
+			break;
+		case 3:
+			if (Admin_level0.datos.nivel == 1) {
+				panels [0].gameObject.SetActive (true);
+				panels [4].gameObject.SetActive (false);
+			} else if (Admin_level0.datos.nivel == 2 && Admin_level0.datos.rutina == 0) {
+				panels [2].gameObject.SetActive (true);
+				panels [4].gameObject.SetActive (false);
+			} else if (Admin_level0.datos.nivel == 2 && Admin_level0.datos.rutina == 1) {
+				panels [3].gameObject.SetActive (true);
+				panels [4].gameObject.SetActive (false);
+			} else if (Admin_level0.datos.nivel == 3) {
+				panels [0].gameObject.SetActive (true);
+				panels [4].gameObject.SetActive (false);
 			}
+			break;
 		}
 	}
 

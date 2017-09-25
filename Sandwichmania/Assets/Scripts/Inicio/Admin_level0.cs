@@ -16,14 +16,12 @@ public class Admin_level0 : MonoBehaviour {
 	public void Setget (){
 		if (!(id.text.ToString().Equals ("a")) || !(password.text.ToString ().Equals ("123"))) {
 			message.text = "Usuario o contraseña incorrecta";
-			Admin_level0.datos.id = 1;
 		} else {
+			Admin_level0.datos.id = int.Parse (id.text);
 			SceneManager.LoadScene (1);
 		}
 	} 
-		
-	//Salir y 
-	// Use this for initialization
+
 	void Awake () {
 		datos = new InfoPartida ();
 	}

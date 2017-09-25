@@ -38,6 +38,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interzas [0].gameObject.SetActive (true);
 		interzas [12].gameObject.SetActive (false);
+		interzas [13].gameObject.SetActive (true);
 		_audioSource = GetComponent <AudioSource> ();
 		_mano = Admin_level0.datos.mano;
 		_numeroDeIngredientes = Admin_level0.datos.numeroDeIngredientes;
