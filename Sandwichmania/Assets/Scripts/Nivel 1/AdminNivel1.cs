@@ -5,8 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class AdminNivel1 : MonoBehaviour {
-
-	//Evento
 	public delegate void Audio ();
 	public static event Audio MusicaAmbiente;
 	public static event Audio AudioExito;
@@ -22,10 +20,10 @@ public class AdminNivel1 : MonoBehaviour {
 	private GameObject _ingredienteClon;
 	private AudioSource _audioSource;
 	private int _mano, _seleccionPanel, _cantidad, _umbral;
-	private float _tiempoInicio,  _tiempoUltimaActualizacion;
-	private bool _panListo, _jamonListo, _quesoListo, _jitomateListo;
+	private float time;
+	private bool _panListo, _jamonListo, _quesoListo, _jitomateListo, bandera;
 
-	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoParcial, SegundoInicio, Exito}
+	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, Exito}
 	ActivaPanelInteractivo PanelActivado;
 
 	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
@@ -53,13 +51,11 @@ public class AdminNivel1 : MonoBehaviour {
 
 	void Awake () {
 		Admin_level0.datos = new InfoPartida ();
-		PanelActivado = ActivaPanelInteractivo.Bienvenido;
-		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interfaz [0].gameObject.SetActive (true);
 		interfaz [1].gameObject.SetActive (true);
-		if (interfaz [11].gameObject != null) {
-			interfaz [11].gameObject.SetActive (false);
-		}
+		interfaz [11].gameObject.SetActive (false);
+		PanelActivado = ActivaPanelInteractivo.Bienvenido;
+		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		_audioSource = GetComponent<AudioSource> ();
 		_mano = Admin_level0.datos.mano;
 		_umbral = 10;
@@ -71,11 +67,13 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 		
 	void ActualizaCantidadPan (){
-		_audioSource.PlayOneShot (sonidoColision, 1.0F);
+		_audioSource.PlayOneShot (sonidoColision, 1.0f);
 		_ingredienteClon = null;
 		_cantidad += 1;
 		cantidadPanText.text = "Pan:" + _cantidad;
 		if (_cantidad == _umbral) {
+			PanelDedosActivo = ActivaPanelDedos.Medio;
+			PanelDedos (_mano);
 			_cantidad = 0;
 			_panListo = true;
 			_jamonListo = false;
@@ -83,11 +81,13 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void ActualizaCantidadJamon (){
-		_audioSource.PlayOneShot (sonidoColision, 1.0F);
+		_audioSource.PlayOneShot (sonidoColision, 1.0f);
 		_ingredienteClon = null;
 		_cantidad += 1;
 		cantidadJamonText.text = "Jamon:" + _cantidad;
 		if (_cantidad == _umbral) {
+			PanelDedosActivo = ActivaPanelDedos.Anular;
+			PanelDedos (_mano);
 			_cantidad = 0;
 			_panListo = true;
 			_jamonListo = true;
@@ -96,11 +96,13 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void ActualizaCantidadQueso (){
-		_audioSource.PlayOneShot (sonidoColision, 1.0F);
+		_audioSource.PlayOneShot (sonidoColision, 1.0f);
 		_ingredienteClon = null;
 		_cantidad += 1;
 		cantidadQuesoText.text = "Queso:" + _cantidad;
 		if (_cantidad == _umbral) {
+			PanelDedosActivo = ActivaPanelDedos.Meñique;
+			PanelDedos (_mano);
 			_cantidad = 0;
 			_panListo = true;
 			_jamonListo = true;
@@ -115,11 +117,14 @@ public class AdminNivel1 : MonoBehaviour {
 		_cantidad += 1;
 		cantidadJitomateText.text = "Jitomate:" + _cantidad;
 		if (_cantidad == _umbral) {
+			PanelActivado = ActivaPanelInteractivo.Exito;
+			MuestraInstrucciones ();
 			_cantidad = 0;
 			_panListo = true;
 			_jamonListo = true;
 			_quesoListo = true;
 			_jitomateListo = true;
+			bandera = false;
 		}
 	}
 
@@ -184,20 +189,22 @@ public class AdminNivel1 : MonoBehaviour {
 		interfaz [8].gameObject.SetActive (false);
 		interfaz [9].gameObject.SetActive (false);
 	}
+
 		
-	void PanelInteractivo (){ // Cambiar a verbo
+	void MuestraInstrucciones (){ 
 		switch (PanelActivado) {
 		case ActivaPanelInteractivo.Siguiente:
-			interfaz [1].gameObject.SetActive (false);
 			PanelDedosActivo = ActivaPanelDedos.Indice;
 			PanelDedos (_mano);
-			PanelActivado =  ActivaPanelInteractivo.Inicio;
+			interfaz [1].gameObject.SetActive (false);
 			break;
 		case ActivaPanelInteractivo.Inicio:
 			DesactivaIngredientes ();
 			PanelActivado = ActivaPanelInteractivo.Juegue;
 			break;
 		case ActivaPanelInteractivo.Exito:
+			DesactivaIngredientes ();
+			interfaz [10].gameObject.SetActive (true);
 			break;
 		}
 	}
@@ -205,8 +212,6 @@ public class AdminNivel1 : MonoBehaviour {
 	void Exito () {
 		SceneManager.LoadScene (1);
 	}
-
-
 		
 	void SpawnPan(){
 		Vector3 PosicionPan = new Vector3 (6.6f, 7.6f, 0.0f);
@@ -241,20 +246,19 @@ public class AdminNivel1 : MonoBehaviour {
 		interfaz [11].gameObject.SetActive (true);
 	}
 	
-	
-	// Update is called once per frame
-	void Update () {
-		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow)
-			|| Input.GetKeyDown(KeyCode.LeftArrow)) && (PanelActivado == ActivaPanelInteractivo.Bienvenido
-			|| PanelActivado == ActivaPanelInteractivo.Siguiente)){
 
-			if (PanelActivado == ActivaPanelInteractivo.Bienvenido) {
-				PanelActivado = ActivaPanelInteractivo.Siguiente;
-				PanelInteractivo ();
-			}
+	void Update () {
+		if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow)
+			|| Input.GetKeyDown(KeyCode.LeftArrow)) && PanelActivado == ActivaPanelInteractivo.Bienvenido && PanelDedosActivo == ActivaPanelDedos.SinSeleccion){
+			PanelActivado = ActivaPanelInteractivo.Siguiente;
+			MuestraInstrucciones ();
+			return;
 		}
 
-
+		if (Input.GetKeyDown (KeyCode.UpArrow) && PanelActivado == ActivaPanelInteractivo.Siguiente) {
+			PanelActivado = ActivaPanelInteractivo.Inicio;
+			MuestraInstrucciones ();
+		}
 
 		if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) 
 			|| Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && PanelActivado == ActivaPanelInteractivo.Exito) {
@@ -262,12 +266,20 @@ public class AdminNivel1 : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow) && _panListo == false && PanelActivado == ActivaPanelInteractivo.Juegue){
+			PanelActivado = ActivaPanelInteractivo.Inicio;
+			MuestraInstrucciones ();
 			SpawnPan ();
 		} else if (Input.GetKeyDown (KeyCode.RightArrow) && _jamonListo == false) {
+			PanelActivado = ActivaPanelInteractivo.Inicio;
+			MuestraInstrucciones ();
 			SpawnJamon ();
 		} else if (Input.GetKeyDown (KeyCode.DownArrow) && _quesoListo == false) {
+			PanelActivado = ActivaPanelInteractivo.Inicio;
+			MuestraInstrucciones ();
 			SpawnQueso ();		
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && _jitomateListo == false) {
+			PanelActivado = ActivaPanelInteractivo.Inicio;
+			MuestraInstrucciones ();
 			SpawnJitomate ();
 		}
 			
