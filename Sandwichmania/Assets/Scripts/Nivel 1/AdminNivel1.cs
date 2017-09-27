@@ -20,8 +20,8 @@ public class AdminNivel1 : MonoBehaviour {
 	private GameObject _ingredienteClon;
 	private AudioSource _audioSource;
 	private int _mano, _seleccionPanel, _cantidad, _umbral;
-	private float time;
-	private bool _panListo, _jamonListo, _quesoListo, _jitomateListo, bandera;
+	private float _tiempoDeApiladoPan, _tiempoDeApiladoJamon, _tiempoDeApiladoQueso, _tiempoDeApiladoJitomate;
+	private bool _panListo, _jamonListo, _quesoListo, _jitomateListo, _iniciaCronometro;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, Exito}
 	ActivaPanelInteractivo PanelActivado;
@@ -63,7 +63,12 @@ public class AdminNivel1 : MonoBehaviour {
 		_jamonListo = true;
 		_quesoListo = true;
 		_jitomateListo = true;
+		_iniciaCronometro = false;
 		_cantidad = 0;
+		_tiempoDeApiladoPan = 0;
+		_tiempoDeApiladoJamon = 0;
+		_tiempoDeApiladoQueso = 0;
+		_tiempoDeApiladoJitomate = 0;
 	}
 		
 	void ActualizaCantidadPan (){
@@ -73,10 +78,11 @@ public class AdminNivel1 : MonoBehaviour {
 		cantidadPanText.text = "Pan:" + _cantidad;
 		if (_cantidad == _umbral) {
 			PanelDedosActivo = ActivaPanelDedos.Medio;
-			PanelDedos (_mano);
+			MuestraPanelDedos (_mano);
 			_cantidad = 0;
 			_panListo = true;
 			_jamonListo = false;
+			_iniciaCronometro = false;
 		}
 	}
 
@@ -87,11 +93,12 @@ public class AdminNivel1 : MonoBehaviour {
 		cantidadJamonText.text = "Jamon:" + _cantidad;
 		if (_cantidad == _umbral) {
 			PanelDedosActivo = ActivaPanelDedos.Anular;
-			PanelDedos (_mano);
+			MuestraPanelDedos (_mano);
 			_cantidad = 0;
 			_panListo = true;
 			_jamonListo = true;
 			_quesoListo = false;
+			_iniciaCronometro = false;
 		}
 	}
 
@@ -102,12 +109,13 @@ public class AdminNivel1 : MonoBehaviour {
 		cantidadQuesoText.text = "Queso:" + _cantidad;
 		if (_cantidad == _umbral) {
 			PanelDedosActivo = ActivaPanelDedos.Meñique;
-			PanelDedos (_mano);
+			MuestraPanelDedos (_mano);
 			_cantidad = 0;
 			_panListo = true;
 			_jamonListo = true;
 			_quesoListo = true;
 			_jitomateListo = false;
+			_iniciaCronometro = false;
 		}
 	}
 
@@ -124,11 +132,11 @@ public class AdminNivel1 : MonoBehaviour {
 			_jamonListo = true;
 			_quesoListo = true;
 			_jitomateListo = true;
-			bandera = false;
+			_iniciaCronometro = false;
 		}
 	}
-
-	void PanelDedos(int mano){
+		
+	void MuestraPanelDedos(int mano){
 		switch (mano) {
 		case 0:
 			if (PanelDedosActivo == ActivaPanelDedos.Indice) {
@@ -195,7 +203,7 @@ public class AdminNivel1 : MonoBehaviour {
 		switch (PanelActivado) {
 		case ActivaPanelInteractivo.Siguiente:
 			PanelDedosActivo = ActivaPanelDedos.Indice;
-			PanelDedos (_mano);
+			MuestraPanelDedos (_mano);
 			interfaz [1].gameObject.SetActive (false);
 			break;
 		case ActivaPanelInteractivo.Inicio:
@@ -265,19 +273,44 @@ public class AdminNivel1 : MonoBehaviour {
 			Exito ();
 		}
 
+
+		if (_panListo == false  && _iniciaCronometro == true) {
+			_tiempoDeApiladoPan += Time.deltaTime;
+			Admin_level0.datos.tiempoDedoIndice = _tiempoDeApiladoPan;
+		}
+
+		if (_jamonListo == false  && _iniciaCronometro == true) {
+			_tiempoDeApiladoJamon += Time.deltaTime;
+			Admin_level0.datos.tiempoDedoMedio = _tiempoDeApiladoJamon;
+		}
+
+		if (_quesoListo == false  && _iniciaCronometro == true) {
+			_tiempoDeApiladoQueso += Time.deltaTime;
+			Admin_level0.datos.tiempoDedoAnular = _tiempoDeApiladoQueso;
+		}
+
+		if (_jitomateListo == false  && _iniciaCronometro == true) {
+			_tiempoDeApiladoJitomate += Time.deltaTime;
+			Admin_level0.datos.tiempoDedoMeñique = _tiempoDeApiladoJitomate;
+		}
+
 		if (Input.GetKeyDown(KeyCode.UpArrow) && _panListo == false && PanelActivado == ActivaPanelInteractivo.Juegue){
+			_iniciaCronometro = true;
 			PanelActivado = ActivaPanelInteractivo.Inicio;
 			MuestraInstrucciones ();
 			SpawnPan ();
 		} else if (Input.GetKeyDown (KeyCode.RightArrow) && _jamonListo == false) {
+			_iniciaCronometro = true;
 			PanelActivado = ActivaPanelInteractivo.Inicio;
 			MuestraInstrucciones ();
 			SpawnJamon ();
 		} else if (Input.GetKeyDown (KeyCode.DownArrow) && _quesoListo == false) {
+			_iniciaCronometro = true;
 			PanelActivado = ActivaPanelInteractivo.Inicio;
 			MuestraInstrucciones ();
 			SpawnQueso ();		
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && _jitomateListo == false) {
+			_iniciaCronometro = true;
 			PanelActivado = ActivaPanelInteractivo.Inicio;
 			MuestraInstrucciones ();
 			SpawnJitomate ();

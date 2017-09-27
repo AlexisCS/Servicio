@@ -10,4 +10,5 @@ public class InfoPartida  {
 	public int rutina; //0 >>> Rutina o 1 >>> Sin Rutina
 	public int numeroDeRepeticiones;
 	public int numeroDeIngredientes;
+	public float tiempoDedoIndice, tiempoDedoMedio, tiempoDedoAnular, tiempoDedoMeñique;
 }
