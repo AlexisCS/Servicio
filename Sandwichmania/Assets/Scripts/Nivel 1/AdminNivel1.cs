@@ -218,7 +218,7 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void Exito () {
-		SceneManager.LoadScene (1);
+		SceneManager.LoadScene (7);
 	}
 		
 	void SpawnPan(){
