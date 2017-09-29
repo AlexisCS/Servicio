@@ -32,7 +32,6 @@ public class AdminNivel2 : MonoBehaviour {
 	ActivaPanelDedos PanelDedosActivo;
 
 	void Awake(){
-		Admin_level0.datos = new InfoPartida ();
 		_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Medio, ActivaPanelDedos.Anular, ActivaPanelDedos.Meñique};
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
@@ -225,7 +224,7 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
 			DesactivaIngredientes ();
-			mensajeFelicitacion.text = "¡Lo estas haciendo genial, sigue asi!\n\n\n" + _limite  + "  de  " + numeroDeRepeticiones; 
+			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + numeroDeRepeticiones; 
 			interfaz [10].gameObject.SetActive (true);
 			break;
 		case ActivaPanelInteractivo.Exito:

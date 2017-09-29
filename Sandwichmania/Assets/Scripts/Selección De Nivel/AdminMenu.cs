@@ -12,7 +12,7 @@ public class AdminMenu : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//solo para probar   !!!!!!!!!!!!!!!!!!!!!!!!
-		//Admin_level0.datos = new InfoPartida ();
+		Admin_level0.datos = new InfoPartida ();
 		//BORRAR!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 	
@@ -72,21 +72,21 @@ public class AdminMenu : MonoBehaviour {
 
 	public void IngresaInfoDeRutina(){
 		if (cantidadDeIngredientes.text.Length.Equals (0)) {
-			Advertencia.text = "El minimo de ingredientes es 5 y el maximo de 15 ...";
+			Advertencia.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
 			return;
 		}
 		if (cantidadDeRepeticiones.text.Length.Equals (0)) {
-			Advertencia.text = "El minimo de repeticiones es 1 y el maximo de 100 ...";
+			Advertencia.text = "El mínimo de repeticiones es 1 y el míximo de 100 ...";
 			return;
 		}
 		int cantidadDeIngredientesTemp=int.Parse (cantidadDeIngredientes.text);
 		if (cantidadDeIngredientesTemp < 5 || cantidadDeIngredientesTemp > 15) {
-			Advertencia.text = "El minimo de ingredientes es 5 y el maximo de 15 ...";
+			Advertencia.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
 			return;
 		}
 		int cantidadDeRepeticionesTemp=int.Parse (cantidadDeRepeticiones.text);
 		if (cantidadDeRepeticionesTemp == 0 || cantidadDeRepeticionesTemp > 100) {
-			Advertencia.text = "El minimo de repeticiones es 1 y el maximo de 100 ...";
+			Advertencia.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
 			return;
 		} 
 		Admin_level0.datos.numeroDeRepeticiones = cantidadDeRepeticionesTemp;

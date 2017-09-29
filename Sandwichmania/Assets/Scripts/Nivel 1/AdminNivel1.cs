@@ -58,7 +58,7 @@ public class AdminNivel1 : MonoBehaviour {
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		_audioSource = GetComponent<AudioSource> ();
 		_mano = Admin_level0.datos.mano;
-		_umbral = 10;
+		_umbral = 3;
 		_panListo = false;
 		_jamonListo = true;
 		_quesoListo = true;

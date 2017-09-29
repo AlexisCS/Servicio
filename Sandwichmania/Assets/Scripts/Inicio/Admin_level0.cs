@@ -17,7 +17,7 @@ public class Admin_level0 : MonoBehaviour {
 		if (!(id.text.ToString().Equals ("a")) || !(password.text.ToString ().Equals ("123"))) {
 			message.text = "Usuario o contraseña incorrecta";
 		} else {
-			Admin_level0.datos.id = int.Parse (id.text);
+			Admin_level0.datos.id = id.text;
 			SceneManager.LoadScene (1);
 		}
 	} 
