@@ -9,7 +9,7 @@ public class AdminNivel3 : MonoBehaviour {
 
 	private GameObject _ingredienteClon, _ingredienteClonAleatorio;
 	private int _contadorCapa;
-	private List <ActivaPanelDedos> _ingredientesDeUsuario;
+	private List <ActivaPanelDedos> _ingredientesDeUsuario, _ingredientesAleatorios;
 
 	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
@@ -31,6 +31,7 @@ public class AdminNivel3 : MonoBehaviour {
 	void Awake(){
 		GeneraSandwichAleatorio ();
 		_ingredientesDeUsuario = new List<ActivaPanelDedos> ();
+		_ingredientesAleatorios = new List<ActivaPanelDedos> ();
 		_contadorCapa = 0;
 	}
 
@@ -85,9 +86,10 @@ public class AdminNivel3 : MonoBehaviour {
 		ActualizaCapa ();
 	}
 
-	void GeneraSandwichAleatorio(){
+	void GeneraSandwichAleatorio (){
 		Vector3 PosicionJitomate = new Vector3 (-4.5f, 7.9f, 0.0f);
 		_ingredienteClon = (GameObject) Instantiate (ingredientes [3], PosicionJitomate, Quaternion.identity);
+		ActualizaCapa ();
 	}
 	
 	// Update is called once per frame

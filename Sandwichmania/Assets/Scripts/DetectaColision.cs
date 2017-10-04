@@ -11,6 +11,10 @@ public class DetectaColision : MonoBehaviour {
 	public static event IngredienteAction OnQuesoApilado;
 	public static event IngredienteAction OnJitomateApilado;
 
+	void Start(){
+		
+	}
+
 	void OnCollisionEnter2D (Collision2D other){
 		//Debug.Log ("Colision");
 		switch (this.gameObject.tag) {
