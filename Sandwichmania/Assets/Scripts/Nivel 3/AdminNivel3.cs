@@ -7,12 +7,16 @@ public class AdminNivel3 : MonoBehaviour {
 	public GameObject[] interfaz;
 	public GameObject[] ingredientes;
 
-	private GameObject _ingredienteClon, _ingredienteClonAleatorio;
+	public int _numeroDeIngredientes;
+	public float tiempoDePausaEntreIngredientes=0.1f;
+
+	private GameObject _ingredienteClon;
 	private int _contadorCapa;
 	private List <ActivaPanelDedos> _ingredientesDeUsuario, _ingredientesAleatorios;
 
 	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
+
 
 	void OnEnable(){
 		DetectaColision.OnPanApilado += AgregaPan;
@@ -29,10 +33,15 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void Awake(){
-		GeneraSandwichAleatorio ();
 		_ingredientesDeUsuario = new List<ActivaPanelDedos> ();
 		_ingredientesAleatorios = new List<ActivaPanelDedos> ();
-		_contadorCapa = 0;
+		GeneraSecuenciaAleatoria ();
+		StartCoroutine (GeneraSandwich ());
+		_contadorCapa = 1;
+	}
+
+	void Start(){
+		//GeneraSandwich ();
 	}
 
 	void AgregaPan(){
@@ -86,16 +95,104 @@ public class AdminNivel3 : MonoBehaviour {
 		ActualizaCapa ();
 	}
 
-	void GeneraSandwichAleatorio (){
-		Vector3 PosicionJitomate = new Vector3 (-4.5f, 7.9f, 0.0f);
-		_ingredienteClon = (GameObject) Instantiate (ingredientes [3], PosicionJitomate, Quaternion.identity);
+	void SpawnPanAleatorio(){
+		Vector3 PosicionPanAleatorio = new Vector3 (-4.5f, 7.9f, 0.0f);
+		_ingredienteClon = (GameObject) Instantiate (ingredientes [4], PosicionPanAleatorio, Quaternion.identity);
 		ActualizaCapa ();
 	}
-	
+
+	void SpawnJamonAleatorio(){
+		Vector3 PosicionJamonAleatorio = new Vector3 (-4.5f, 7.9f, 0.0f);
+		_ingredienteClon = (GameObject) Instantiate (ingredientes [5], PosicionJamonAleatorio, Quaternion.identity);
+		ActualizaCapa ();
+	}
+
+	void SpawnQuesoAleatorio(){
+		Vector3 PosicionQuesoAleatorio = new Vector3 (-4.5f, 7.9f, 0.0f);
+		_ingredienteClon = (GameObject) Instantiate (ingredientes [6], PosicionQuesoAleatorio, Quaternion.identity);
+		ActualizaCapa ();
+	}
+
+	void SpawnJitomateAleatorio(){
+		Vector3 PosicionJitomateAleatorio = new Vector3 (-4.5f, 7.9f, 0.0f);
+		_ingredienteClon = (GameObject) Instantiate (ingredientes [7], PosicionJitomateAleatorio, Quaternion.identity);
+		ActualizaCapa ();
+	}
+
+	void GeneraSecuenciaAleatoria(){
+		int ingredienteAnterior = 0; 
+		int numeroAleatorio = 0; 
+		_ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (0));
+		for (int i = 3; i <= _numeroDeIngredientes; i++) {
+			if (i == 3 || i == _numeroDeIngredientes) {
+				numeroAleatorio = Random.Range (1, 3);
+				if (numeroAleatorio == ingredienteAnterior) {
+					numeroAleatorio = (numeroAleatorio == ingredienteAnterior) ? (numeroAleatorio + 1) : numeroAleatorio;
+				}
+			} else {
+				numeroAleatorio = Random.Range (0, 3);
+				if (numeroAleatorio == ingredienteAnterior) {
+					numeroAleatorio = (numeroAleatorio == 0) ? 1 : (numeroAleatorio-1);
+				} 			
+			}
+			_ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
+			ingredienteAnterior = numeroAleatorio;
+
+		}
+		_ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (0));
+	}
+
+	ActivaPanelDedos SeleccionaIngredienteAleatorio(int semilla){
+		switch (semilla) {
+		case 0:			
+			return ActivaPanelDedos.Indice;
+			break;
+		case 1:			
+			return ActivaPanelDedos.Medio;
+			break;
+		case 2:			
+			return ActivaPanelDedos.Anular;
+			break;
+		case 3:
+			return ActivaPanelDedos.Meñique;
+			break;
+		}
+		return ActivaPanelDedos.SinSeleccion;
+	}
+
+	IEnumerator GeneraSandwich(){
+		for (int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
+			switch (_ingredientesAleatorios [i]) {
+			case ActivaPanelDedos.Indice:
+				SpawnPanAleatorio ();
+				break;
+			case ActivaPanelDedos.Medio:
+				SpawnJamonAleatorio ();
+				break;
+			case ActivaPanelDedos.Anular:
+				SpawnQuesoAleatorio ();
+				break;
+			case ActivaPanelDedos.Meñique:
+				SpawnJitomateAleatorio ();
+				break;
+			}
+			yield return new WaitForSeconds (tiempoDePausaEntreIngredientes);
+		}
+	}
+
+	void imprimeSecuenciaAleatoria(){
+		for (int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
+			Debug.Log (_ingredientesAleatorios[i]);
+		}
+	}
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.A)) {
 			ImprimeSecuencia ();
+		}
+
+		if (Input.GetKeyDown (KeyCode.S)) {
+			imprimeSecuenciaAleatoria ();
 		}
 
 		if (Input.GetKeyDown (KeyCode.UpArrow)) {
