@@ -7,12 +7,16 @@ public class AdminNivel3 : MonoBehaviour {
 	public GameObject[] interfaz;
 	public GameObject[] ingredientes;
 
-	public int _numeroDeIngredientes;
-	public float tiempoDePausaEntreIngredientes=0.1f;
+	public int _numeroDeIngredientes, _numeroDeRepeticiones;
+	public float tiempoDePausaEntreIngredientes;
 
-	private GameObject _ingredienteClon;
-	private int _contadorCapa;
+	private GameObject _ingredienteClon; 
+	private GameObject[] _destruir;
+	private int _contadorCapa, _contadorIngredientesDeUsuario, _limite, _aciertos, _errores; 
+	private List <ActivaPanelDedos> _guardaAciertos, _guardaErrores; 
 	private List <ActivaPanelDedos> _ingredientesDeUsuario, _ingredientesAleatorios;
+	private Dictionary<int, List<ActivaPanelDedos>> _informacionPartida;
+	private bool _pan, _jamon, _queso, _jitomate;
 
 	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
@@ -35,9 +39,19 @@ public class AdminNivel3 : MonoBehaviour {
 	void Awake(){
 		_ingredientesDeUsuario = new List<ActivaPanelDedos> ();
 		_ingredientesAleatorios = new List<ActivaPanelDedos> ();
+		_informacionPartida = new Dictionary<int, List<ActivaPanelDedos>> ();
+		_guardaErrores = new List<ActivaPanelDedos> ();
 		GeneraSecuenciaAleatoria ();
 		StartCoroutine (GeneraSandwich ());
 		_contadorCapa = 1;
+		_pan = true;
+		_jamon = true;
+		_queso = true;
+		_jitomate = true;
+		_aciertos = 0;
+		_errores = 0;
+		_contadorIngredientesDeUsuario = 0;
+		_limite = 1;
 	}
 
 	void Start(){
@@ -45,24 +59,50 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaPan(){
+		_ingredienteClon = null;
+		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Indice);
+		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			_pan = false;
+			_jamon = false;
+			_queso = false;
+			_jitomate = false;
+		}
 	}
 
 	void AgregaJamon(){
+		_ingredienteClon = null;
+		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Medio);
+		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			_pan = false;
+			_jamon = false;
+			_queso = false;
+			_jitomate = false;
+		}
 	}
 
 	void AgregaQueso(){
+		_ingredienteClon = null;
+		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Anular);
+		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			_pan = false;
+			_jamon = false;
+			_queso = false;
+			_jitomate = false;
+		}
 	}
 
 	void AgregaJitomate(){
+		_ingredienteClon = null;
+		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Meñique);
-	}
-		
-	void ImprimeSecuencia(){
-		for (int i = 0; i <= _ingredientesDeUsuario.Count - 1; i++) {
-			Debug.Log (_ingredientesDeUsuario[i]);
+		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			_pan = false;
+			_jamon = false;
+			_queso = false;
+			_jitomate = false;
 		}
 	}
 
@@ -179,30 +219,85 @@ public class AdminNivel3 : MonoBehaviour {
 			yield return new WaitForSeconds (tiempoDePausaEntreIngredientes);
 		}
 	}
-
-	void imprimeSecuenciaAleatoria(){
+		
+	void ComparaIngredientes(){
 		for (int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
-			Debug.Log (_ingredientesAleatorios[i]);
+			if (_ingredientesAleatorios [i] == _ingredientesDeUsuario [i]) {
+				_aciertos += 1;
+			} else {
+				_guardaErrores.Add (_ingredientesAleatorios[i]);
+				_errores += 1;
+			}
+		}
+
+		for (int i = 0; i <= _guardaErrores.Count - 1; i++) {
+			Debug.Log (_guardaErrores[i]);
+		}
+
+	}
+
+	void InfoDePartida(int nivel){
+		_informacionPartida.Add (nivel, _guardaErrores);
+		//for (int i = 0; i <= _informacionPartida.Count; i++) {
+		foreach(int val in _informacionPartida.Keys){
+			List < ActivaPanelDedos > listTemp= _informacionPartida [val];
+			for (int j = 0; j < listTemp.Count; j++){
+				Debug.Log (listTemp[j].ToString ());
+			}
+		}
+
+
+	}
+
+	void Reinicio(){
+		if (_limite < _numeroDeRepeticiones) {
+			_ingredientesDeUsuario.Clear ();
+			_pan = true;
+			_jamon = true;
+			_queso = true;
+			_jitomate = true;
+			_aciertos = 0;
+			_errores = 0;
+			_limite += 1;
+			_contadorIngredientesDeUsuario = 0;
+			_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
+			for (int i = 0; i <= _destruir.Length - 1; i++) {
+				Destroy (_destruir [i]);
+			}
 		}
 	}
 	// Update is called once per frame
 	void Update () {
+		if (Input.GetKeyDown (KeyCode.Z)) {
+			ComparaIngredientes ();
+		}
+
 		if (Input.GetKeyDown (KeyCode.A)) {
-			ImprimeSecuencia ();
+			InfoDePartida (_limite);
 		}
 
-		if (Input.GetKeyDown (KeyCode.S)) {
-			imprimeSecuenciaAleatoria ();
-		}
-
-		if (Input.GetKeyDown (KeyCode.UpArrow)) {
+		if (Input.GetKeyDown (KeyCode.UpArrow) && _pan == true) {
 			SpawnPan ();
-		} else if (Input.GetKeyDown (KeyCode.RightArrow)) {
+		} else if (Input.GetKeyDown (KeyCode.RightArrow) && _jamon == true) {
 			SpawnJamon ();
-		} else if (Input.GetKeyDown (KeyCode.DownArrow)) {
+		} else if (Input.GetKeyDown (KeyCode.DownArrow) && _queso == true) {
 			SpawnQueso ();		
-		} else if (Input.GetKeyDown (KeyCode.LeftArrow)) {
+		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && _jitomate == true) {
 			SpawnJitomate ();
 		}
+
+		if (Input.GetKeyUp (KeyCode.UpArrow) && _ingredienteClon != null && _pan == true) {;
+			Destroy(_ingredienteClon);
+			_ingredienteClon = null;
+		} else if (Input.GetKeyUp (KeyCode.RightArrow) && _ingredienteClon != null && _jamon == true) {
+			Destroy(_ingredienteClon);
+			_ingredienteClon = null;
+		} else if (Input.GetKeyUp (KeyCode.DownArrow) && _ingredienteClon != null && _queso == true) { 
+			Destroy(_ingredienteClon);
+			_ingredienteClon = null;
+		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null && _jitomate == true) {
+			Destroy(_ingredienteClon);
+			_ingredienteClon = null;
+		} 
 	}
 }
