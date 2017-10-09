@@ -12,7 +12,9 @@ public class AdminNivel3 : MonoBehaviour {
 
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
-	private int _contadorCapa, _contadorIngredientesDeUsuario, _limite, _aciertos, _errores; 
+	private int _contadorCapa, _contadorIngredientesDeUsuario, _limite, _aciertos, _errores;
+	private float _altura; 
+	private List <Transform> _posicionDeIngredientesClon; 
 	private List <ActivaPanelDedos> _guardaAciertos, _guardaErrores; 
 	private List <ActivaPanelDedos> _ingredientesDeUsuario, _ingredientesAleatorios;
 	private Dictionary<int, List<ActivaPanelDedos>> _informacionPartida;
@@ -41,6 +43,7 @@ public class AdminNivel3 : MonoBehaviour {
 		_ingredientesAleatorios = new List<ActivaPanelDedos> ();
 		_informacionPartida = new Dictionary<int, List<ActivaPanelDedos>> ();
 		_guardaErrores = new List<ActivaPanelDedos> ();
+		_posicionDeIngredientesClon = new List<Transform> ();
 		GeneraSecuenciaAleatoria ();
 		StartCoroutine (GeneraSandwich ());
 		_contadorCapa = 1;
@@ -52,11 +55,9 @@ public class AdminNivel3 : MonoBehaviour {
 		_errores = 0;
 		_contadorIngredientesDeUsuario = 0;
 		_limite = 1;
+		_altura = 2f;
 	}
-
-	void Start(){
-		//GeneraSandwich ();
-	}
+		
 
 	void AgregaPan(){
 		_ingredienteClon = null;
@@ -138,24 +139,28 @@ public class AdminNivel3 : MonoBehaviour {
 	void SpawnPanAleatorio(){
 		Vector3 PosicionPanAleatorio = new Vector3 (-4.5f, 7.9f, 0.0f);
 		_ingredienteClon = (GameObject) Instantiate (ingredientes [4], PosicionPanAleatorio, Quaternion.identity);
+		_posicionDeIngredientesClon.Add (_ingredienteClon.transform);
 		ActualizaCapa ();
 	}
 
 	void SpawnJamonAleatorio(){
 		Vector3 PosicionJamonAleatorio = new Vector3 (-4.5f, 7.9f, 0.0f);
 		_ingredienteClon = (GameObject) Instantiate (ingredientes [5], PosicionJamonAleatorio, Quaternion.identity);
+		_posicionDeIngredientesClon.Add (_ingredienteClon.transform);
 		ActualizaCapa ();
 	}
 
 	void SpawnQuesoAleatorio(){
 		Vector3 PosicionQuesoAleatorio = new Vector3 (-4.5f, 7.9f, 0.0f);
 		_ingredienteClon = (GameObject) Instantiate (ingredientes [6], PosicionQuesoAleatorio, Quaternion.identity);
+		_posicionDeIngredientesClon.Add (_ingredienteClon.transform);
 		ActualizaCapa ();
 	}
 
 	void SpawnJitomateAleatorio(){
 		Vector3 PosicionJitomateAleatorio = new Vector3 (-4.5f, 7.9f, 0.0f);
 		_ingredienteClon = (GameObject) Instantiate (ingredientes [7], PosicionJitomateAleatorio, Quaternion.identity);
+		_posicionDeIngredientesClon.Add (_ingredienteClon.transform);
 		ActualizaCapa ();
 	}
 
@@ -165,12 +170,12 @@ public class AdminNivel3 : MonoBehaviour {
 		_ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (0));
 		for (int i = 3; i <= _numeroDeIngredientes; i++) {
 			if (i == 3 || i == _numeroDeIngredientes) {
-				numeroAleatorio = Random.Range (1, 3);
+				numeroAleatorio = Random.Range (1, 4);
 				if (numeroAleatorio == ingredienteAnterior) {
 					numeroAleatorio = (numeroAleatorio == ingredienteAnterior) ? (numeroAleatorio + 1) : numeroAleatorio;
 				}
 			} else {
-				numeroAleatorio = Random.Range (0, 3);
+				numeroAleatorio = Random.Range (0, 4);
 				if (numeroAleatorio == ingredienteAnterior) {
 					numeroAleatorio = (numeroAleatorio == 0) ? 1 : (numeroAleatorio-1);
 				} 			
@@ -186,16 +191,12 @@ public class AdminNivel3 : MonoBehaviour {
 		switch (semilla) {
 		case 0:			
 			return ActivaPanelDedos.Indice;
-			break;
 		case 1:			
 			return ActivaPanelDedos.Medio;
-			break;
 		case 2:			
 			return ActivaPanelDedos.Anular;
-			break;
 		case 3:
 			return ActivaPanelDedos.Meñique;
-			break;
 		}
 		return ActivaPanelDedos.SinSeleccion;
 	}
@@ -249,6 +250,19 @@ public class AdminNivel3 : MonoBehaviour {
 
 	}
 
+	IEnumerator AnimacionSalto(){
+		Vector3 temp;
+		for ( int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
+			temp = _posicionDeIngredientesClon [i].transform.position;
+			temp.y += (0.13f)*i;
+			_posicionDeIngredientesClon [i].transform.position = temp;
+			Debug.Log (_posicionDeIngredientesClon[i].transform.position);
+		}
+
+		yield return new WaitForSeconds (2.0f);
+
+	}
+
 	void Reinicio(){
 		if (_limite < _numeroDeRepeticiones) {
 			_ingredientesDeUsuario.Clear ();
@@ -273,7 +287,7 @@ public class AdminNivel3 : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.A)) {
-			InfoDePartida (_limite);
+			StartCoroutine (AnimacionSalto ());
 		}
 
 		if (Input.GetKeyDown (KeyCode.UpArrow) && _pan == true) {

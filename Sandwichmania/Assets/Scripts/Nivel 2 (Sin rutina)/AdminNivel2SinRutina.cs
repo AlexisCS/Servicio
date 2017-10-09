@@ -93,16 +93,12 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		switch (semilla) {
 		case 0:
 			return ActivaPanelDedos.Indice;
-			break;
 		case 1:
 			return ActivaPanelDedos.Medio;
-			break;
 		case 2:
 			return ActivaPanelDedos.Anular;
-			break;
 		case 3:
 			return ActivaPanelDedos.Meñique;
-			break;
 		}
 		return ActivaPanelDedos.SinSeleccion;
 	}
