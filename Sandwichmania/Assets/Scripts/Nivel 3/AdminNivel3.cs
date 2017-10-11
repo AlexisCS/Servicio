@@ -64,6 +64,7 @@ public class AdminNivel3 : MonoBehaviour {
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Indice);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			ComparaIngredientes ();
 			_pan = false;
 			_jamon = false;
 			_queso = false;
@@ -76,6 +77,7 @@ public class AdminNivel3 : MonoBehaviour {
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Medio);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			ComparaIngredientes ();
 			_pan = false;
 			_jamon = false;
 			_queso = false;
@@ -88,6 +90,7 @@ public class AdminNivel3 : MonoBehaviour {
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Anular);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			ComparaIngredientes ();
 			_pan = false;
 			_jamon = false;
 			_queso = false;
@@ -100,6 +103,7 @@ public class AdminNivel3 : MonoBehaviour {
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Meñique);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			ComparaIngredientes ();
 			_pan = false;
 			_jamon = false;
 			_queso = false;
@@ -219,6 +223,7 @@ public class AdminNivel3 : MonoBehaviour {
 			}
 			yield return new WaitForSeconds (tiempoDePausaEntreIngredientes);
 		}
+		StartCoroutine (AnimacionSalto ());
 	}
 		
 	void ComparaIngredientes(){
@@ -230,41 +235,43 @@ public class AdminNivel3 : MonoBehaviour {
 				_errores += 1;
 			}
 		}
-
-		for (int i = 0; i <= _guardaErrores.Count - 1; i++) {
-			Debug.Log (_guardaErrores[i]);
-		}
-
+		InformacionDePartida (_limite, _guardaErrores);	
 	}
 
-	void InfoDePartida(int nivel){
-		_informacionPartida.Add (nivel, _guardaErrores);
-		//for (int i = 0; i <= _informacionPartida.Count; i++) {
-		foreach(int val in _informacionPartida.Keys){
-			List < ActivaPanelDedos > listTemp= _informacionPartida [val];
-			for (int j = 0; j < listTemp.Count; j++){
-				Debug.Log (listTemp[j].ToString ());
+	void InformacionDePartida(int nivel, List<ActivaPanelDedos> errores){
+		List <ActivaPanelDedos>[] listTemp = new List<ActivaPanelDedos>[_numeroDeRepeticiones];
+		listTemp [nivel] = errores;
+		_informacionPartida.Add (nivel, listTemp[nivel]);
+		foreach (KeyValuePair<int, List<ActivaPanelDedos>> pair in _informacionPartida) {
+			Debug.Log (pair.Key+"\n");
+			for (int i = 0; i <= pair.Value.Count; i++) {
+				Debug.Log (pair.Value[i]);
 			}
+			Debug.Log ("\n------------------------------------------------\n");
 		}
-
-
+		//listTemp.Clear ();
 	}
 
 	IEnumerator AnimacionSalto(){
+		yield return new WaitForSeconds (3.0f);
 		Vector3 temp;
 		for ( int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
 			temp = _posicionDeIngredientesClon [i].transform.position;
-			temp.y += (0.13f)*i;
+			temp.y += (0.12f)*i;
 			_posicionDeIngredientesClon [i].transform.position = temp;
-			Debug.Log (_posicionDeIngredientesClon[i].transform.position);
+			_posicionDeIngredientesClon [i].GetComponent <Rigidbody2D> ().bodyType = RigidbodyType2D.Kinematic;
 		}
 
-		yield return new WaitForSeconds (2.0f);
-
+		yield return new WaitForSeconds (3.0f);
+		for ( int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {			
+			_posicionDeIngredientesClon [i].GetComponent <Rigidbody2D> ().bodyType = RigidbodyType2D.Dynamic;
+		}
+		StartCoroutine (AnimacionSalto ());
 	}
 
 	void Reinicio(){
 		if (_limite < _numeroDeRepeticiones) {
+			_limite += 1;
 			_ingredientesDeUsuario.Clear ();
 			_pan = true;
 			_jamon = true;
@@ -272,7 +279,6 @@ public class AdminNivel3 : MonoBehaviour {
 			_jitomate = true;
 			_aciertos = 0;
 			_errores = 0;
-			_limite += 1;
 			_contadorIngredientesDeUsuario = 0;
 			_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
 			for (int i = 0; i <= _destruir.Length - 1; i++) {
@@ -282,12 +288,8 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.Z)) {
-			ComparaIngredientes ();
-		}
-
 		if (Input.GetKeyDown (KeyCode.A)) {
-			StartCoroutine (AnimacionSalto ());
+			Reinicio ();
 		}
 
 		if (Input.GetKeyDown (KeyCode.UpArrow) && _pan == true) {
