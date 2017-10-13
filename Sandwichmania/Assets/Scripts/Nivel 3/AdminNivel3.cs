@@ -13,16 +13,17 @@ public class AdminNivel3 : MonoBehaviour {
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
 	private int _contadorCapa, _contadorIngredientesDeUsuario, _limite, _aciertos, _errores;
-	private float _altura; 
 	private List <Transform> _posicionDeIngredientesClon; 
-	private List <ActivaPanelDedos> _guardaAciertos, _guardaErrores; 
+	private List <ActivaPanelDedos>[] _guardaErrores;
+	private List <List<ActivaPanelDedos>> _guardaResultados;
 	private List <ActivaPanelDedos> _ingredientesDeUsuario, _ingredientesAleatorios;
 	private Dictionary<int, List<ActivaPanelDedos>> _informacionPartida;
-	private bool _pan, _jamon, _queso, _jitomate;
 
 	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
 
+	enum Teclado {SinPresionar, PresionaPan, PresionaJamon, PresionaQueso, PresionaJitomate, PresionaCualquiera}
+	Teclado ActivaTecla;
 
 	void OnEnable(){
 		DetectaColision.OnPanApilado += AgregaPan;
@@ -41,21 +42,20 @@ public class AdminNivel3 : MonoBehaviour {
 	void Awake(){
 		_ingredientesDeUsuario = new List<ActivaPanelDedos> ();
 		_ingredientesAleatorios = new List<ActivaPanelDedos> ();
-		_informacionPartida = new Dictionary<int, List<ActivaPanelDedos>> ();
-		_guardaErrores = new List<ActivaPanelDedos> ();
 		_posicionDeIngredientesClon = new List<Transform> ();
+		_guardaErrores = new List<ActivaPanelDedos>[_numeroDeRepeticiones];
+		for (int i = 0; i <= _numeroDeRepeticiones - 1; i++) {
+			_guardaErrores[i] = new List<ActivaPanelDedos>();
+		}
+		_guardaResultados = new List<List<ActivaPanelDedos>> ();
+		ActivaTecla = Teclado.PresionaCualquiera;
 		GeneraSecuenciaAleatoria ();
 		StartCoroutine (GeneraSandwich ());
 		_contadorCapa = 1;
-		_pan = true;
-		_jamon = true;
-		_queso = true;
-		_jitomate = true;
 		_aciertos = 0;
 		_errores = 0;
 		_contadorIngredientesDeUsuario = 0;
-		_limite = 1;
-		_altura = 2f;
+		_limite = 0;
 	}
 		
 
@@ -65,10 +65,6 @@ public class AdminNivel3 : MonoBehaviour {
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Indice);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
 			ComparaIngredientes ();
-			_pan = false;
-			_jamon = false;
-			_queso = false;
-			_jitomate = false;
 		}
 	}
 
@@ -78,10 +74,6 @@ public class AdminNivel3 : MonoBehaviour {
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Medio);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
 			ComparaIngredientes ();
-			_pan = false;
-			_jamon = false;
-			_queso = false;
-			_jitomate = false;
 		}
 	}
 
@@ -91,10 +83,6 @@ public class AdminNivel3 : MonoBehaviour {
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Anular);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
 			ComparaIngredientes ();
-			_pan = false;
-			_jamon = false;
-			_queso = false;
-			_jitomate = false;
 		}
 	}
 
@@ -104,10 +92,6 @@ public class AdminNivel3 : MonoBehaviour {
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Meñique);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
 			ComparaIngredientes ();
-			_pan = false;
-			_jamon = false;
-			_queso = false;
-			_jitomate = false;
 		}
 	}
 
@@ -223,7 +207,26 @@ public class AdminNivel3 : MonoBehaviour {
 			}
 			yield return new WaitForSeconds (tiempoDePausaEntreIngredientes);
 		}
+		yield return new WaitForSeconds (2.0f);
+		//DesactivaTeclas ();
 		StartCoroutine (AnimacionSalto ());
+	}
+
+	void DesactivaTeclas(Teclado tecla){
+		switch (tecla) {
+		case Teclado.PresionaPan:
+			break;
+		case Teclado.PresionaJamon:
+			break;
+		case Teclado.PresionaQueso:
+			break;
+		case Teclado.PresionaJitomate:
+			break;
+		}
+	}
+
+	void ActivaTeclas(){
+		
 	}
 		
 	void ComparaIngredientes(){
@@ -231,27 +234,27 @@ public class AdminNivel3 : MonoBehaviour {
 			if (_ingredientesAleatorios [i] == _ingredientesDeUsuario [i]) {
 				_aciertos += 1;
 			} else {
-				_guardaErrores.Add (_ingredientesAleatorios[i]);
+				_guardaErrores [_limite].Add(_ingredientesAleatorios[i]);
 				_errores += 1;
 			}
 		}
-		InformacionDePartida (_limite, _guardaErrores);	
+		InformacionDePartida (_guardaErrores[_limite]);
+		_limite++;
 	}
 
-	void InformacionDePartida(int nivel, List<ActivaPanelDedos> errores){
-		List <ActivaPanelDedos>[] listTemp = new List<ActivaPanelDedos>[_numeroDeRepeticiones];
-		listTemp [nivel] = errores;
-		_informacionPartida.Add (nivel, listTemp[nivel]);
-		foreach (KeyValuePair<int, List<ActivaPanelDedos>> pair in _informacionPartida) {
-			Debug.Log (pair.Key+"\n");
-			for (int i = 0; i <= pair.Value.Count; i++) {
-				Debug.Log (pair.Value[i]);
+	void InformacionDePartida(List<ActivaPanelDedos> errores){
+		_guardaResultados.Add (errores);
+		for (int i = 0; i < _guardaResultados.Count; i++) {
+			Debug.Log ("Nivel: "+i+"\n");
+			List <ActivaPanelDedos> temp = _guardaResultados [i];
+			for (int j = 0; j < temp.Count; j++) {
+				Debug.Log (temp[j]);
 			}
-			Debug.Log ("\n------------------------------------------------\n");
+			Debug.Log ("-----------------------------------------------");
 		}
-		//listTemp.Clear ();
-	}
 
+	}
+		
 	IEnumerator AnimacionSalto(){
 		yield return new WaitForSeconds (3.0f);
 		Vector3 temp;
@@ -271,12 +274,7 @@ public class AdminNivel3 : MonoBehaviour {
 
 	void Reinicio(){
 		if (_limite < _numeroDeRepeticiones) {
-			_limite += 1;
 			_ingredientesDeUsuario.Clear ();
-			_pan = true;
-			_jamon = true;
-			_queso = true;
-			_jitomate = true;
 			_aciertos = 0;
 			_errores = 0;
 			_contadorIngredientesDeUsuario = 0;
@@ -291,27 +289,31 @@ public class AdminNivel3 : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.A)) {
 			Reinicio ();
 		}
-
-		if (Input.GetKeyDown (KeyCode.UpArrow) && _pan == true) {
+			
+		if (Input.GetKeyDown (KeyCode.UpArrow) && (ActivaTecla == Teclado.PresionaPan || ActivaTecla == Teclado.PresionaCualquiera)){
+			
 			SpawnPan ();
-		} else if (Input.GetKeyDown (KeyCode.RightArrow) && _jamon == true) {
+		} else if (Input.GetKeyDown (KeyCode.RightArrow) && (ActivaTecla == Teclado.PresionaJamon || ActivaTecla == Teclado.PresionaCualquiera)){
+			
 			SpawnJamon ();
-		} else if (Input.GetKeyDown (KeyCode.DownArrow) && _queso == true) {
+		} else if (Input.GetKeyDown (KeyCode.DownArrow) && (ActivaTecla == Teclado.PresionaQueso || ActivaTecla == Teclado.PresionaCualquiera)){
+			
 			SpawnQueso ();		
-		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && _jitomate == true) {
+		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && (ActivaTecla == Teclado.PresionaJitomate || ActivaTecla == Teclado.PresionaCualquiera)){
+			
 			SpawnJitomate ();
 		}
 
-		if (Input.GetKeyUp (KeyCode.UpArrow) && _ingredienteClon != null && _pan == true) {;
+		if (Input.GetKeyUp (KeyCode.UpArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaPan || ActivaTecla == Teclado.PresionaCualquiera) ) {
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
-		} else if (Input.GetKeyUp (KeyCode.RightArrow) && _ingredienteClon != null && _jamon == true) {
+		} else if (Input.GetKeyUp (KeyCode.RightArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaJamon || ActivaTecla == Teclado.PresionaCualquiera)) {
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
-		} else if (Input.GetKeyUp (KeyCode.DownArrow) && _ingredienteClon != null && _queso == true) { 
+		} else if (Input.GetKeyUp (KeyCode.DownArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaQueso || ActivaTecla == Teclado.PresionaCualquiera)) {
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
-		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null && _jitomate == true) {
+		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaQueso || ActivaTecla == Teclado.PresionaCualquiera) ) {
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 		} 
