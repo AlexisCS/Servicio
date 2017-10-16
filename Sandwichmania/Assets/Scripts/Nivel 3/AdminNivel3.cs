@@ -1,11 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using UnityEngine.Collections;
 
 public class AdminNivel3 : MonoBehaviour {
 
 	public GameObject[] interfaz;
 	public GameObject[] ingredientes;
+	public Text noRepeticionesExito1, noRepeticionesExito2, noRepeticionesExito3;
 
 	public int _numeroDeIngredientes, _numeroDeRepeticiones;
 	public float tiempoDePausaEntreIngredientes;
@@ -18,6 +22,10 @@ public class AdminNivel3 : MonoBehaviour {
 	private List <List<ActivaPanelDedos>> _guardaResultados;
 	private List <ActivaPanelDedos> _ingredientesDeUsuario, _ingredientesAleatorios;
 	private Dictionary<int, List<ActivaPanelDedos>> _informacionPartida;
+
+
+	enum ActivaPanelInteractivo {SinPanel, Bienvenido, Inicio, Juegue, ExitoParcial, Reinicio, Exito}
+	ActivaPanelInteractivo PanelActivado;
 
 	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
@@ -48,9 +56,8 @@ public class AdminNivel3 : MonoBehaviour {
 			_guardaErrores[i] = new List<ActivaPanelDedos>();
 		}
 		_guardaResultados = new List<List<ActivaPanelDedos>> ();
-		ActivaTecla = Teclado.PresionaCualquiera;
-		GeneraSecuenciaAleatoria ();
-		StartCoroutine (GeneraSandwich ());
+		ActivaTecla = Teclado.SinPresionar;
+		PanelActivado = ActivaPanelInteractivo.SinPanel;
 		_contadorCapa = 1;
 		_aciertos = 0;
 		_errores = 0;
@@ -64,8 +71,13 @@ public class AdminNivel3 : MonoBehaviour {
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Indice);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			ActivaTecla = Teclado.SinPresionar;
 			ComparaIngredientes ();
+			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
+			ActivaPanel ();
 		}
+		ActivaTecla = Teclado.PresionaCualquiera;
+
 	}
 
 	void AgregaJamon(){
@@ -73,8 +85,12 @@ public class AdminNivel3 : MonoBehaviour {
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Medio);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			ActivaTecla = Teclado.SinPresionar;
 			ComparaIngredientes ();
+			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
+			ActivaPanel ();
 		}
+		ActivaTecla = Teclado.PresionaCualquiera;
 	}
 
 	void AgregaQueso(){
@@ -82,8 +98,12 @@ public class AdminNivel3 : MonoBehaviour {
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Anular);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			ActivaTecla = Teclado.SinPresionar;
 			ComparaIngredientes ();
+			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
+			ActivaPanel ();
 		}
+		ActivaTecla = Teclado.PresionaCualquiera;
 	}
 
 	void AgregaJitomate(){
@@ -91,8 +111,12 @@ public class AdminNivel3 : MonoBehaviour {
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Meñique);
 		if (_contadorIngredientesDeUsuario == _numeroDeIngredientes) {
+			ActivaTecla = Teclado.SinPresionar;
 			ComparaIngredientes ();
+			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
+			ActivaPanel ();
 		}
+		ActivaTecla = Teclado.PresionaCualquiera;
 	}
 
 	void ActualizaCapa(){
@@ -208,27 +232,10 @@ public class AdminNivel3 : MonoBehaviour {
 			yield return new WaitForSeconds (tiempoDePausaEntreIngredientes);
 		}
 		yield return new WaitForSeconds (2.0f);
-		//DesactivaTeclas ();
-		StartCoroutine (AnimacionSalto ());
-	}
-
-	void DesactivaTeclas(Teclado tecla){
-		switch (tecla) {
-		case Teclado.PresionaPan:
-			break;
-		case Teclado.PresionaJamon:
-			break;
-		case Teclado.PresionaQueso:
-			break;
-		case Teclado.PresionaJitomate:
-			break;
-		}
-	}
-
-	void ActivaTeclas(){
-		
+		ActivaTecla = Teclado.PresionaCualquiera;
 	}
 		
+
 	void ComparaIngredientes(){
 		for (int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
 			if (_ingredientesAleatorios [i] == _ingredientesDeUsuario [i]) {
@@ -238,6 +245,7 @@ public class AdminNivel3 : MonoBehaviour {
 				_errores += 1;
 			}
 		}
+		Debug.Log (_errores);
 		InformacionDePartida (_guardaErrores[_limite]);
 		_limite++;
 	}
@@ -273,6 +281,12 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void Reinicio(){
+		if (_limite == _numeroDeRepeticiones) {
+			ActivaTecla = Teclado.SinPresionar;
+			PanelActivado = ActivaPanelInteractivo.Exito;
+			ActivaPanel ();
+		}
+
 		if (_limite < _numeroDeRepeticiones) {
 			_ingredientesDeUsuario.Clear ();
 			_aciertos = 0;
@@ -284,36 +298,107 @@ public class AdminNivel3 : MonoBehaviour {
 			}
 		}
 	}
+
+	void ActivaPanel(){
+		switch (PanelActivado) {
+		case ActivaPanelInteractivo.Bienvenido:
+			interfaz [0].gameObject.SetActive (false);
+			interfaz [1].gameObject.SetActive (true);
+			PanelActivado = ActivaPanelInteractivo.Inicio;
+			break;
+		case ActivaPanelInteractivo.Juegue:
+			interfaz [1].gameObject.SetActive (false);
+			GeneraSecuenciaAleatoria ();
+			StartCoroutine (GeneraSandwich ());
+			break;
+		case ActivaPanelInteractivo.ExitoParcial:
+			Debug.Log (_numeroDeIngredientes);
+			int temp;
+			temp = _numeroDeIngredientes / 2;
+			Debug.Log (temp);
+			if (_errores == 0) {
+				interfaz [2].gameObject.SetActive (true);
+				noRepeticionesExito1.text = _limite + " de " +_numeroDeRepeticiones;
+			} else if (_errores <= temp) {
+				interfaz [3].gameObject.SetActive (true);
+				noRepeticionesExito2.text = _limite + " de " +_numeroDeRepeticiones;
+			} else if (_errores > temp) {
+				interfaz [4].gameObject.SetActive (true);
+				noRepeticionesExito3.text = _limite + " de " +_numeroDeRepeticiones;
+			}
+			break;
+		case ActivaPanelInteractivo.Reinicio:
+			interfaz [2].gameObject.SetActive (false);
+			interfaz [3].gameObject.SetActive (false);
+			interfaz [4].gameObject.SetActive (false);
+			break;
+		case ActivaPanelInteractivo.Exito:
+			interfaz [5].gameObject.SetActive (true);
+			break;
+		}
+		
+	}
+
+	void Exito(){
+		SceneManager.LoadScene (9);
+	}
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown (KeyCode.A)) {
-			Reinicio ();
+		if (Input.GetKeyDown (KeyCode.UpArrow) || Input.GetKeyDown (KeyCode.RightArrow) || Input.GetKeyDown (KeyCode.DownArrow) || Input.GetKeyDown (KeyCode.LeftArrow)
+			&& (PanelActivado == ActivaPanelInteractivo.SinPanel || PanelActivado == ActivaPanelInteractivo.Inicio || PanelActivado == ActivaPanelInteractivo.ExitoParcial || PanelActivado == ActivaPanelInteractivo.Exito)) {
+			if (PanelActivado == ActivaPanelInteractivo.SinPanel) {
+				PanelActivado = ActivaPanelInteractivo.Bienvenido;
+				ActivaPanel ();
+				return;
+			}
+
+			if (PanelActivado == ActivaPanelInteractivo.Inicio) {
+				PanelActivado = ActivaPanelInteractivo.Juegue;
+				ActivaPanel ();
+				return;
+			}
+
+			if (PanelActivado == ActivaPanelInteractivo.ExitoParcial) {
+				PanelActivado = ActivaPanelInteractivo.Reinicio;
+				ActivaPanel ();
+				Reinicio ();
+			}
+		}
+
+		if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) 
+			|| Input.GetKeyDown(KeyCode.LeftArrow)) && PanelActivado == ActivaPanelInteractivo.Exito) {
+			Exito ();
+			return;
 		}
 			
 		if (Input.GetKeyDown (KeyCode.UpArrow) && (ActivaTecla == Teclado.PresionaPan || ActivaTecla == Teclado.PresionaCualquiera)){
-			
+			ActivaTecla = Teclado.PresionaPan;
 			SpawnPan ();
 		} else if (Input.GetKeyDown (KeyCode.RightArrow) && (ActivaTecla == Teclado.PresionaJamon || ActivaTecla == Teclado.PresionaCualquiera)){
-			
+			ActivaTecla = Teclado.PresionaJamon;
 			SpawnJamon ();
 		} else if (Input.GetKeyDown (KeyCode.DownArrow) && (ActivaTecla == Teclado.PresionaQueso || ActivaTecla == Teclado.PresionaCualquiera)){
-			
+			ActivaTecla = Teclado.PresionaQueso;
 			SpawnQueso ();		
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && (ActivaTecla == Teclado.PresionaJitomate || ActivaTecla == Teclado.PresionaCualquiera)){
-			
+			ActivaTecla = Teclado.PresionaJitomate;
 			SpawnJitomate ();
 		}
 
 		if (Input.GetKeyUp (KeyCode.UpArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaPan || ActivaTecla == Teclado.PresionaCualquiera) ) {
+			ActivaTecla = Teclado.PresionaCualquiera;
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 		} else if (Input.GetKeyUp (KeyCode.RightArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaJamon || ActivaTecla == Teclado.PresionaCualquiera)) {
+			ActivaTecla = Teclado.PresionaCualquiera;
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 		} else if (Input.GetKeyUp (KeyCode.DownArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaQueso || ActivaTecla == Teclado.PresionaCualquiera)) {
+			ActivaTecla = Teclado.PresionaCualquiera;
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
-		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaQueso || ActivaTecla == Teclado.PresionaCualquiera) ) {
+		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null && (ActivaTecla == Teclado.PresionaJitomate || ActivaTecla == Teclado.PresionaCualquiera)) {
+			ActivaTecla = Teclado.PresionaCualquiera;
 			Destroy(_ingredienteClon);
 			_ingredienteClon = null;
 		} 
