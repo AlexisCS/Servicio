@@ -5,32 +5,73 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Collections;
 
+public enum Teclado {SinPresionar, PresionaPan, PresionaJamon, PresionaQueso, PresionaJitomate, PresionaCualquiera}
+public enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
+
 public class AdminNivel3 : MonoBehaviour {
 
 	public GameObject[] interfaz;
 	public GameObject[] ingredientes;
 	public Text noRepeticionesExito1, noRepeticionesExito2, noRepeticionesExito3;
+	public Button ayudaBoton;
 
-	public int _numeroDeIngredientes, _numeroDeRepeticiones;
-	public float tiempoDePausaEntreIngredientes;
+	private static List <List<ActivaPanelDedos>> guardaResultados;
+	public static List <List<ActivaPanelDedos>> GuardaResultados{
+		get{ 
+			return guardaResultados;
+		}
+	}
 
+	private static List <ActivaPanelDedos> ingredientesAleatorios;
+	public static List <ActivaPanelDedos> IngredientesAleatorios{
+		get {
+			return ingredientesAleatorios;
+		}
+	}
+
+	public void BotonRegresar(){
+		interfaz [6].gameObject.SetActive (true);
+	}
+
+	public void BotonSi(){
+		SceneManager.LoadScene (1);
+	}
+
+	public void BotonNo(){
+		interfaz [6].gameObject.SetActive (false);
+	}
+
+	public void BotonEntendido(){
+		interfaz [7].gameObject.SetActive (false);
+		interfaz [8].gameObject.SetActive (false);
+	}
+
+	public void ActivaPanelAyuda(){
+		switch (_mano) {
+		case 0:
+			interfaz [8].gameObject.SetActive (true);
+			break;
+		case 1:
+			interfaz [7].gameObject.SetActive (true);
+			break;
+		}
+	}
+		
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
-	private int _contadorCapa, _contadorIngredientesDeUsuario, _limite, _aciertos, _errores;
+	private int _numeroDeIngredientes, _numeroDeRepeticiones, _mano, _contadorCapa, _contadorIngredientesDeUsuario, _limite, _aciertos, _errores;
+	private float _tiempoDePausaEntreIngredientes;
 	private List <Transform> _posicionDeIngredientesClon; 
 	private List <ActivaPanelDedos>[] _guardaErrores;
-	private List <List<ActivaPanelDedos>> _guardaResultados;
-	private List <ActivaPanelDedos> _ingredientesDeUsuario, _ingredientesAleatorios;
+	private List <ActivaPanelDedos> _ingredientesDeUsuario;
 	private Dictionary<int, List<ActivaPanelDedos>> _informacionPartida;
 
 
 	enum ActivaPanelInteractivo {SinPanel, Bienvenido, Inicio, Juegue, ExitoParcial, Reinicio, Exito}
 	ActivaPanelInteractivo PanelActivado;
 
-	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
 
-	enum Teclado {SinPresionar, PresionaPan, PresionaJamon, PresionaQueso, PresionaJitomate, PresionaCualquiera}
 	Teclado ActivaTecla;
 
 	void OnEnable(){
@@ -48,23 +89,30 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void Awake(){
+		Admin_level0.datos = new InfoPartida ();
+		_mano = Admin_level0.datos.mano;
+		_numeroDeIngredientes = Admin_level0.datos.numeroDeIngredientesNivel3;
+		_numeroDeRepeticiones = Admin_level0.datos.numeroDeRepeticionesNivel3;
+		ayudaBoton.gameObject.SetActive (false);
+		interfaz [0].gameObject.SetActive (true);
 		_ingredientesDeUsuario = new List<ActivaPanelDedos> ();
-		_ingredientesAleatorios = new List<ActivaPanelDedos> ();
+		ingredientesAleatorios = new List<ActivaPanelDedos> ();
 		_posicionDeIngredientesClon = new List<Transform> ();
 		_guardaErrores = new List<ActivaPanelDedos>[_numeroDeRepeticiones];
 		for (int i = 0; i <= _numeroDeRepeticiones - 1; i++) {
 			_guardaErrores[i] = new List<ActivaPanelDedos>();
 		}
-		_guardaResultados = new List<List<ActivaPanelDedos>> ();
+		guardaResultados = new List<List<ActivaPanelDedos>> ();
 		ActivaTecla = Teclado.SinPresionar;
 		PanelActivado = ActivaPanelInteractivo.SinPanel;
+		_tiempoDePausaEntreIngredientes = 0.5f;
 		_contadorCapa = 1;
 		_aciertos = 0;
 		_errores = 0;
 		_contadorIngredientesDeUsuario = 0;
 		_limite = 0;
+
 	}
-		
 
 	void AgregaPan(){
 		_ingredienteClon = null;
@@ -179,7 +227,7 @@ public class AdminNivel3 : MonoBehaviour {
 	void GeneraSecuenciaAleatoria(){
 		int ingredienteAnterior = 0; 
 		int numeroAleatorio = 0; 
-		_ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (0));
+		ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (0));
 		for (int i = 3; i <= _numeroDeIngredientes; i++) {
 			if (i == 3 || i == _numeroDeIngredientes) {
 				numeroAleatorio = Random.Range (1, 4);
@@ -192,11 +240,11 @@ public class AdminNivel3 : MonoBehaviour {
 					numeroAleatorio = (numeroAleatorio == 0) ? 1 : (numeroAleatorio-1);
 				} 			
 			}
-			_ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
+			ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
 			ingredienteAnterior = numeroAleatorio;
 
 		}
-		_ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (0));
+		ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (0));
 	}
 
 	ActivaPanelDedos SeleccionaIngredienteAleatorio(int semilla){
@@ -214,8 +262,8 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	IEnumerator GeneraSandwich(){
-		for (int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
-			switch (_ingredientesAleatorios [i]) {
+		for (int i = 0; i <= ingredientesAleatorios.Count - 1; i++) {
+			switch (ingredientesAleatorios [i]) {
 			case ActivaPanelDedos.Indice:
 				SpawnPanAleatorio ();
 				break;
@@ -229,32 +277,31 @@ public class AdminNivel3 : MonoBehaviour {
 				SpawnJitomateAleatorio ();
 				break;
 			}
-			yield return new WaitForSeconds (tiempoDePausaEntreIngredientes);
+			yield return new WaitForSeconds (_tiempoDePausaEntreIngredientes);
 		}
-		yield return new WaitForSeconds (2.0f);
+		yield return new WaitForSeconds (1.5f);
 		ActivaTecla = Teclado.PresionaCualquiera;
 	}
 		
 
 	void ComparaIngredientes(){
-		for (int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
-			if (_ingredientesAleatorios [i] == _ingredientesDeUsuario [i]) {
+		for (int i = 0; i <= ingredientesAleatorios.Count - 1; i++) {
+			if (ingredientesAleatorios [i] == _ingredientesDeUsuario [i]) {
 				_aciertos += 1;
 			} else {
-				_guardaErrores [_limite].Add(_ingredientesAleatorios[i]);
+				_guardaErrores [_limite].Add(ingredientesAleatorios[i]);
 				_errores += 1;
 			}
 		}
-		Debug.Log (_errores);
 		InformacionDePartida (_guardaErrores[_limite]);
 		_limite++;
 	}
 
 	void InformacionDePartida(List<ActivaPanelDedos> errores){
-		_guardaResultados.Add (errores);
-		for (int i = 0; i < _guardaResultados.Count; i++) {
+		guardaResultados.Add (errores);
+		for (int i = 0; i < guardaResultados.Count; i++) {
 			Debug.Log ("Nivel: "+i+"\n");
-			List <ActivaPanelDedos> temp = _guardaResultados [i];
+			List <ActivaPanelDedos> temp = guardaResultados [i];
 			for (int j = 0; j < temp.Count; j++) {
 				Debug.Log (temp[j]);
 			}
@@ -263,28 +310,29 @@ public class AdminNivel3 : MonoBehaviour {
 
 	}
 		
-	IEnumerator AnimacionSalto(){
-		yield return new WaitForSeconds (3.0f);
-		Vector3 temp;
-		for ( int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
-			temp = _posicionDeIngredientesClon [i].transform.position;
-			temp.y += (0.12f)*i;
-			_posicionDeIngredientesClon [i].transform.position = temp;
-			_posicionDeIngredientesClon [i].GetComponent <Rigidbody2D> ().bodyType = RigidbodyType2D.Kinematic;
-		}
-
-		yield return new WaitForSeconds (3.0f);
-		for ( int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {			
-			_posicionDeIngredientesClon [i].GetComponent <Rigidbody2D> ().bodyType = RigidbodyType2D.Dynamic;
-		}
-		StartCoroutine (AnimacionSalto ());
-	}
-
+//	IEnumerator AnimacionSalto(){
+//		yield return new WaitForSeconds (3.0f);
+//		Vector3 temp;
+//		for ( int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {
+//			temp = _posicionDeIngredientesClon [i].transform.position;
+//			temp.y += (0.12f)*i;
+//			_posicionDeIngredientesClon [i].transform.position = temp;
+//			_posicionDeIngredientesClon [i].GetComponent <Rigidbody2D> ().bodyType = RigidbodyType2D.Kinematic;
+//		}
+//
+//		yield return new WaitForSeconds (3.0f);
+//		for ( int i = 0; i <= _ingredientesAleatorios.Count - 1; i++) {			
+//			_posicionDeIngredientesClon [i].GetComponent <Rigidbody2D> ().bodyType = RigidbodyType2D.Dynamic;
+//		}
+//		StartCoroutine (AnimacionSalto ());
+//	}
+//
 	void Reinicio(){
 		if (_limite == _numeroDeRepeticiones) {
 			ActivaTecla = Teclado.SinPresionar;
 			PanelActivado = ActivaPanelInteractivo.Exito;
 			ActivaPanel ();
+			return;
 		}
 
 		if (_limite < _numeroDeRepeticiones) {
@@ -307,15 +355,14 @@ public class AdminNivel3 : MonoBehaviour {
 			PanelActivado = ActivaPanelInteractivo.Inicio;
 			break;
 		case ActivaPanelInteractivo.Juegue:
+			ayudaBoton.gameObject.SetActive (true);
 			interfaz [1].gameObject.SetActive (false);
 			GeneraSecuenciaAleatoria ();
 			StartCoroutine (GeneraSandwich ());
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
-			Debug.Log (_numeroDeIngredientes);
 			int temp;
 			temp = _numeroDeIngredientes / 2;
-			Debug.Log (temp);
 			if (_errores == 0) {
 				interfaz [2].gameObject.SetActive (true);
 				noRepeticionesExito1.text = _limite + " de " +_numeroDeRepeticiones;
@@ -342,6 +389,7 @@ public class AdminNivel3 : MonoBehaviour {
 	void Exito(){
 		SceneManager.LoadScene (9);
 	}
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.UpArrow) || Input.GetKeyDown (KeyCode.RightArrow) || Input.GetKeyDown (KeyCode.DownArrow) || Input.GetKeyDown (KeyCode.LeftArrow)
@@ -362,6 +410,7 @@ public class AdminNivel3 : MonoBehaviour {
 				PanelActivado = ActivaPanelInteractivo.Reinicio;
 				ActivaPanel ();
 				Reinicio ();
+				return;
 			}
 		}
 

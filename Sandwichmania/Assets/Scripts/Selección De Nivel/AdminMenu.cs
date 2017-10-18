@@ -39,7 +39,7 @@ public class AdminMenu : MonoBehaviour {
 			break;
 		case 3:
 			panels [0].gameObject.SetActive (false);
-			panels [4].gameObject.SetActive (true);
+			panels [7].gameObject.SetActive (true);
 			break;
 		}
 	}
@@ -95,6 +95,31 @@ public class AdminMenu : MonoBehaviour {
 		panels [4].gameObject.SetActive (true);
 	}
 
+	public void IngresaInfoDeRutinaNivel3(){
+		if (cantidadDeIngredientes.text.Length.Equals (0)) {
+			Advertencia.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
+			return;
+		}
+		if (cantidadDeRepeticiones.text.Length.Equals (0)) {
+			Advertencia.text = "El mínimo de repeticiones es 1 y el míximo de 100 ...";
+			return;
+		}
+		int cantidadDeIngredientesTemp=int.Parse (cantidadDeIngredientes.text);
+		if (cantidadDeIngredientesTemp < 5 || cantidadDeIngredientesTemp > 15) {
+			Advertencia.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
+			return;
+		}
+		int cantidadDeRepeticionesTemp=int.Parse (cantidadDeRepeticiones.text);
+		if (cantidadDeRepeticionesTemp == 0 || cantidadDeRepeticionesTemp > 100) {
+			Advertencia.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
+			return;
+		} 
+		Admin_level0.datos.numeroDeRepeticionesNivel3 = cantidadDeRepeticionesTemp;
+		Admin_level0.datos.numeroDeIngredientesNivel3 = cantidadDeIngredientesTemp;
+		panels [7].gameObject.SetActive (false);
+		panels [4].gameObject.SetActive (true);
+	}
+
 	public void RegresaBoton (int seccion) {
 		switch (seccion) {
 		case 0:
@@ -123,6 +148,10 @@ public class AdminMenu : MonoBehaviour {
 				panels [0].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
 			}
+			break;
+		case 4:
+			panels [0].gameObject.SetActive (true);
+			panels [7].gameObject.SetActive (false);
 			break;
 		}
 	}
