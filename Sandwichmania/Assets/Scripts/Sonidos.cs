@@ -16,6 +16,8 @@ public class Sonidos : MonoBehaviour {
 		AdminNivel2.AudiodeExito += InicioAudioExito;
 		AdminNivel2SinRutina.AudioDeJuego += InicioMusicaAmbiente;
 		AdminNivel2SinRutina.AudiodeExito += InicioAudioExito;
+		AdminNivel3.AudioDeJuegoNivel3 += InicioMusicaAmbiente;
+		AdminNivel3.AudiodeExitoNivel3 += InicioAudioExito;
 	}
 
 	void OnDisable(){
@@ -26,16 +28,17 @@ public class Sonidos : MonoBehaviour {
 		AdminNivel2.AudiodeExito -= InicioAudioExito;
 		AdminNivel2SinRutina.AudioDeJuego -= InicioMusicaAmbiente;
 		AdminNivel2SinRutina.AudiodeExito -= InicioAudioExito;
+		AdminNivel3.AudioDeJuegoNivel3 -= InicioMusicaAmbiente;
+		AdminNivel3.AudiodeExitoNivel3 -= InicioAudioExito;
 	}
 
 	void OnLoadScene(Scene scene,LoadSceneMode mode){
-		if ((scene.buildIndex == 0 || scene.buildIndex == 1 )) {
-			_audioDeEscena.clip = sonidos [0];
-			_audioDeEscena.loop = true;
-			if(!_audioDeEscena.isPlaying)
-				_audioDeEscena.Play ();
-			
-		} 
+		if (scene.buildIndex >=3 && scene.buildIndex <=6)
+			return;
+		_audioDeEscena.clip = sonidos [0];
+		_audioDeEscena.loop = true;
+		if(!_audioDeEscena.isPlaying)
+			_audioDeEscena.Play ();
 	}
 
 	void Awake(){

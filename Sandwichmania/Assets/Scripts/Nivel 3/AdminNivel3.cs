@@ -10,10 +10,15 @@ public enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 
 public class AdminNivel3 : MonoBehaviour {
 
+	public delegate void Audio ();
+	public static event Audio AudioDeJuegoNivel3;
+	public static event Audio AudiodeExitoNivel3;
+
 	public GameObject[] interfaz;
 	public GameObject[] ingredientes;
 	public Text noRepeticionesExito1, noRepeticionesExito2, noRepeticionesExito3;
 	public Button ayudaBoton;
+	public AudioClip audioColision;
 
 	private static List <List<ActivaPanelDedos>> guardaResultados;
 	public static List <List<ActivaPanelDedos>> GuardaResultados{
@@ -59,6 +64,7 @@ public class AdminNivel3 : MonoBehaviour {
 		
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
+	private AudioSource _audioSource;
 	private int _numeroDeIngredientes, _numeroDeRepeticiones, _mano, _contadorCapa, _contadorIngredientesDeUsuario, _limite, _aciertos, _errores;
 	private float _tiempoDePausaEntreIngredientes;
 	private List <Transform> _posicionDeIngredientesClon; 
@@ -89,7 +95,6 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void Awake(){
-		Admin_level0.datos = new InfoPartida ();
 		_mano = Admin_level0.datos.mano;
 		_numeroDeIngredientes = Admin_level0.datos.numeroDeIngredientesNivel3;
 		_numeroDeRepeticiones = Admin_level0.datos.numeroDeRepeticionesNivel3;
@@ -102,6 +107,7 @@ public class AdminNivel3 : MonoBehaviour {
 		for (int i = 0; i <= _numeroDeRepeticiones - 1; i++) {
 			_guardaErrores[i] = new List<ActivaPanelDedos>();
 		}
+		_audioSource = GetComponent <AudioSource> ();
 		guardaResultados = new List<List<ActivaPanelDedos>> ();
 		ActivaTecla = Teclado.SinPresionar;
 		PanelActivado = ActivaPanelInteractivo.SinPanel;
@@ -115,6 +121,7 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaPan(){
+		_audioSource.PlayOneShot (audioColision, 1.0f);
 		_ingredienteClon = null;
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Indice);
@@ -129,6 +136,7 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaJamon(){
+		_audioSource.PlayOneShot (audioColision, 1.0f);
 		_ingredienteClon = null;
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Medio);
@@ -142,6 +150,7 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaQueso(){
+		_audioSource.PlayOneShot (audioColision, 1.0f);
 		_ingredienteClon = null;
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Anular);
@@ -155,6 +164,7 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaJitomate(){
+		_audioSource.PlayOneShot (audioColision, 1.0f);
 		_ingredienteClon = null;
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Meñique);
@@ -299,15 +309,14 @@ public class AdminNivel3 : MonoBehaviour {
 
 	void InformacionDePartida(List<ActivaPanelDedos> errores){
 		guardaResultados.Add (errores);
-		for (int i = 0; i < guardaResultados.Count; i++) {
-			Debug.Log ("Nivel: "+i+"\n");
-			List <ActivaPanelDedos> temp = guardaResultados [i];
-			for (int j = 0; j < temp.Count; j++) {
-				Debug.Log (temp[j]);
-			}
-			Debug.Log ("-----------------------------------------------");
-		}
-
+//		for (int i = 0; i < guardaResultados.Count; i++) {
+//			Debug.Log ("Nivel: "+i+"\n");
+//			List <ActivaPanelDedos> temp = guardaResultados [i];
+//			for (int j = 0; j < temp.Count; j++) {
+//				Debug.Log (temp[j]);
+//			}
+//			Debug.Log ("-----------------------------------------------");
+//		}
 	}
 		
 //	IEnumerator AnimacionSalto(){
@@ -326,7 +335,7 @@ public class AdminNivel3 : MonoBehaviour {
 //		}
 //		StartCoroutine (AnimacionSalto ());
 //	}
-//
+
 	void Reinicio(){
 		if (_limite == _numeroDeRepeticiones) {
 			ActivaTecla = Teclado.SinPresionar;
@@ -355,6 +364,9 @@ public class AdminNivel3 : MonoBehaviour {
 			PanelActivado = ActivaPanelInteractivo.Inicio;
 			break;
 		case ActivaPanelInteractivo.Juegue:
+			if (AudioDeJuegoNivel3 != null) {
+				AudioDeJuegoNivel3 ();
+			}
 			ayudaBoton.gameObject.SetActive (true);
 			interfaz [1].gameObject.SetActive (false);
 			GeneraSecuenciaAleatoria ();
@@ -380,6 +392,9 @@ public class AdminNivel3 : MonoBehaviour {
 			interfaz [4].gameObject.SetActive (false);
 			break;
 		case ActivaPanelInteractivo.Exito:
+			if (AudiodeExitoNivel3 != null) {
+				AudiodeExitoNivel3 ();
+			}
 			interfaz [5].gameObject.SetActive (true);
 			break;
 		}

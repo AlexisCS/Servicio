@@ -14,9 +14,9 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 		SceneManager.LoadScene (1);
 	}
 
-	private float _cantidadDePan, _cantidadDeJamon, _cantidadDeQueso, _cantidadDeJitomate; 
-	private float _erroresPan, _erroresJamon, _erroresQueso, _erroresJitomate;
-	private float _repeticiones;
+	private int _cantidadDePan, _cantidadDeJamon, _cantidadDeQueso, _cantidadDeJitomate; 
+	private int _erroresPan, _erroresJamon, _erroresQueso, _erroresJitomate;
+	private int _repeticiones;
 
 	void Awake(){
 		_repeticiones = Admin_level0.datos.numeroDeRepeticionesNivel3;
@@ -61,9 +61,9 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 		_cantidadDeJitomate = _cantidadDeJitomate * _repeticiones;
 	}
 
-	float CalculaPorcentajeError(float cantidadDeIngrediente, float errores){
+	float CalculaPorcentajeError(int cantidadDeIngrediente, int errores){
 		float porcentajeDeError;
-		porcentajeDeError = ((cantidadDeIngrediente - errores) / cantidadDeIngrediente)*100;
+		porcentajeDeError = (((cantidadDeIngrediente - errores)*1f) / cantidadDeIngrediente)*100;
 		porcentajeDeError = 100 - porcentajeDeError;
 		return Mathf.Round (porcentajeDeError);
 	}

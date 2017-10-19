@@ -6,14 +6,15 @@ using UnityEngine;
 
 public class AdminMenu : MonoBehaviour {
 	public GameObject[] panels;
-	public InputField cantidadDeIngredientes, cantidadDeRepeticiones;
-	public Text Advertencia;
+	public InputField cantidadDeIngredientes, cantidadDeRepeticiones, cantidadDeIngredientesNivel3, cantidadDeRepeticionesNivel3;
+	public Text Advertencia, advertenciaNivel3, nombreDeUsuario;
 
 	// Use this for initialization
 	void Start () {
 		//solo para probar   !!!!!!!!!!!!!!!!!!!!!!!!
-		Admin_level0.datos = new InfoPartida ();
+		//Admin_level0.datos = new InfoPartida ();
 		//BORRAR!!!!!!!!!!!!!!!!!!!!!!!!
+		ImprimeNombreUsuario ();
 	}
 	
 	// Update is called once per frame
@@ -48,7 +49,8 @@ public class AdminMenu : MonoBehaviour {
 		Admin_level0.datos.mano = mano;
 		Calibrar ();
 	}
-		
+
+
 
 	public void DecideTipoDeRutina(int rutina){
 		Admin_level0.datos.rutina = rutina;
@@ -96,22 +98,22 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	public void IngresaInfoDeRutinaNivel3(){
-		if (cantidadDeIngredientes.text.Length.Equals (0)) {
-			Advertencia.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
+		if (cantidadDeIngredientesNivel3.text.Length.Equals (0)) {
+			advertenciaNivel3.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
 			return;
 		}
-		if (cantidadDeRepeticiones.text.Length.Equals (0)) {
-			Advertencia.text = "El mínimo de repeticiones es 1 y el míximo de 100 ...";
+		if (cantidadDeRepeticionesNivel3.text.Length.Equals (0)) {
+			advertenciaNivel3.text = "El mínimo de repeticiones es 1 y el míximo de 100 ...";
 			return;
 		}
-		int cantidadDeIngredientesTemp=int.Parse (cantidadDeIngredientes.text);
+		int cantidadDeIngredientesTemp=int.Parse (cantidadDeIngredientesNivel3.text);
 		if (cantidadDeIngredientesTemp < 5 || cantidadDeIngredientesTemp > 15) {
-			Advertencia.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
+			advertenciaNivel3.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
 			return;
 		}
-		int cantidadDeRepeticionesTemp=int.Parse (cantidadDeRepeticiones.text);
+		int cantidadDeRepeticionesTemp=int.Parse (cantidadDeRepeticionesNivel3.text);
 		if (cantidadDeRepeticionesTemp == 0 || cantidadDeRepeticionesTemp > 100) {
-			Advertencia.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
+			advertenciaNivel3.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
 			return;
 		} 
 		Admin_level0.datos.numeroDeRepeticionesNivel3 = cantidadDeRepeticionesTemp;
@@ -173,6 +175,10 @@ public class AdminMenu : MonoBehaviour {
 			SceneManager.LoadScene (2);
 			Debug.Log ("Nivel =" + Admin_level0.datos.nivel + ", Mano (0-> Izq, 1-> Der) =" + Admin_level0.datos.mano);
 		}
+	}
+
+	void ImprimeNombreUsuario(){
+		nombreDeUsuario.text = Admin_level0.datos.id.ToString ();
 	}
 }
 

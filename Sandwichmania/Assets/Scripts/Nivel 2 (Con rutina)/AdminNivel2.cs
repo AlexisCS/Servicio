@@ -109,7 +109,6 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		}
 		if(_count <_secuencia.Count){
-			Debug.Log (_count+"y"+_secuencia.Count);
 			_count += 1;
 		}
 

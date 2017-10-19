@@ -151,7 +151,6 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			break;
 		}
 		if(_count <_secuencia.Count){
-			Debug.Log (_count+"y"+_secuencia.Count);
 			_count += 1;
 		}
 

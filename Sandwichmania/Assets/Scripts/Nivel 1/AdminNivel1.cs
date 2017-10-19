@@ -50,7 +50,6 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void Awake () {
-		Admin_level0.datos = new InfoPartida ();
 		interfaz [0].gameObject.SetActive (true);
 		interfaz [1].gameObject.SetActive (true);
 		interfaz [11].gameObject.SetActive (false);
@@ -58,7 +57,7 @@ public class AdminNivel1 : MonoBehaviour {
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		_audioSource = GetComponent<AudioSource> ();
 		_mano = Admin_level0.datos.mano;
-		_umbral = 3;
+		_umbral = 1;
 		_panListo = false;
 		_jamonListo = true;
 		_quesoListo = true;
@@ -211,6 +210,9 @@ public class AdminNivel1 : MonoBehaviour {
 			PanelActivado = ActivaPanelInteractivo.Juegue;
 			break;
 		case ActivaPanelInteractivo.Exito:
+			if (AudioExito != null) {
+				AudioExito ();
+			}
 			DesactivaIngredientes ();
 			interfaz [10].gameObject.SetActive (true);
 			break;
@@ -264,6 +266,9 @@ public class AdminNivel1 : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.UpArrow) && PanelActivado == ActivaPanelInteractivo.Siguiente) {
+			if (MusicaAmbiente != null) {
+				MusicaAmbiente ();
+			}
 			PanelActivado = ActivaPanelInteractivo.Inicio;
 			MuestraInstrucciones ();
 		}
