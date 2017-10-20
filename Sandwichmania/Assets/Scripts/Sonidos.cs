@@ -3,10 +3,25 @@ using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class Sonidos : MonoBehaviour {
-
+	public static bool reproduceSonido = true;
 	public static Sonidos manejador;
 	public AudioClip[] sonidos;
 	private AudioSource _audioDeEscena;
+	private bool _temp;
+
+
+	public static void EnciedeOApAGA(bool v){
+		GameObject Cam = GameObject.Find ("Main Camera");
+		if (Cam != null)
+			Debug.Log ("encontre main camera");
+		AudioSource temp = Cam.GetComponent <AudioSource> ();
+		if (v) { //encendido
+			Debug.Log ("enntre estatic");
+			if (!temp.isPlaying)
+				temp.Play ();
+		} else
+			temp.Pause();
+	}
 
 	void OnEnable(){
 		SceneManager.sceneLoaded += OnLoadScene;
@@ -37,14 +52,15 @@ public class Sonidos : MonoBehaviour {
 			return;
 		_audioDeEscena.clip = sonidos [0];
 		_audioDeEscena.loop = true;
-		if(!_audioDeEscena.isPlaying)
-			_audioDeEscena.Play ();
+//		if(!_audioDeEscena.isPlaying)
+//			_audioDeEscena.Play ();
 	}
 
 	void Awake(){
+		//_temp = ControlDeAudio.silenciar;
 		_audioDeEscena = this.GetComponent<AudioSource> ();
 		_audioDeEscena.clip = sonidos [0];
-		_audioDeEscena.Play ();
+		//_audioDeEscena.Play ();
 		if (manejador == null) {
 			DontDestroyOnLoad (this.transform);
 			manejador = this;
@@ -67,6 +83,20 @@ public class Sonidos : MonoBehaviour {
 		_audioDeEscena.Play ();
 		_audioDeEscena.loop = false;
 	}
+
+	void PausaAudio(){
+		if (_temp == true) {
+			_audioDeEscena.Pause ();
+		}
+
+	}
+
+	void ContinuaReproduccion(){
+		if (_temp == false) {
+			_audioDeEscena.Play ();
+		}
+	}
+
 
 
 	void Update(){
