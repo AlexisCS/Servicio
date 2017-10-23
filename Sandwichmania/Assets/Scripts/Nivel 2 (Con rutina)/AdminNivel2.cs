@@ -8,20 +8,19 @@ using UnityEngine.Collections;
 public class AdminNivel2 : MonoBehaviour {
 
 	public delegate void Audio ();
+	public static event Audio Colision;
 	public static event Audio AudioDeJuego;
 	public static event Audio AudiodeExito;
 
 	public GameObject[] ingredientes;
 	public GameObject[] interfaz;
 	public Text mensajeFelicitacion;
-	public AudioClip AudioColision;
 
 	public int numeroDeRepeticiones;
 
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
 	private List<ActivaPanelDedos> _secuencia;
-	private AudioSource _audioSource;
 	private int _contadorCapa, _count, _limite, _mano;
 	private bool _pan, _jamon, _queso, _jitomate;
 
@@ -37,7 +36,6 @@ public class AdminNivel2 : MonoBehaviour {
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interfaz [0].gameObject.SetActive (true);
 		interfaz [13].gameObject.SetActive (true);
-		_audioSource = GetComponent <AudioSource> ();
 		_mano = Admin_level0.datos.mano;
 		_contadorCapa = 0;
 		_count = 0;
@@ -115,25 +113,25 @@ public class AdminNivel2 : MonoBehaviour {
 	}
 
 	void AgregaPan(){
-		_audioSource.PlayOneShot (AudioColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		DecideSecuencia ();
 	}
 
 	void AgregaJamon(){
-		_audioSource.PlayOneShot (AudioColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		DecideSecuencia ();
 	}
 
 	void AgregaQueso(){
-		_audioSource.PlayOneShot (AudioColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		DecideSecuencia ();
 	}
 
 	void AgregaJitomate(){
-		_audioSource.PlayOneShot (AudioColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		DecideSecuencia ();
 	}

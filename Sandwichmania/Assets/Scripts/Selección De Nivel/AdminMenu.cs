@@ -11,9 +11,6 @@ public class AdminMenu : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		//solo para probar   !!!!!!!!!!!!!!!!!!!!!!!!
-		//Admin_level0.datos = new InfoPartida ();
-		//BORRAR!!!!!!!!!!!!!!!!!!!!!!!!
 		ImprimeNombreUsuario ();
 	}
 	

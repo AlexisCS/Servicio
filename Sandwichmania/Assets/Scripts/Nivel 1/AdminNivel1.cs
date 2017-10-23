@@ -6,19 +6,18 @@ using UnityEngine.SceneManagement;
 
 public class AdminNivel1 : MonoBehaviour {
 	public delegate void Audio ();
+	public static event Audio Colision;
 	public static event Audio MusicaAmbiente;
 	public static event Audio AudioExito;
 
 	public GameObject[] ingredientes;
 	public GameObject[] interfaz;
-	public AudioClip sonidoColision;
 	public Text cantidadPanText;
 	public Text cantidadJamonText;
 	public Text cantidadQuesoText;
 	public Text cantidadJitomateText;
 
 	private GameObject _ingredienteClon;
-	private AudioSource _audioSource;
 	private int _mano, _seleccionPanel, _cantidad, _umbral;
 	private float _tiempoDeApiladoPan, _tiempoDeApiladoJamon, _tiempoDeApiladoQueso, _tiempoDeApiladoJitomate;
 	private bool _panListo, _jamonListo, _quesoListo, _jitomateListo, _iniciaCronometro;
@@ -55,9 +54,8 @@ public class AdminNivel1 : MonoBehaviour {
 		interfaz [11].gameObject.SetActive (false);
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
-		_audioSource = GetComponent<AudioSource> ();
 		_mano = Admin_level0.datos.mano;
-		_umbral = 1;
+		_umbral = 3;
 		_panListo = false;
 		_jamonListo = true;
 		_quesoListo = true;
@@ -71,7 +69,7 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 		
 	void ActualizaCantidadPan (){
-		_audioSource.PlayOneShot (sonidoColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		_cantidad += 1;
 		cantidadPanText.text = "Pan:" + _cantidad;
@@ -86,7 +84,7 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void ActualizaCantidadJamon (){
-		_audioSource.PlayOneShot (sonidoColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		_cantidad += 1;
 		cantidadJamonText.text = "Jamon:" + _cantidad;
@@ -102,7 +100,7 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void ActualizaCantidadQueso (){
-		_audioSource.PlayOneShot (sonidoColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		_cantidad += 1;
 		cantidadQuesoText.text = "Queso:" + _cantidad;
@@ -119,7 +117,7 @@ public class AdminNivel1 : MonoBehaviour {
 	}
 
 	void ActualizaCantidadJitomate (){
-		_audioSource.PlayOneShot (sonidoColision, 1.0F);
+		Colision ();
 		_ingredienteClon = null;
 		_cantidad += 1;
 		cantidadJitomateText.text = "Jitomate:" + _cantidad;

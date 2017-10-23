@@ -7,7 +7,7 @@ public class Sonidos : MonoBehaviour {
 	public static Sonidos manejador;
 	public AudioClip[] sonidos;
 	private AudioSource _audioDeEscena;
-	private bool _temp;
+	private AudioSource _colision;
 
 
 	public static void EnciedeOApAGA(bool v){
@@ -25,24 +25,40 @@ public class Sonidos : MonoBehaviour {
 
 	void OnEnable(){
 		SceneManager.sceneLoaded += OnLoadScene;
+		//--------------------------------------------------------//
+		AdminNivel1.Colision += Colision;
 		AdminNivel1.MusicaAmbiente += InicioMusicaAmbiente;
 		AdminNivel1.AudioExito += InicioAudioExito;
+		//--------------------------------------------------------//
+		AdminNivel2.Colision += Colision;
 		AdminNivel2.AudioDeJuego += InicioMusicaAmbiente;
 		AdminNivel2.AudiodeExito += InicioAudioExito;
+		//--------------------------------------------------------//
+		AdminNivel2SinRutina.Colision += Colision;
 		AdminNivel2SinRutina.AudioDeJuego += InicioMusicaAmbiente;
 		AdminNivel2SinRutina.AudiodeExito += InicioAudioExito;
+		//--------------------------------------------------------//
+		AdminNivel3.Colision += Colision;
 		AdminNivel3.AudioDeJuegoNivel3 += InicioMusicaAmbiente;
 		AdminNivel3.AudiodeExitoNivel3 += InicioAudioExito;
 	}
 
 	void OnDisable(){
 		SceneManager.sceneLoaded -= OnLoadScene;
+		//--------------------------------------------------------//
+		AdminNivel1.Colision -= Colision;
 		AdminNivel1.MusicaAmbiente -= InicioMusicaAmbiente;
 		AdminNivel1.AudioExito -= InicioAudioExito;
+		//--------------------------------------------------------//
+		AdminNivel2.Colision -= Colision;
 		AdminNivel2.AudioDeJuego -= InicioMusicaAmbiente;
 		AdminNivel2.AudiodeExito -= InicioAudioExito;
+		//--------------------------------------------------------//
+		AdminNivel2SinRutina.Colision -= Colision;
 		AdminNivel2SinRutina.AudioDeJuego -= InicioMusicaAmbiente;
 		AdminNivel2SinRutina.AudiodeExito -= InicioAudioExito;
+		//--------------------------------------------------------//
+		AdminNivel3.Colision -= Colision;
 		AdminNivel3.AudioDeJuegoNivel3 -= InicioMusicaAmbiente;
 		AdminNivel3.AudiodeExitoNivel3 -= InicioAudioExito;
 	}
@@ -58,6 +74,7 @@ public class Sonidos : MonoBehaviour {
 
 	void Awake(){
 		//_temp = ControlDeAudio.silenciar;
+		_colision = GetComponent <AudioSource> ();
 		_audioDeEscena = this.GetComponent<AudioSource> ();
 		_audioDeEscena.clip = sonidos [0];
 		//_audioDeEscena.Play ();
@@ -71,41 +88,40 @@ public class Sonidos : MonoBehaviour {
 	}
 
 	void InicioMusicaAmbiente(){
-		_audioDeEscena.Stop ();
-		_audioDeEscena.clip = sonidos[1];
-		_audioDeEscena.Play ();
-		_audioDeEscena.loop = true;
+		if (reproduceSonido) {
+			_audioDeEscena.Stop ();
+			_audioDeEscena.clip = sonidos [1];
+			_audioDeEscena.Play ();
+			_audioDeEscena.loop = true;
+		} else {
+			_audioDeEscena.clip = sonidos [1];
+			_audioDeEscena.Pause ();
+		}
 	}
 
 	void InicioAudioExito(){
-		_audioDeEscena.Stop ();
-		_audioDeEscena.clip = sonidos[2];
-		_audioDeEscena.Play ();
-		_audioDeEscena.loop = false;
-	}
-
-	void PausaAudio(){
-		if (_temp == true) {
+		if (reproduceSonido) {
+			_audioDeEscena.Stop ();
+			_audioDeEscena.clip = sonidos [2];
+			_audioDeEscena.Play ();
+			_audioDeEscena.loop = false;
+		} else {
+			_audioDeEscena.clip = sonidos [1];
 			_audioDeEscena.Pause ();
 		}
-
 	}
 
-	void ContinuaReproduccion(){
-		if (_temp == false) {
-			_audioDeEscena.Play ();
+	void Colision(){
+		if (reproduceSonido) {
+			_colision.PlayOneShot (sonidos [3], 1.0f);
+		} else {
+			_colision.Pause ();
 		}
 	}
-
 
 
 	void Update(){
-//		if (condicion) {
-//						manejadorSonido.Stop ();
-//						manejadorSonido.clip = sonidos [2];
-//						manejadorSonido.loop = false;
-//						manejadorSonido.Play ();
-//		}
+		
 	}
 }
 

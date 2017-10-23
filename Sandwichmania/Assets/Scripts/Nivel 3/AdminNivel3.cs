@@ -11,6 +11,7 @@ public enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 public class AdminNivel3 : MonoBehaviour {
 
 	public delegate void Audio ();
+	public static event Audio Colision;
 	public static event Audio AudioDeJuegoNivel3;
 	public static event Audio AudiodeExitoNivel3;
 
@@ -18,7 +19,6 @@ public class AdminNivel3 : MonoBehaviour {
 	public GameObject[] ingredientes;
 	public Text noRepeticionesExito1, noRepeticionesExito2, noRepeticionesExito3;
 	public Button ayudaBoton;
-	public AudioClip audioColision;
 
 	private static List <List<ActivaPanelDedos>> guardaResultados;
 	public static List <List<ActivaPanelDedos>> GuardaResultados{
@@ -64,8 +64,7 @@ public class AdminNivel3 : MonoBehaviour {
 		
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
-	private AudioSource _audioSource;
-	private int _numeroDeIngredientes, _numeroDeRepeticiones, _mano, _contadorCapa, _contadorIngredientesDeUsuario, _limite, _aciertos, _errores;
+	private int _numeroDeIngredientes, _numeroDeRepeticiones, _mano, _contadorCapa, _contadorIngredientesDeUsuario, _limite, _errores;
 	private float _tiempoDePausaEntreIngredientes;
 	private List <Transform> _posicionDeIngredientesClon; 
 	private List <ActivaPanelDedos>[] _guardaErrores;
@@ -107,13 +106,11 @@ public class AdminNivel3 : MonoBehaviour {
 		for (int i = 0; i <= _numeroDeRepeticiones - 1; i++) {
 			_guardaErrores[i] = new List<ActivaPanelDedos>();
 		}
-		_audioSource = GetComponent <AudioSource> ();
 		guardaResultados = new List<List<ActivaPanelDedos>> ();
 		ActivaTecla = Teclado.SinPresionar;
 		PanelActivado = ActivaPanelInteractivo.SinPanel;
 		_tiempoDePausaEntreIngredientes = 0.5f;
 		_contadorCapa = 1;
-		_aciertos = 0;
 		_errores = 0;
 		_contadorIngredientesDeUsuario = 0;
 		_limite = 0;
@@ -121,7 +118,7 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaPan(){
-		_audioSource.PlayOneShot (audioColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Indice);
@@ -136,7 +133,7 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaJamon(){
-		_audioSource.PlayOneShot (audioColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Medio);
@@ -150,7 +147,7 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaQueso(){
-		_audioSource.PlayOneShot (audioColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Anular);
@@ -164,7 +161,7 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void AgregaJitomate(){
-		_audioSource.PlayOneShot (audioColision, 1.0f);
+		Colision ();
 		_ingredienteClon = null;
 		_contadorIngredientesDeUsuario += 1;
 		_ingredientesDeUsuario.Add (ActivaPanelDedos.Meñique);
@@ -297,7 +294,6 @@ public class AdminNivel3 : MonoBehaviour {
 	void ComparaIngredientes(){
 		for (int i = 0; i <= ingredientesAleatorios.Count - 1; i++) {
 			if (ingredientesAleatorios [i] == _ingredientesDeUsuario [i]) {
-				_aciertos += 1;
 			} else {
 				_guardaErrores [_limite].Add(ingredientesAleatorios[i]);
 				_errores += 1;
@@ -346,7 +342,6 @@ public class AdminNivel3 : MonoBehaviour {
 
 		if (_limite < _numeroDeRepeticiones) {
 			_ingredientesDeUsuario.Clear ();
-			_aciertos = 0;
 			_errores = 0;
 			_contadorIngredientesDeUsuario = 0;
 			_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
