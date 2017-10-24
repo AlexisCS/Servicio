@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 
 public class AdminResultadosNivel1 : MonoBehaviour {
 
 	public Text apiladoPan, apiladoJamon, apiladoQueso, apiladoJitomate;
+	public List <Nivel1> temp = new List<Nivel1> ();
 
 	private float _convercionTemp;
 
@@ -15,35 +19,35 @@ public class AdminResultadosNivel1 : MonoBehaviour {
 	}
 
 	void EntregaResultado(){
-		if (Admin_level0.datos.tiempoDedoIndice <= 60f) {
-			_convercionTemp = Mathf.Round (Admin_level0.datos.tiempoDedoIndice * 10f) / 10f;
+		if (AdminMenu.datosNivel1.tiempoDedoIndice <= 60f) {
+			_convercionTemp = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoIndice * 10f) / 10f;
 			apiladoPan.text = "Pan\n-Indice-\n\n" + _convercionTemp + "\nsegundos";
 		} else {
-			_convercionTemp = ConvierteSegundosAMinutos (Admin_level0.datos.tiempoDedoIndice);
+			_convercionTemp = ConvierteSegundosAMinutos (AdminMenu.datosNivel1.tiempoDedoIndice);
 			apiladoPan.text = "Pan\n-Indice-\n\n" + _convercionTemp + "\nminutos";
 		}
 
-		if (Admin_level0.datos.tiempoDedoMedio <= 60f) {
-			_convercionTemp = Mathf.Round (Admin_level0.datos.tiempoDedoMedio * 10f) / 10f;
+		if (AdminMenu.datosNivel1.tiempoDedoMedio <= 60f) {
+			_convercionTemp = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoMedio * 10f) / 10f;
 			apiladoJamon.text = "Jamon\n-Medio-\n\n" + _convercionTemp + "\nsegundos";
 		} else {
-			_convercionTemp = ConvierteSegundosAMinutos (Admin_level0.datos.tiempoDedoMedio);
+			_convercionTemp = ConvierteSegundosAMinutos (AdminMenu.datosNivel1.tiempoDedoMedio);
 			apiladoJamon.text = "Jamon\n-Medio-\n\n" + _convercionTemp + "\nminutos";
 		}
 
-		if (Admin_level0.datos.tiempoDedoAnular <= 60f) {
-			_convercionTemp = Mathf.Round (Admin_level0.datos.tiempoDedoAnular * 10f) / 10f;
+		if (AdminMenu.datosNivel1.tiempoDedoAnular <= 60f) {
+			_convercionTemp = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoAnular * 10f) / 10f;
 			apiladoQueso.text = "Queso\n-Anular-\n\n" + _convercionTemp + "\nsegundos";
 		} else {
-			_convercionTemp = ConvierteSegundosAMinutos (Admin_level0.datos.tiempoDedoAnular);
+			_convercionTemp = ConvierteSegundosAMinutos (AdminMenu.datosNivel1.tiempoDedoAnular);
 			apiladoQueso.text = "Queso\n-Anular-\n\n" + _convercionTemp + "\nminutos";
 		}
 
-		if (Admin_level0.datos.tiempoDedoMeñique <= 60f) {
-			_convercionTemp = Mathf.Round (Admin_level0.datos.tiempoDedoMeñique * 10f) / 10f;
+		if (AdminMenu.datosNivel1.tiempoDedoMeñique <= 60f) {
+			_convercionTemp = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoMeñique * 10f) / 10f;
 			apiladoJitomate.text = "Jitomate\n-Meñique-\n\n" + _convercionTemp + "\nsegundos";
 		} else {
-			_convercionTemp = ConvierteSegundosAMinutos (Admin_level0.datos.tiempoDedoMeñique);
+			_convercionTemp = ConvierteSegundosAMinutos (AdminMenu.datosNivel1.tiempoDedoMeñique);
 			apiladoJitomate.text = "Jitomate\n-Meñique-\n\n" + _convercionTemp + "\nminutos";
 		}
 	}
@@ -56,6 +60,15 @@ public class AdminResultadosNivel1 : MonoBehaviour {
 		
 	void Awake(){
 		EntregaResultado ();
+		//Nivel1 datosTemp=new Nivel1();
+		//datosTemp=AdminMenu.datosNivel1;
+		//temp.Add (datosTemp);
+
+		//temp.Add (AdminMenu.datosNivel1);
+		//Admin_level0.datos.HistorialPartidasNivel1 = temp;
+
+		Admin_level0.datos.HistorialPartidasNivel1.Add (AdminMenu.datosNivel1);
+		GameSaveLoad.Save (Admin_level0.datos);
 	}
 		
 }

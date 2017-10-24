@@ -22,7 +22,8 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	private GameObject[] _destruir;
 	private List<ActivaPanelDedos> _secuencia;
 	private List<ActivaPanelDedos> _guardaIngredientes;
-	private int _contadorCapa, _count, _limite, _mano, _numeroDeRepeticiones, _numeroDeIngredientes;
+	private int _contadorCapa, _count, _limite, _numeroDeRepeticiones, _numeroDeIngredientes;
+	Mano _mano;
 	private bool _pan, _jamon, _queso, _jitomate;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoParcial, SegundoInicio, Exito}
@@ -38,9 +39,9 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		interzas [0].gameObject.SetActive (true);
 		interzas [12].gameObject.SetActive (false);
 		interzas [13].gameObject.SetActive (true);
-		_mano = Admin_level0.datos.mano;
-		_numeroDeIngredientes = Admin_level0.datos.numeroDeIngredientes;
-		_numeroDeRepeticiones = Admin_level0.datos.numeroDeRepeticiones;
+		_mano = AdminMenu.datosNivel2.ManoSeleccionada;
+		_numeroDeIngredientes = AdminMenu.datosNivel2.numeroDeIngredientes;
+		_numeroDeRepeticiones = AdminMenu.datosNivel2.numeroDeRepeticiones;
 		_contadorCapa = 0;
 		_count = 0;
 		_limite = 1;
@@ -183,9 +184,9 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		_ingredienteClon.gameObject.GetComponent<Renderer>().sortingOrder = _contadorCapa;
 	}
 
-	void PanelDedos(int mano){
-		switch (mano) {
-		case 0:
+	void PanelDedos(Mano seleccion){
+		switch (seleccion) {
+		case Mano.Izquierda:
 			if (PanelDedosActivo == ActivaPanelDedos.Indice) {
 				interzas [6].gameObject.SetActive (true);
 				interzas [7].gameObject.SetActive (false);
@@ -208,7 +209,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 				interzas [9].gameObject.SetActive (true);
 			} 
 			break;
-		case 1:
+		case Mano.Derecha:
 			if (PanelDedosActivo == ActivaPanelDedos.Indice) {
 				interzas [2].gameObject.SetActive (true);
 				interzas [3].gameObject.SetActive (false);

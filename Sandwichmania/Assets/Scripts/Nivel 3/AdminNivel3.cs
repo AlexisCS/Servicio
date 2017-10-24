@@ -53,10 +53,10 @@ public class AdminNivel3 : MonoBehaviour {
 
 	public void ActivaPanelAyuda(){
 		switch (_mano) {
-		case 0:
+		case Mano.Izquierda:
 			interfaz [8].gameObject.SetActive (true);
 			break;
-		case 1:
+		case Mano.Derecha:
 			interfaz [7].gameObject.SetActive (true);
 			break;
 		}
@@ -64,7 +64,8 @@ public class AdminNivel3 : MonoBehaviour {
 		
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
-	private int _numeroDeIngredientes, _numeroDeRepeticiones, _mano, _contadorCapa, _contadorIngredientesDeUsuario, _limite, _errores;
+	private int _numeroDeIngredientes, _numeroDeRepeticiones, _contadorCapa, _contadorIngredientesDeUsuario, _limite, _errores;
+	Mano _mano;
 	private float _tiempoDePausaEntreIngredientes;
 	private List <Transform> _posicionDeIngredientesClon; 
 	private List <ActivaPanelDedos>[] _guardaErrores;
@@ -94,9 +95,9 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	void Awake(){
-		_mano = Admin_level0.datos.mano;
-		_numeroDeIngredientes = Admin_level0.datos.numeroDeIngredientesNivel3;
-		_numeroDeRepeticiones = Admin_level0.datos.numeroDeRepeticionesNivel3;
+		_mano = AdminMenu.datosNivel3.ManoSeleccionada;
+		_numeroDeIngredientes = AdminMenu.datosNivel3.numeroDeIngredientes;
+		_numeroDeRepeticiones = AdminMenu.datosNivel3.numeroDeRepeticiones;
 		ayudaBoton.gameObject.SetActive (false);
 		interfaz [0].gameObject.SetActive (true);
 		_ingredientesDeUsuario = new List<ActivaPanelDedos> ();

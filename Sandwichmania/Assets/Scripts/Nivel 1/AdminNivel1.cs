@@ -18,7 +18,8 @@ public class AdminNivel1 : MonoBehaviour {
 	public Text cantidadJitomateText;
 
 	private GameObject _ingredienteClon;
-	private int _mano, _seleccionPanel, _cantidad, _umbral;
+	private int __seleccionPanel, _cantidad, _umbral;
+	Mano _mano;
 	private float _tiempoDeApiladoPan, _tiempoDeApiladoJamon, _tiempoDeApiladoQueso, _tiempoDeApiladoJitomate;
 	private bool _panListo, _jamonListo, _quesoListo, _jitomateListo, _iniciaCronometro;
 
@@ -54,8 +55,8 @@ public class AdminNivel1 : MonoBehaviour {
 		interfaz [11].gameObject.SetActive (false);
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
-		_mano = Admin_level0.datos.mano;
-		_umbral = 3;
+		_mano = AdminMenu.datosNivel1.ManoSeleccionada;
+		_umbral = 1;
 		_panListo = false;
 		_jamonListo = true;
 		_quesoListo = true;
@@ -133,9 +134,9 @@ public class AdminNivel1 : MonoBehaviour {
 		}
 	}
 		
-	void MuestraPanelDedos(int mano){
-		switch (mano) {
-		case 0:
+	void MuestraPanelDedos(Mano seleccion){
+		switch (seleccion) {
+		case Mano.Izquierda:
 			if (PanelDedosActivo == ActivaPanelDedos.Indice) {
 				interfaz [6].gameObject.SetActive (true);
 				interfaz [7].gameObject.SetActive (false);
@@ -158,7 +159,7 @@ public class AdminNivel1 : MonoBehaviour {
 				interfaz [9].gameObject.SetActive (true);
 			} 
 			break;
-		case 1:
+		case Mano.Derecha:
 			if (PanelDedosActivo == ActivaPanelDedos.Indice) {
 				interfaz [2].gameObject.SetActive (true);
 				interfaz [3].gameObject.SetActive (false);
@@ -279,22 +280,22 @@ public class AdminNivel1 : MonoBehaviour {
 
 		if (_panListo == false  && _iniciaCronometro == true) {
 			_tiempoDeApiladoPan += Time.deltaTime;
-			Admin_level0.datos.tiempoDedoIndice = _tiempoDeApiladoPan;
+			AdminMenu.datosNivel1.tiempoDedoIndice = _tiempoDeApiladoPan;
 		}
 
 		if (_jamonListo == false  && _iniciaCronometro == true) {
 			_tiempoDeApiladoJamon += Time.deltaTime;
-			Admin_level0.datos.tiempoDedoMedio = _tiempoDeApiladoJamon;
+			AdminMenu.datosNivel1.tiempoDedoMedio = _tiempoDeApiladoJamon;
 		}
 
 		if (_quesoListo == false  && _iniciaCronometro == true) {
 			_tiempoDeApiladoQueso += Time.deltaTime;
-			Admin_level0.datos.tiempoDedoAnular = _tiempoDeApiladoQueso;
+			AdminMenu.datosNivel1.tiempoDedoAnular = _tiempoDeApiladoQueso;
 		}
 
 		if (_jitomateListo == false  && _iniciaCronometro == true) {
 			_tiempoDeApiladoJitomate += Time.deltaTime;
-			Admin_level0.datos.tiempoDedoMeñique = _tiempoDeApiladoJitomate;
+			AdminMenu.datosNivel1.tiempoDedoMeñique = _tiempoDeApiladoJitomate;
 		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow) && _panListo == false && PanelActivado == ActivaPanelInteractivo.Juegue){

@@ -5,13 +5,13 @@ using UnityEngine;
 
 public class AdminCalibrar : MonoBehaviour {
 	public void Jugar(){
-		if (Admin_level0.datos.nivel == 1 && (Admin_level0.datos.mano == 0 || Admin_level0.datos.mano == 1)) {
+		if (AdminMenu.datosNivel1.nivel == 1) {
 			SceneManager.LoadScene (3);
-		} else if (Admin_level0.datos.nivel == 2 && Admin_level0.datos.rutina == 0 && (Admin_level0.datos.mano == 0 || Admin_level0.datos.mano == 1)) {
+		} else if (AdminMenu.datosNivel2.nivel == 2 && AdminMenu.datosNivel2.RutinaSeleccionada == Rutina.ConRutina) {
 			SceneManager.LoadScene (4);
-		} else if (Admin_level0.datos.nivel == 2 && Admin_level0.datos.rutina == 1 && (Admin_level0.datos.mano == 0 || Admin_level0.datos.mano == 1)) {
+		} else if (AdminMenu.datosNivel2.nivel == 2 && AdminMenu.datosNivel2.RutinaSeleccionada == Rutina.SinRutina) {
 			SceneManager.LoadScene (5);
-		} else if (Admin_level0.datos.nivel == 3 && (Admin_level0.datos.mano == 0 || Admin_level0.datos.mano == 1)) {
+		} else if (AdminMenu.datosNivel3.nivel == 3) {
 			SceneManager.LoadScene (6);
 		}
 	}

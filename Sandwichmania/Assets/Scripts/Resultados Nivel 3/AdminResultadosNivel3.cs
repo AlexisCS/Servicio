@@ -19,7 +19,7 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 	private int _repeticiones;
 
 	void Awake(){
-		_repeticiones = Admin_level0.datos.numeroDeRepeticionesNivel3;
+		_repeticiones = AdminMenu.datosNivel3.numeroDeRepeticiones;
 		_cantidadDePan = 0;
 		_cantidadDeJamon = 0;
 		_cantidadDeQueso = 0;
@@ -122,8 +122,8 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 	}
 
 	void EntregaInformacion(){
-		numeroDeRepeticiones.text = "No. Repeticiones:\n" + Admin_level0.datos.numeroDeRepeticionesNivel3;
-		numeroDeIngredientes.text = "No. Ingredientes:\n" + Admin_level0.datos.numeroDeIngredientesNivel3;
+		numeroDeRepeticiones.text = "No. Repeticiones:\n" + AdminMenu.datosNivel3.numeroDeRepeticiones;
+		numeroDeIngredientes.text = "No. Ingredientes:\n" + AdminMenu.datosNivel3.numeroDeIngredientes;
 	}
 
 

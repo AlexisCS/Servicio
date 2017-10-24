@@ -5,13 +5,18 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class AdminMenu : MonoBehaviour {
+
+	public static Nivel1 datosNivel1=new Nivel1 ();
+	public static Nivel2 datosNivel2;
+	public static Nivel3 datosNivel3;
+
 	public GameObject[] panels;
 	public InputField cantidadDeIngredientes, cantidadDeRepeticiones, cantidadDeIngredientesNivel3, cantidadDeRepeticionesNivel3;
 	public Text Advertencia, advertenciaNivel3, nombreDeUsuario;
 
 	// Use this for initialization
 	void Start () {
-		ImprimeNombreUsuario ();
+
 	}
 	
 	// Update is called once per frame
@@ -20,22 +25,28 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	void Awake(){
+		ImprimeNombreUsuario ();
+		//datosNivel1 = new Nivel1 ();
+		datosNivel2 = new Nivel2 ();
+		datosNivel3 = new Nivel3 ();
 		panels [0].gameObject.SetActive (true);
 		panels [5].gameObject.SetActive (true);
 	}
 
 	public void SelecNivel(int nivel){
-		Admin_level0.datos.nivel = nivel;
 		switch (nivel) {
 		case 1:
+			datosNivel1.nivel = nivel;
 			panels [0].gameObject.SetActive (false);
 			panels [4].gameObject.SetActive (true);
 			break;
 		case 2:
+		datosNivel2.nivel = nivel;
 			panels [0].gameObject.SetActive (false);
 			panels [1].gameObject.SetActive (true);
 			break;
 		case 3:
+			datosNivel3.nivel = nivel;
 			panels [0].gameObject.SetActive (false);
 			panels [7].gameObject.SetActive (true);
 			break;
@@ -43,22 +54,46 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	public void SelecMano(int mano){
-		Admin_level0.datos.mano = mano;
+		switch (mano) {
+		case 0:
+			if (datosNivel1.nivel == 1) {
+				datosNivel1.ManoSeleccionada = Mano.Izquierda;
+			}
+			if (datosNivel2.nivel == 2) {
+				datosNivel2.ManoSeleccionada = Mano.Izquierda;
+			}
+			if (datosNivel3.nivel == 3) {
+				datosNivel3.ManoSeleccionada = Mano.Izquierda;
+			}
+			break;
+		case 1:
+			if (datosNivel1.nivel == 1) {
+				datosNivel1.ManoSeleccionada = Mano.Derecha;
+			}
+			if (datosNivel2.nivel == 2) {
+				datosNivel2.ManoSeleccionada = Mano.Derecha;
+			}
+			if (datosNivel3.nivel == 3) {
+				datosNivel3.ManoSeleccionada = Mano.Derecha;
+			}
+			break;
+		}
 		Calibrar ();
 	}
 
 
 
-	public void DecideTipoDeRutina(int rutina){
-		Admin_level0.datos.rutina = rutina;
-		switch (rutina) {
+	public void DecideTipoDeRutina(int seleccion){
+		switch (seleccion) {
 		case 0:
-			panels [1].gameObject.SetActive (false);
-			panels [2].gameObject.SetActive (true);
-			break;
-		case 1:
+			datosNivel2.RutinaSeleccionada = Rutina.SinRutina;
 			panels [1].gameObject.SetActive (false);
 			panels [3].gameObject.SetActive (true);
+			break;
+		case 1:
+			datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
+			panels [1].gameObject.SetActive (false);
+			panels [2].gameObject.SetActive (true);
 			break;
 		}
 	}
@@ -88,8 +123,8 @@ public class AdminMenu : MonoBehaviour {
 			Advertencia.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
 			return;
 		} 
-		Admin_level0.datos.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
-		Admin_level0.datos.numeroDeIngredientes = cantidadDeIngredientesTemp;
+		datosNivel2.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
+		datosNivel2.numeroDeIngredientes = cantidadDeIngredientesTemp;
 		panels [3].gameObject.SetActive (false);
 		panels [4].gameObject.SetActive (true);
 	}
@@ -112,9 +147,9 @@ public class AdminMenu : MonoBehaviour {
 		if (cantidadDeRepeticionesTemp == 0 || cantidadDeRepeticionesTemp > 100) {
 			advertenciaNivel3.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
 			return;
-		} 
-		Admin_level0.datos.numeroDeRepeticionesNivel3 = cantidadDeRepeticionesTemp;
-		Admin_level0.datos.numeroDeIngredientesNivel3 = cantidadDeIngredientesTemp;
+		}
+		datosNivel3.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
+		datosNivel3.numeroDeIngredientes = cantidadDeIngredientesTemp;
 		panels [7].gameObject.SetActive (false);
 		panels [4].gameObject.SetActive (true);
 	}
@@ -134,16 +169,16 @@ public class AdminMenu : MonoBehaviour {
 			panels [3].gameObject.SetActive (false);
 			break;
 		case 3:
-			if (Admin_level0.datos.nivel == 1) {
+			if (datosNivel1.nivel == 1) {
 				panels [0].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
-			} else if (Admin_level0.datos.nivel == 2 && Admin_level0.datos.rutina == 0) {
+			} else if (datosNivel2.nivel == 2 && datosNivel2.RutinaSeleccionada == Rutina.ConRutina) {
 				panels [2].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
-			} else if (Admin_level0.datos.nivel == 2 && Admin_level0.datos.rutina == 1) {
+			} else if (datosNivel2.nivel == 2 && datosNivel2.RutinaSeleccionada == Rutina.SinRutina) {
 				panels [3].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
-			} else if (Admin_level0.datos.nivel == 3) {
+			} else if (datosNivel3.nivel == 3) {
 				panels [0].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
 			}
@@ -168,14 +203,15 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	public void Calibrar(){
-		if (Admin_level0.datos.mano == 1 || Admin_level0.datos.mano == 0) {
+		if (datosNivel1.ManoSeleccionada == Mano.Derecha || datosNivel1.ManoSeleccionada == Mano.Izquierda ||
+			datosNivel2.ManoSeleccionada == Mano.Derecha || datosNivel2.ManoSeleccionada == Mano.Izquierda ||
+			datosNivel3.ManoSeleccionada == Mano.Derecha || datosNivel3.ManoSeleccionada == Mano.Izquierda) {
 			SceneManager.LoadScene (2);
-			Debug.Log ("Nivel =" + Admin_level0.datos.nivel + ", Mano (0-> Izq, 1-> Der) =" + Admin_level0.datos.mano);
 		}
 	}
 
 	void ImprimeNombreUsuario(){
-		nombreDeUsuario.text = Admin_level0.datos.id.ToString ();
+		nombreDeUsuario.text = Admin_level0.datos.nombre.ToString ();
 	}
 }
 

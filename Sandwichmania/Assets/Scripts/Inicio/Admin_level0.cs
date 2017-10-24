@@ -32,13 +32,14 @@ public class Admin_level0 : MonoBehaviour {
 	private IEnumerator VerifyPatient(string id, string password){
 		//Buscando el ID en el sistema CITAN
 		string urlString = _postURL2 + "?"+"id=" + WWW.EscapeURL (id);
+		Admin_level0.datos.id = int.Parse (WWW.EscapeURL (id));
 		WWW postName = new WWW (urlString);
 		yield return postName;
 		//recibimos el nombre asociado al id
 		Debug.Log ("Nombre asociado al ID:"+postName.text.ToString ().ToUpper()+"ok");
 		_userName=postName.text.ToString ().ToUpper();
 		if (_userName.Length>=3 && !_userName.Equals("INEXISTENTE")) {
-			Admin_level0.datos.id = _userName;
+			Admin_level0.datos.nombre = _userName;
 			StartCoroutine(GetPassword(id, password));	//el ID existe pero comprobaremos la contraseña
 		}
 		else if(_userName.Length<1){
