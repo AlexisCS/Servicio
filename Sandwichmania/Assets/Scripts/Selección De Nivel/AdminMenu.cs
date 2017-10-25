@@ -14,6 +14,9 @@ public class AdminMenu : MonoBehaviour {
 	public InputField cantidadDeRepeticiones, cantidadDeIngredientesNivel3, cantidadDeRepeticionesNivel3;
 	public Text Advertencia, advertenciaNivel3, nombreDeUsuario;
 	// Use this for initialization
+
+	private List<ActivaPanelDedos> _rutina;
+
 	void Start () {
 
 	}
@@ -25,6 +28,7 @@ public class AdminMenu : MonoBehaviour {
 
 	void Awake(){
 		//ImprimeNombreUsuario ();
+		_rutina = new List<ActivaPanelDedos> ();
 		datosNivel1 = new Nivel1 ();
 		datosNivel2 = new Nivel2 ();
 		datosNivel3 = new Nivel3 ();
@@ -97,9 +101,53 @@ public class AdminMenu : MonoBehaviour {
 		}
 	}
 
-	public void IngresaRutina(){
-		panels [2].gameObject.SetActive (false);
-		panels [4].gameObject.SetActive (true);
+	public void IngresaRutinaNivel2(int seleccion){
+		switch (seleccion) {
+		case 1:
+			_rutina = new List<ActivaPanelDedos> {
+				ActivaPanelDedos.Indice,
+				ActivaPanelDedos.Medio,
+				ActivaPanelDedos.Anular,
+				ActivaPanelDedos.Meñique
+			};
+			AdminMenu.datosNivel2.Rutina = _rutina;
+			break;
+		case 2:
+			_rutina = new List<ActivaPanelDedos> {
+				ActivaPanelDedos.Meñique,
+				ActivaPanelDedos.Anular,
+				ActivaPanelDedos.Medio,
+				ActivaPanelDedos.Indice
+			};
+			AdminMenu.datosNivel2.Rutina = _rutina;
+			break;
+		case 3:
+			_rutina = new List<ActivaPanelDedos> {
+				ActivaPanelDedos.Indice,
+				ActivaPanelDedos.Medio,
+				ActivaPanelDedos.Anular,
+				ActivaPanelDedos.Meñique,
+				ActivaPanelDedos.Anular,
+				ActivaPanelDedos.Medio,
+				ActivaPanelDedos.Indice
+			};
+			AdminMenu.datosNivel2.Rutina = _rutina;
+			break;
+		case 4:
+			_rutina = new List<ActivaPanelDedos> {
+				ActivaPanelDedos.Meñique,
+				ActivaPanelDedos.Anular,
+				ActivaPanelDedos.Medio,
+				ActivaPanelDedos.Indice,
+				ActivaPanelDedos.Medio,
+				ActivaPanelDedos.Anular,
+				ActivaPanelDedos.Meñique
+			};
+			AdminMenu.datosNivel2.Rutina = _rutina;
+			break;
+		}
+//		panels [2].gameObject.SetActive (false);
+//		panels [4].gameObject.SetActive (true);
 	}
 
 

@@ -13,34 +13,30 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	public static event Audio AudiodeExito;
 
 	public GameObject[] ingredientes;
-	public GameObject[] interzas;
+	public GameObject[] interfaz;
 	public Text mensajeFelicitacion;
 
-	//public int _numeroDeRepeticiones, _numeroDeIngredientes, _mano;
-
+	private int _numeroDeRepeticiones;
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
 	private List<ActivaPanelDedos> _secuencia;
-	private List<ActivaPanelDedos> _guardaIngredientes;
-	private int _contadorCapa, _count, _limite, _numeroDeRepeticiones, _numeroDeIngredientes;
+	private int _contadorCapa, _count, _limite; 
 	Mano _mano;
 	private bool _pan, _jamon, _queso, _jitomate;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoParcial, SegundoInicio, Exito}
 	ActivaPanelInteractivo PanelActivado;
 
-	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
 
 	void Awake(){
 		_secuencia = new List<ActivaPanelDedos> ();
+		_secuencia = AdminMenu.datosNivel2.Rutina;
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
-		interzas [0].gameObject.SetActive (true);
-		interzas [12].gameObject.SetActive (false);
-		interzas [13].gameObject.SetActive (true);
+		interfaz [0].gameObject.SetActive (true);
+		interfaz [13].gameObject.SetActive (true);
 		_mano = AdminMenu.datosNivel2.ManoSeleccionada;
-		_numeroDeIngredientes = AdminMenu.datosNivel2.numeroDeIngredientes;
 		_numeroDeRepeticiones = AdminMenu.datosNivel2.numeroDeRepeticiones;
 		_contadorCapa = 0;
 		_count = 0;
@@ -64,44 +60,6 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		DetectaColision.OnQuesoApilado -= AgregaQueso;
 		DetectaColision.OnJitomateApilado -= AgregaJitomate;
 	}
-
-
-	void GeneraSecuenciaAleatoria(){
-		int ingredienteAnterior = 0; 
-		int numeroAleatorio = 0; 
-		_secuencia.Add (SeleccionaIngredienteAleatorio (0));
-		for (int i = 3; i <= _numeroDeIngredientes; i++) {
-			if (i == 3 || i == _numeroDeIngredientes) {
-				numeroAleatorio = Random.Range (1, 4);
-				if (numeroAleatorio == ingredienteAnterior) {
-					numeroAleatorio = (numeroAleatorio == ingredienteAnterior) ? (numeroAleatorio + 1) : numeroAleatorio;
-				}
-			} else {
-				numeroAleatorio = Random.Range (0, 4);
-				if (numeroAleatorio == ingredienteAnterior) {
-					numeroAleatorio = (numeroAleatorio == 0) ? 1 : (numeroAleatorio-1);
-				} 			
-			}
-			_secuencia.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
-			ingredienteAnterior = numeroAleatorio;
-		}
-		_secuencia.Add (SeleccionaIngredienteAleatorio (0));
-	}
-		
-	ActivaPanelDedos SeleccionaIngredienteAleatorio(int semilla){
-		switch (semilla) {
-		case 0:
-			return ActivaPanelDedos.Indice;
-		case 1:
-			return ActivaPanelDedos.Medio;
-		case 2:
-			return ActivaPanelDedos.Anular;
-		case 3:
-			return ActivaPanelDedos.Meñique;
-		}
-		return ActivaPanelDedos.SinSeleccion;
-	}
-
 
 	void DecideSecuencia(){
 		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){ 
@@ -188,48 +146,48 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		switch (seleccion) {
 		case Mano.Izquierda:
 			if (PanelDedosActivo == ActivaPanelDedos.Indice) {
-				interzas [6].gameObject.SetActive (true);
-				interzas [7].gameObject.SetActive (false);
-				interzas [8].gameObject.SetActive (false);
-				interzas [9].gameObject.SetActive (false);
+				interfaz [6].gameObject.SetActive (true);
+				interfaz [7].gameObject.SetActive (false);
+				interfaz [8].gameObject.SetActive (false);
+				interfaz [9].gameObject.SetActive (false);
 			} else if (PanelDedosActivo == ActivaPanelDedos.Medio) {
-				interzas [6].gameObject.SetActive (false);
-				interzas [7].gameObject.SetActive (true);
-				interzas [8].gameObject.SetActive (false);
-				interzas [9].gameObject.SetActive (false);
+				interfaz [6].gameObject.SetActive (false);
+				interfaz [7].gameObject.SetActive (true);
+				interfaz [8].gameObject.SetActive (false);
+				interfaz [9].gameObject.SetActive (false);
 			} else if (PanelDedosActivo == ActivaPanelDedos.Anular) {
-				interzas [6].gameObject.SetActive (false);
-				interzas [7].gameObject.SetActive (false);
-				interzas [8].gameObject.SetActive (true);
-				interzas [9].gameObject.SetActive (false);
+				interfaz [6].gameObject.SetActive (false);
+				interfaz [7].gameObject.SetActive (false);
+				interfaz [8].gameObject.SetActive (true);
+				interfaz [9].gameObject.SetActive (false);
 			} else if (PanelDedosActivo == ActivaPanelDedos.Meñique) {
-				interzas [6].gameObject.SetActive (false);
-				interzas [7].gameObject.SetActive (false);
-				interzas [8].gameObject.SetActive (false);
-				interzas [9].gameObject.SetActive (true);
+				interfaz [6].gameObject.SetActive (false);
+				interfaz [7].gameObject.SetActive (false);
+				interfaz [8].gameObject.SetActive (false);
+				interfaz [9].gameObject.SetActive (true);
 			} 
 			break;
 		case Mano.Derecha:
 			if (PanelDedosActivo == ActivaPanelDedos.Indice) {
-				interzas [2].gameObject.SetActive (true);
-				interzas [3].gameObject.SetActive (false);
-				interzas [4].gameObject.SetActive (false);
-				interzas [5].gameObject.SetActive (false);
+				interfaz [2].gameObject.SetActive (true);
+				interfaz [3].gameObject.SetActive (false);
+				interfaz [4].gameObject.SetActive (false);
+				interfaz [5].gameObject.SetActive (false);
 			} else if (PanelDedosActivo == ActivaPanelDedos.Medio) {
-				interzas [2].gameObject.SetActive (false);
-				interzas [3].gameObject.SetActive (true);
-				interzas [4].gameObject.SetActive (false);
-				interzas [5].gameObject.SetActive (false);
+				interfaz [2].gameObject.SetActive (false);
+				interfaz [3].gameObject.SetActive (true);
+				interfaz [4].gameObject.SetActive (false);
+				interfaz [5].gameObject.SetActive (false);
 			} else if (PanelDedosActivo == ActivaPanelDedos.Anular) {
-				interzas [2].gameObject.SetActive (false);
-				interzas [3].gameObject.SetActive (false);
-				interzas [4].gameObject.SetActive (true);
-				interzas [5].gameObject.SetActive (false);
+				interfaz [2].gameObject.SetActive (false);
+				interfaz [3].gameObject.SetActive (false);
+				interfaz [4].gameObject.SetActive (true);
+				interfaz [5].gameObject.SetActive (false);
 			} else if (PanelDedosActivo == ActivaPanelDedos.Meñique) {
-				interzas [2].gameObject.SetActive (false);
-				interzas [3].gameObject.SetActive (false);
-				interzas [4].gameObject.SetActive (false);
-				interzas [5].gameObject.SetActive (true);
+				interfaz [2].gameObject.SetActive (false);
+				interfaz [3].gameObject.SetActive (false);
+				interfaz [4].gameObject.SetActive (false);
+				interfaz [5].gameObject.SetActive (true);
 			} 
 			break;
 		}
@@ -237,42 +195,42 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 
 	void DesactivaIngredientes(){
-		interzas [2].gameObject.SetActive (false);
-		interzas [3].gameObject.SetActive (false);
-		interzas [4].gameObject.SetActive (false);
-		interzas [5].gameObject.SetActive (false);
-		interzas [6].gameObject.SetActive (false);
-		interzas [7].gameObject.SetActive (false);
-		interzas [8].gameObject.SetActive (false);
-		interzas [9].gameObject.SetActive (false);
+		interfaz [2].gameObject.SetActive (false);
+		interfaz [3].gameObject.SetActive (false);
+		interfaz [4].gameObject.SetActive (false);
+		interfaz [5].gameObject.SetActive (false);
+		interfaz [6].gameObject.SetActive (false);
+		interfaz [7].gameObject.SetActive (false);
+		interfaz [8].gameObject.SetActive (false);
+		interfaz [9].gameObject.SetActive (false);
 	}
 
 	//Contiene los mensajes de instrucciones y de exito
 	void PanelInteractivo (){ // Cambiar a verbo
 		switch (PanelActivado) {
 		case ActivaPanelInteractivo.Siguiente:
-			interzas [0].gameObject.SetActive (false);
-			interzas [1].gameObject.SetActive (true);
+			interfaz [0].gameObject.SetActive (false);
+			interfaz [1].gameObject.SetActive (true);
 			PanelActivado = ActivaPanelInteractivo.Inicio;
 			break;
 		case ActivaPanelInteractivo.Inicio:
-			interzas [1].gameObject.SetActive (false);
-			interzas [10].gameObject.SetActive (false);
+			interfaz [1].gameObject.SetActive (false);
+			interfaz [10].gameObject.SetActive (false);
 			PanelActivado = ActivaPanelInteractivo.Juegue;
 			PanelDedosActivo = _secuencia [0];
 			PanelDedos (_mano);
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
 			DesactivaIngredientes ();
-			mensajeFelicitacion.text = "¡Lo estas haciendo genial, sigue asi!\n\n\n" + _limite  + "  de  " + _numeroDeRepeticiones; 
-			interzas [10].gameObject.SetActive (true);
+			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + _numeroDeRepeticiones; 
+			interfaz [10].gameObject.SetActive (true);
 			break;
 		case ActivaPanelInteractivo.Exito:
 			if (AudiodeExito != null) {
 				AudiodeExito ();
 			}
 			DesactivaIngredientes ();
-			interzas [11].gameObject.SetActive (true);
+			interfaz [11].gameObject.SetActive (true);
 			break;
 		}
 	}
@@ -303,7 +261,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	} 
 
 	public void BotonRegresar(){
-		interzas [12].gameObject.SetActive (true);
+		interfaz [12].gameObject.SetActive (true);
 	}
 
 	public void BotonSi(){
@@ -311,7 +269,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	}
 
 	public void BotonNo(){
-		interzas [12].gameObject.SetActive (false);
+		interfaz [12].gameObject.SetActive (false);
 	}
 
 	void Exito(){
@@ -349,7 +307,6 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 				PanelActivado == ActivaPanelInteractivo.ExitoParcial)){
 			if (PanelActivado == ActivaPanelInteractivo.Bienvenido) {
 				PanelActivado = ActivaPanelInteractivo.Siguiente;
-				GeneraSecuenciaAleatoria ();
 				PanelInteractivo ();
 			} else {
 				ActivaMusicaDeJuego ();
