@@ -11,7 +11,7 @@ public class InfoPartida  {
 	public string nombre;
 	public int id;
 	public List <Nivel1> HistorialPartidasNivel1 = new List<Nivel1> ();
-	public List <Nivel2> HistorialPartidasNivel2ConRutina = new List<Nivel2> ();
+	public List <Nivel2> HistorialPartidasNivel2 = new List<Nivel2> ();
 	public List <Nivel3> HistorialPartidasNivel3 = new List<Nivel3>();
 //	public int mano; //mano derecha 1 y mano izquierda 0
 //	public int nivel;

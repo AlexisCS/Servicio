@@ -118,13 +118,18 @@ public static class GameSaveLoad {
 			myFinalData=(InfoPartida)DeserializeObject(_oldData);
 			myNewData=(InfoPartida)DeserializeObject(_data);
 			//agregar todas las partidas de la sesion
-//			for(int i=0;i<myNewData.HistorialPartidas.Count;i++){
-//				myFinalData.HistorialPartidas.Add(myNewData.HistorialPartidas[i]);
-//			}
-//			//agregar todo el historial de partidas personalizadas
-//			for(int i=0;i<myNewData.HistorialPartidasPersonalizadas.Count;i++){
-//				myFinalData.HistorialPartidasPersonalizadas.Add(myNewData.HistorialPartidasPersonalizadas[i]);
-//			}
+			for(int i=0;i<myNewData.HistorialPartidasNivel1.Count;i++){
+				myFinalData.HistorialPartidasNivel1.Add(myNewData.HistorialPartidasNivel1[i]);
+			}
+			//agregar todo el historial de partidas personalizadas
+			for(int i=0;i<myNewData.HistorialPartidasNivel2.Count;i++){
+				myFinalData.HistorialPartidasNivel2.Add(myNewData.HistorialPartidasNivel2[i]);
+			}
+
+			for(int i=0;i<myNewData.HistorialPartidasNivel3.Count;i++){
+				myFinalData.HistorialPartidasNivel3.Add(myNewData.HistorialPartidasNivel3[i]);
+			}
+
 			_data="";
 			_data=SerializeObject(myFinalData); 
 			writer = t.CreateText();
@@ -133,8 +138,8 @@ public static class GameSaveLoad {
 		writer.Write(_data); 
 		writer.Close(); 
 		//Limpiando
-//			SelectorEscenas.paciente.HistorialPartidas.Clear ();
-//		SelectorEscenas.paciente.HistorialPartidasPersonalizadas.Clear ();
+		//SelectorEscenas.paciente.HistorialPartidas.Clear ();
+		//SelectorEscenas.paciente.HistorialPartidasPersonalizadas.Clear ();
 
 		Debug.Log("File written and data cleared."); 
 	} 

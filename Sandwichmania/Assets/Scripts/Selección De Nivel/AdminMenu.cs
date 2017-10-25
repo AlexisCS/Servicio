@@ -6,14 +6,13 @@ using UnityEngine;
 
 public class AdminMenu : MonoBehaviour {
 
-	public static Nivel1 datosNivel1=new Nivel1 ();
+	public static Nivel1 datosNivel1;
 	public static Nivel2 datosNivel2;
 	public static Nivel3 datosNivel3;
 
 	public GameObject[] panels;
-	public InputField cantidadDeIngredientes, cantidadDeRepeticiones, cantidadDeIngredientesNivel3, cantidadDeRepeticionesNivel3;
+	public InputField cantidadDeRepeticiones, cantidadDeIngredientesNivel3, cantidadDeRepeticionesNivel3;
 	public Text Advertencia, advertenciaNivel3, nombreDeUsuario;
-
 	// Use this for initialization
 	void Start () {
 
@@ -25,8 +24,8 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	void Awake(){
-		ImprimeNombreUsuario ();
-		//datosNivel1 = new Nivel1 ();
+		//ImprimeNombreUsuario ();
+		datosNivel1 = new Nivel1 ();
 		datosNivel2 = new Nivel2 ();
 		datosNivel3 = new Nivel3 ();
 		panels [0].gameObject.SetActive (true);
@@ -104,29 +103,25 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 
-	public void IngresaInfoDeRutina(){
-		if (cantidadDeIngredientes.text.Length.Equals (0)) {
-			Advertencia.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
-			return;
-		}
+	public void IngresaRepeticionesNivel2(){
 		if (cantidadDeRepeticiones.text.Length.Equals (0)) {
 			Advertencia.text = "El mínimo de repeticiones es 1 y el míximo de 100 ...";
 			return;
 		}
-		int cantidadDeIngredientesTemp=int.Parse (cantidadDeIngredientes.text);
-		if (cantidadDeIngredientesTemp < 5 || cantidadDeIngredientesTemp > 15) {
-			Advertencia.text = "El mínimo de ingredientes es 5 y el máximo de 15 ...";
-			return;
-		}
+
 		int cantidadDeRepeticionesTemp=int.Parse (cantidadDeRepeticiones.text);
 		if (cantidadDeRepeticionesTemp == 0 || cantidadDeRepeticionesTemp > 100) {
 			Advertencia.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
 			return;
 		} 
 		datosNivel2.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
-		datosNivel2.numeroDeIngredientes = cantidadDeIngredientesTemp;
-		panels [3].gameObject.SetActive (false);
+		panels [8].gameObject.SetActive (false);
 		panels [4].gameObject.SetActive (true);
+	}
+
+	public void EligeRutina(){
+		panels [3].gameObject.SetActive (false);
+		panels [8].gameObject.SetActive (true);
 	}
 
 	public void IngresaInfoDeRutinaNivel3(){
@@ -187,6 +182,10 @@ public class AdminMenu : MonoBehaviour {
 			panels [0].gameObject.SetActive (true);
 			panels [7].gameObject.SetActive (false);
 			break;
+		case 5:
+			panels [3].gameObject.SetActive (true);
+			panels [8].gameObject.SetActive (false);
+			break;
 		}
 	}
 
@@ -210,8 +209,8 @@ public class AdminMenu : MonoBehaviour {
 		}
 	}
 
-	void ImprimeNombreUsuario(){
-		nombreDeUsuario.text = Admin_level0.datos.nombre.ToString ();
-	}
+//	void ImprimeNombreUsuario(){
+//		nombreDeUsuario.text = Admin_level0.datos.nombre.ToString ();
+//		}
 }
 
