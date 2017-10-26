@@ -17,7 +17,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	public Text mensajeFelicitacion;
 
 	private int _numeroDeRepeticiones;
-	private GameObject _ingredienteClon; 
+	private GameObject _ingredienteClon, _ingredienteExtra, _destruirIngredienteExtra;
 	private GameObject[] _destruir;
 	private List<ActivaPanelDedos> _secuencia;
 	private int _contadorCapa, _count, _limite; 
@@ -62,17 +62,20 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	}
 
 	void DecideSecuencia(){
-		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){ 
-			PanelActivado = ActivaPanelInteractivo.Exito;
-			PanelInteractivo ();
+		if(_count>_secuencia.Count) //se supone que nunca debe entrar aquí, pero a veces lo hace así que matamos a la función
+			return;
+		
+		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){		
+			StartCoroutine (PausaPanelExito ());
 			return;
 		}
 
 		if(_count == _secuencia.Count && _limite < _numeroDeRepeticiones){
-			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
-			PanelInteractivo ();
+			_count++;
+			StartCoroutine (PausaPanelExitoParcial ());
 			return;
 		}
+
 		switch (_secuencia[_count]) {
 		case ActivaPanelDedos.Indice:
 			PanelDedosActivo = ActivaPanelDedos.Indice;
@@ -110,7 +113,6 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		if(_count <_secuencia.Count){
 			_count += 1;
 		}
-
 	}
 
 	void AgregaPan(){
@@ -135,11 +137,24 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		Colision ();
 		_ingredienteClon = null;
 		DecideSecuencia ();
+
 	}
 
 	void ActualizaCapa(){
 		_contadorCapa += 1;
 		_ingredienteClon.gameObject.GetComponent<Renderer>().sortingOrder = _contadorCapa;
+	}
+
+	IEnumerator PausaPanelExito(){
+		yield return new WaitForSeconds (2.0f);
+		PanelActivado = ActivaPanelInteractivo.Exito;
+		PanelInteractivo ();
+	}
+
+	IEnumerator PausaPanelExitoParcial(){
+		yield return new WaitForSeconds (2.0f);
+		PanelActivado = ActivaPanelInteractivo.ExitoParcial;
+		PanelInteractivo ();
 	}
 
 	void PanelDedos(Mano seleccion){
@@ -222,7 +237,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
 			DesactivaIngredientes ();
-			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + _numeroDeRepeticiones; 
+			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + _numeroDeRepeticiones;
 			interfaz [10].gameObject.SetActive (true);
 			break;
 		case ActivaPanelInteractivo.Exito:
@@ -253,6 +268,8 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			_count = 0;
 			_limite += 1;
 			PanelActivado = ActivaPanelInteractivo.Juegue;
+			_destruirIngredienteExtra = GameObject.FindGameObjectWithTag ("PanNivel3");
+			Destroy (_destruirIngredienteExtra);
 			_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
 			for (int i = 0; i <= _destruir.Length - 1; i++) {
 				Destroy (_destruir [i]);
@@ -274,6 +291,12 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 	void Exito(){
 		SceneManager.LoadScene (1);
+	}
+
+	void SpawnPanExtra(){
+		Vector3 PosicionPanExtra = new Vector3 (4.5f, 15.0f, 0.0f);
+		_ingredienteExtra = (GameObject) Instantiate (ingredientes[4], PosicionPanExtra, Quaternion.identity);
+		_ingredienteExtra.gameObject.GetComponent<Renderer>().sortingOrder = 100;
 	}
 
 	void SpawnPan(){
@@ -335,6 +358,9 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		} else if (Input.GetKeyDown (KeyCode.DownArrow) && _queso == false) {
 			SpawnQueso ();		
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && _jitomate == false) {
+			if (_secuencia [_secuencia.Count - 1] == ActivaPanelDedos.Meñique) {
+				SpawnPanExtra ();
+			}
 			SpawnJitomate ();
 		}
 
@@ -349,7 +375,9 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			_ingredienteClon = null;
 		} else if (Input.GetKeyUp (KeyCode.LeftArrow) && _ingredienteClon != null && _jitomate == false) {
 			Destroy(_ingredienteClon);
+			Destroy (_ingredienteExtra);
 			_ingredienteClon = null;
+			_ingredienteExtra = null;
 		} 
 	}
 }
