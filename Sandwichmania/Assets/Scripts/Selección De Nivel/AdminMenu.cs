@@ -13,6 +13,8 @@ public class AdminMenu : MonoBehaviour {
 	public GameObject[] panels;
 	public InputField cantidadDeRepeticiones, cantidadDeIngredientesNivel3, cantidadDeRepeticionesNivel3;
 	public Text Advertencia, advertenciaNivel3, nombreDeUsuario;
+	public Toggle[] eligeRutinaToggle;
+
 	// Use this for initialization
 
 	private List<ActivaPanelDedos> _rutina;
@@ -90,6 +92,10 @@ public class AdminMenu : MonoBehaviour {
 		switch (seleccion) {
 		case 0:
 			datosNivel2.RutinaSeleccionada = Rutina.SinRutina;
+			eligeRutinaToggle [0].isOn = false;
+			eligeRutinaToggle [1].isOn = false;
+			eligeRutinaToggle [2].isOn = false;
+			eligeRutinaToggle [3].isOn = false;
 			panels [1].gameObject.SetActive (false);
 			panels [3].gameObject.SetActive (true);
 			break;
@@ -146,8 +152,6 @@ public class AdminMenu : MonoBehaviour {
 			AdminMenu.datosNivel2.Rutina = _rutina;
 			break;
 		}
-//		panels [2].gameObject.SetActive (false);
-//		panels [4].gameObject.SetActive (true);
 	}
 
 
@@ -168,8 +172,12 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	public void EligeRutina(){
-		panels [3].gameObject.SetActive (false);
-		panels [8].gameObject.SetActive (true);
+		if (eligeRutinaToggle [0].isOn == false || eligeRutinaToggle [1].isOn == false || eligeRutinaToggle [2].isOn == false || eligeRutinaToggle [3].isOn == false) {
+		} 
+		if (eligeRutinaToggle [0].isOn == true || eligeRutinaToggle [1].isOn == true || eligeRutinaToggle [2].isOn == true || eligeRutinaToggle [3].isOn == true) {
+			panels [3].gameObject.SetActive (false);
+			panels [8].gameObject.SetActive (true);
+		}
 	}
 
 	public void IngresaInfoDeRutinaNivel3(){
@@ -219,7 +227,7 @@ public class AdminMenu : MonoBehaviour {
 				panels [2].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
 			} else if (datosNivel2.nivel == 2 && datosNivel2.RutinaSeleccionada == Rutina.SinRutina) {
-				panels [3].gameObject.SetActive (true);
+				panels [8].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
 			} else if (datosNivel3.nivel == 3) {
 				panels [0].gameObject.SetActive (true);
@@ -231,6 +239,10 @@ public class AdminMenu : MonoBehaviour {
 			panels [7].gameObject.SetActive (false);
 			break;
 		case 5:
+			eligeRutinaToggle [0].isOn = false;
+			eligeRutinaToggle [1].isOn = false;
+			eligeRutinaToggle [2].isOn = false;
+			eligeRutinaToggle [3].isOn = false;
 			panels [3].gameObject.SetActive (true);
 			panels [8].gameObject.SetActive (false);
 			break;

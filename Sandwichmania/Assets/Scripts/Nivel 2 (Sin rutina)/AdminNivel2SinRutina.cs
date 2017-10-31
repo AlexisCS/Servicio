@@ -22,7 +22,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	private List<ActivaPanelDedos> _secuencia;
 	private int _contadorCapa, _count, _limite; 
 	Mano _mano;
-	private bool _pan, _jamon, _queso, _jitomate;
+	private bool _pan, _jamon, _queso, _jitomate, _panExtra;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoParcial, SegundoInicio, Exito}
 	ActivaPanelInteractivo PanelActivado;
@@ -45,6 +45,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		_jamon = true;
 		_queso = true;
 		_jitomate = true;
+		_panExtra = true;
 	}
 
 	void OnEnable(){
@@ -108,6 +109,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			_jamon = true;
 			_queso = true;
 			_jitomate = false;
+			_panExtra = false;
 			break;
 		}
 		if(_count <_secuencia.Count){
@@ -146,13 +148,13 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	}
 
 	IEnumerator PausaPanelExito(){
-		yield return new WaitForSeconds (2.0f);
+		yield return new WaitForSeconds (1.5f);
 		PanelActivado = ActivaPanelInteractivo.Exito;
 		PanelInteractivo ();
 	}
 
 	IEnumerator PausaPanelExitoParcial(){
-		yield return new WaitForSeconds (2.0f);
+		yield return new WaitForSeconds (1.5f);
 		PanelActivado = ActivaPanelInteractivo.ExitoParcial;
 		PanelInteractivo ();
 	}
@@ -265,6 +267,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			_jamon = true;
 			_queso = true;
 			_jitomate = true;
+			_panExtra = true;
 			_count = 0;
 			_limite += 1;
 			PanelActivado = ActivaPanelInteractivo.Juegue;
@@ -294,9 +297,19 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	}
 
 	void SpawnPanExtra(){
-		Vector3 PosicionPanExtra = new Vector3 (4.5f, 15.0f, 0.0f);
-		_ingredienteExtra = (GameObject) Instantiate (ingredientes[4], PosicionPanExtra, Quaternion.identity);
-		_ingredienteExtra.gameObject.GetComponent<Renderer>().sortingOrder = 100;
+		Vector3 PosicionPanExtra;
+		if (_count == _secuencia.Count) {
+			PosicionPanExtra = new Vector3 (4.5f, 10.0f, 0.0f);
+			_ingredienteExtra = (GameObject)Instantiate (ingredientes [4], PosicionPanExtra, Quaternion.identity);
+			_ingredienteExtra.gameObject.GetComponent<Renderer> ().sortingOrder = 100;
+		}
+
+		if (_count == 1) {
+			PosicionPanExtra = new Vector3 (4.5f, 3.0f, 0.0f);
+			_ingredienteExtra = (GameObject)Instantiate (ingredientes [4], PosicionPanExtra, Quaternion.identity);
+			_ingredienteExtra.gameObject.GetComponent<Renderer> ().sortingOrder = 0;
+		}
+
 	}
 
 	void SpawnPan(){
@@ -358,7 +371,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		} else if (Input.GetKeyDown (KeyCode.DownArrow) && _queso == false) {
 			SpawnQueso ();		
 		} else if (Input.GetKeyDown (KeyCode.LeftArrow) && _jitomate == false) {
-			if (_secuencia [_secuencia.Count - 1] == ActivaPanelDedos.Meñique) {
+			if (_panExtra == false) {
 				SpawnPanExtra ();
 			}
 			SpawnJitomate ();
