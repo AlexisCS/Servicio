@@ -1,4 +1,4 @@
 sceneSetups:
-- path: "Assets/_Scenes/Selecci\xF3n_Nivel.unity"
+- path: Assets/_Scenes/Interfaz del Terapeuta.unity
   isLoaded: 1
   isActive: 1
