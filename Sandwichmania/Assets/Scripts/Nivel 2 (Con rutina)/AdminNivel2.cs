@@ -4,6 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine.Collections;
+using System;
+using System.IO;
+using System.Xml; 
+using System.Xml.Serialization;  
+using System.Text;
 
 public class AdminNivel2 : MonoBehaviour {
 
@@ -16,8 +21,9 @@ public class AdminNivel2 : MonoBehaviour {
 	public GameObject[] interfaz;
 	public Text mensajeFelicitacion;
 
-	public int numeroDeRepeticiones;
+	private int _numeroDeRepeticiones;
 
+	static string _data;
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
 	private List<ActivaPanelDedos> _secuencia;
@@ -27,12 +33,12 @@ public class AdminNivel2 : MonoBehaviour {
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoParcial, SegundoInicio, Exito}
 	ActivaPanelInteractivo PanelActivado;
-
-	enum ActivaPanelDedos {SinSeleccion, Indice, Medio, Anular, Meñique}
 	ActivaPanelDedos PanelDedosActivo;
 
 	void Awake(){
-		_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Medio, ActivaPanelDedos.Anular, ActivaPanelDedos.Meñique};
+		//_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Medio, ActivaPanelDedos.Anular, ActivaPanelDedos.Meñique};
+		_secuencia = Load ().Rutina;
+		_numeroDeRepeticiones = Load ().NumeroDeRepeticiones;
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interfaz [0].gameObject.SetActive (true);
@@ -61,14 +67,59 @@ public class AdminNivel2 : MonoBehaviour {
 		DetectaColision.OnJitomateApilado -= AgregaJitomate;
 	}
 
+
+	public static RutinaData Load(){ 
+		//Creamos el objeto de tipo PacienteData donde almacenaremos la info deserializada de _data
+		RutinaData myData2 = new RutinaData ();
+		//La información del XML la guardamos en la cadena _data
+		LoadXML(); 
+		if(_data.ToString() != "") 
+		{ 
+			// notice how I use a reference to type (PacienteData) here, you need this 
+			// so that the returned object is converted into the correct type 
+			myData2 = (RutinaData)DeserializeObject(_data); 
+		} 
+		return myData2;
+	}
+
+	public static byte[] StringToUTF8ByteArray(string pXmlString) 
+	{ 
+		UTF8Encoding encoding = new UTF8Encoding(); 
+		byte[] byteArray = encoding.GetBytes(pXmlString); 
+		return byteArray; 
+	} 
+
+	static object DeserializeObject(string pXmlizedString) 
+	{ 
+		XmlSerializer xs = new XmlSerializer(typeof(RutinaData)); 
+		MemoryStream memoryStream = new MemoryStream(StringToUTF8ByteArray(pXmlizedString)); 
+		XmlTextWriter xmlTextWriter = new XmlTextWriter(memoryStream, Encoding.UTF8); 
+		return xs.Deserialize(memoryStream); 
+	}
+
+	static void LoadXML() 
+	{ 
+		string filePath =(GameSaveLoad._FileLocation+"\\"+"Terapeuta0"+"_"+"ID"+"_PMRutina.xml").ToString();
+		if (File.Exists (filePath)) {
+			StreamReader r = File.OpenText (filePath); 
+			string _info = r.ReadToEnd (); 
+			r.Close (); 
+			_data = _info; 
+			Debug.Log ("File Read");
+		} else {
+			Debug.Log("File Doesnt exist");
+			_data="";
+		}
+	}
+		
 	void DecideSecuencia(){
-		if(_count == _secuencia.Count && _limite == numeroDeRepeticiones){ 
+		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){ 
 			PanelActivado = ActivaPanelInteractivo.Exito;
 			PanelInteractivo ();
 			return;
 		}
 
-		if(_count == _secuencia.Count && _limite < numeroDeRepeticiones){
+		if(_count == _secuencia.Count && _limite < _numeroDeRepeticiones){
 			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
 			PanelInteractivo ();
 			return;
@@ -222,7 +273,7 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
 			DesactivaIngredientes ();
-			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + numeroDeRepeticiones; 
+			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + _numeroDeRepeticiones; 
 			interfaz [10].gameObject.SetActive (true);
 			break;
 		case ActivaPanelInteractivo.Exito:
@@ -245,7 +296,7 @@ public class AdminNivel2 : MonoBehaviour {
 
 
 	void Reinicio(){ 
-		if (_limite < numeroDeRepeticiones) {
+		if (_limite < _numeroDeRepeticiones) {
 			_pan = true;
 			_jamon = true;
 			_queso = true;

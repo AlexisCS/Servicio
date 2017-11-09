@@ -107,6 +107,10 @@ public class AdminMenu : MonoBehaviour {
 		}
 	}
 
+	public void JugarBoton(){
+		panels [2].gameObject.SetActive (false);
+		panels [4].gameObject.SetActive (true);
+	}
 	public void IngresaRutinaNivel2(int seleccion){
 		switch (seleccion) {
 		case 1:
