@@ -16,12 +16,49 @@ public class InterfazMedico : MonoBehaviour {
 	public InputField nombreDeRutina, descripcionDeRutina;
 	public InputField muestraRutina;
 	public Text advertencia;
+	public Text nombreTerapeuta;
+	public Dropdown rutinas;
+	public Dropdown pacientes;
+
 
 	private List<ActivaPanelDedos> _rutina = new List<ActivaPanelDedos> ();
+	private List<string> _nombresDeRuitinas = new List<string> ();
+	private string _nombresPacientes;
 	string _data;
 	int count = 0;
 	enum FlechasTeclado {Ninguna, Cualquiera, Arriba, Derecha, Abajo, Izquierda}
 	FlechasTeclado ElementoRutina;
+
+	void Awake(){
+		EntregaNombreTerapeuta ();
+		_nombresPacientes = "";
+		try {
+			//StartCoroutine (GetPatientsFromDoc(SelectorEscenas.terapeuta.Id.ToString()));
+		} catch (Exception e) {
+			Debug.Log ("Problemas obteniendo pacientes del doc.");
+		}
+		//primero obtenemos todos los ducumentos que contengan rutinas
+		DirectoryInfo dir = new DirectoryInfo(GameSaveLoad._FileLocation);
+		FileInfo[] info = dir.GetFiles("*_SandwichmaniaRutina.xml");
+		foreach (FileInfo f in info)  
+		{ 
+			Debug.Log(f+"ruta");
+			//DropDownListItem atem=new DropDownListItem();
+			//atem.ID=f.ToString();   //<=no me esta leyendo esta direccion en el ejecutable
+
+			//atem.Caption=f.ToString().Substring(f.ToString().LastIndexOf("\\")+1);
+			rutinas.itemText.text = f.ToString().Substring(f.ToString().LastIndexOf("\\")+1);
+			//atem.ID=GameSaveLoad._FileLocation+"\\"+atem.Caption;
+			// rutinas.
+			//atem.Caption=atem.Caption.Substring(0,atem.Caption.LastIndexOf("_"));
+			//atem.Caption=atem.Caption.Substring(atem.Caption.IndexOf("_")+1);
+			//DropDownList_Rutinas.Items.Add(atem);
+		}
+	}
+
+	void ImprimeRutinas(){
+		rutinas.AddOptions (_nombresDeRuitinas);
+	}
 
 	public void SeleccionaCategoria (int categoria){
 		switch (categoria) {
@@ -58,6 +95,7 @@ public class InterfazMedico : MonoBehaviour {
 			break;
 		}
 	}
+		
 
 	public void ContinuarRutina(){
 		if (nombreDeRutina.text.Length.Equals (0)) {
@@ -134,6 +172,18 @@ public class InterfazMedico : MonoBehaviour {
 		interfaz [7].gameObject.SetActive (false);
 	}
 
+	public void CerrarSesion(){
+		interfaz [10].gameObject.SetActive (true);
+	}
+
+	public void BotonSiCerraSesion(){
+		SceneManager.LoadScene (0);
+	}
+
+	public void BotonNoCerraSesion(){
+		interfaz [10].gameObject.SetActive (false);
+	}
+
 	// Use this for initialization
 	void Start () {
 	}
@@ -187,7 +237,8 @@ public class InterfazMedico : MonoBehaviour {
 	void CreateXML() 
 	{ 
 		StreamWriter writer; 
-		FileInfo t = new FileInfo(GameSaveLoad._FileLocation+"\\"+"Terapeuta"+count+"_"+"ID"+"_PMRutina.xml"); 
+		//FileInfo t = new FileInfo(GameSaveLoad._FileLocation+"\\"+"Terapeuta"+count+"_"+"ID"+"_PMRutina.xml"); 
+		FileInfo t= new FileInfo(GameSaveLoad._FileLocation + "\\" +Admin_level0.terapeuta.Id +"_"+nombreDeRutina.text+"_SandwichmaniaRutina.xml");
 		//no se sobreescribira el archivo de la rutina
 		if(!t.Exists) 
 		{ 
@@ -198,6 +249,9 @@ public class InterfazMedico : MonoBehaviour {
 		Debug.Log("File written."); 
 	} 
 
+	void EntregaNombreTerapeuta(){
+//		nombreTerapeuta.text = Admin_level0.terapeuta.Nombre.ToString ();
+	}
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.UpArrow) && ElementoRutina == FlechasTeclado.Cualquiera) {

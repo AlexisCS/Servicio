@@ -29,7 +29,7 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	void Awake(){
-		//ImprimeNombreUsuario ();
+		ImprimeNombreUsuario ();
 		_rutina = new List<ActivaPanelDedos> ();
 		datosNivel1 = new Nivel1 ();
 		datosNivel2 = new Nivel2 ();
@@ -273,8 +273,8 @@ public class AdminMenu : MonoBehaviour {
 		}
 	}
 
-//	void ImprimeNombreUsuario(){
-//		nombreDeUsuario.text = Admin_level0.datos.nombre.ToString ();
-//		}
+	void ImprimeNombreUsuario(){
+		nombreDeUsuario.text = Admin_level0.datos.nombre.ToString ();
+	}
 }
 

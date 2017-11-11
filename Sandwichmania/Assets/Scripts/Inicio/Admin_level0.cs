@@ -8,25 +8,48 @@ using UnityEngine.UI;
 public class Admin_level0 : MonoBehaviour {
 
 	public static InfoPartida datos;
+	public static TerapeutaData terapeuta;
 
 //	public GameObject PanelAutenticaMedico;
 	public Text warning;
 	public InputField id;
 	public InputField password;
 
+	private bool _idNumerico;
+
 	private string _postURL1= "http://132.248.16.11/unity/validaUsuario.php"; //direccion que recibe el Id del paciente y devuelve su contraseña (fecha de nacimiento)
 	private string _postURL2 =  "http://132.248.16.11/unity/index.php"; 	//direccion que recibe el Id del paciente y devuelve su nombre y apellidos
+	private string _postURL3 = "http://132.248.16.11/unity/validaDoctor.php";  //me dice si existe o no existe el terapeuta
+	private string _postURL6 = "http://132.248.16.11/citan/authGame/";  //valida la contraseña del terapeuta
 	private string _userName;
 
 	public void Setget (){
+		int i = 0;
 		string usuario = id.text.ToString ();
 		string contraseña = password.text.ToString ();
-		StartCoroutine (VerifyPatient (usuario, contraseña));
+		_idNumerico = int.TryParse (usuario, out i);
+		if(_idNumerico == true){
+				StartCoroutine (VerifyPatient (usuario, contraseña));
+		} else {
+				StartCoroutine (VerifyDoctor (usuario, contraseña));
+		}
 	} 
 
 	void Awake () {
 		datos = new InfoPartida ();
 		_userName = " ";
+	}
+
+	void Update(){
+		if (Input.GetKeyDown (KeyCode.Tab)) {
+			if (!id.isFocused)
+				id.Select ();
+			else
+				password.Select ();
+		}
+		if(Input.GetKeyDown (KeyCode.Return)){
+			Setget ();
+		}
 	}
 
 	private IEnumerator VerifyPatient(string id, string password){
@@ -69,6 +92,60 @@ public class Admin_level0 : MonoBehaviour {
 		} else {
 			warning.gameObject.SetActive(true);
 			warning.text="Contraseña incorrecta.\n Por favor verifique e intente nuevamente.";
+		}
+	}
+
+	//corutina para que los doctores inicien sesion
+	private IEnumerator VerifyDoctor(string userName,string password){
+		string docName;
+		string urlString = _postURL3 + "?"+"user_unity=" + WWW.EscapeURL (userName); //primero revisamos si existe el terapeuta
+		Debug.Log ("Enviando"+urlString);
+		WWW postName = new WWW (urlString);
+		yield return postName;
+		Debug.Log ("Doctor"+postName.text+"ok");
+		if (postName.text.Length>4 && !postName.text.Equals("Inexistente")) {
+			//_userName = postName.text.ToString ().Substring(0,postName.text.LastIndexOf("-")).ToUpper();
+			docName = postName.text.ToString ().ToUpper();
+			urlString = _postURL6+ WWW.EscapeURL (userName)+"/"+WWW.EscapeURL(password); //ahora revisaremos si la contraseña es correcta
+			WWW postName2 = new WWW (urlString);
+			yield return postName2;
+			//string pass = postName.text.ToString ().Substring (postName.text.LastIndexOf ("-") + 1);
+			//pass = pass.Substring (0, pass.Length-1);
+			//if(password.Equals(pass)){  //Todo correcto, procesa los datos
+			if(postName2.text.Equals("true")){
+				terapeuta = new TerapeutaData();
+				terapeuta.Nombre=docName.Substring(0,docName.LastIndexOf(" "));
+				terapeuta.Id=int.Parse(docName.Substring(docName.LastIndexOf(" ")));
+				//GameSaveLoad._PacienteNameWithSpaces=docName;
+				//GameSaveLoad._PacienteName=docName.Replace(" ","");
+				warning.gameObject.SetActive(false);
+				Debug.LogWarning("TODO CORRECTO SIR!!");
+				SceneManager.LoadScene (10);
+				//bienvenido.text=terapeuta.Nombre;
+				//opcionesCanvas.SetActive(true);
+				//inicioCanvas.SetActive(false);
+				//cerrarSesion_button.gameObject.SetActive(true);
+				//crearRutina_button.interactable=true;
+				//crearRutina_button.gameObject.SetActive(true);
+				//seleccionarNivel_button.gameObject.SetActive(false);
+				//cargarRutina_button.gameObject.SetActive(false);
+				//veryAsignarRutina_button.gameObject.SetActive(true);
+				//asignaNivel_button.gameObject.SetActive (true);
+				//jugar_button.gameObject.SetActive(false);
+				//tutorial_button.gameObject.SetActive(false);
+				//personaje_button.gameObject.SetActive(false);
+				//IsMedico=true;
+				//inicioSesion=true;
+				//Online=true;
+				//DescomprimeZIP(); //descargamos del servidor las rutinas que haya creado el terapeuta
+			}
+			else{
+				warning.gameObject.SetActive(true);
+				warning.text="Contraseña incorrecta.\n Por favor verifique e intente nuevamente.";
+			}
+		} else {
+			warning.gameObject.SetActive(true);
+			warning.text="El usuario no existe.\n Por favor verifique e intente nuevamente.";
 		}
 	}
 

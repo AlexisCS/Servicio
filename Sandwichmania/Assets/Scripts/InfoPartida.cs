@@ -23,6 +23,11 @@ public class InfoPartida  {
 //	public float tiempoDedoIndice, tiempoDedoMedio, tiempoDedoAnular, tiempoDedoMeñique;
 }
 
+public class TerapeutaData{
+	public string Nombre;
+	public int Id;
+}
+	
 public class Nivel1{
 	public int nivel;
 	public Mano ManoSeleccionada;
