@@ -9,55 +9,152 @@ using System.IO;
 using System.Xml; 
 using System.Xml.Serialization;  
 using System.Text;
+using UnityEngine.UI.Extensions;
 
 public class InterfazMedico : MonoBehaviour {
+
+	private string _postURL1= "http://132.248.16.11/unity/verPacientes.php";
+	private string _urlAsignaRutina="http://132.248.16.11/unity/actualizaRutina.php"; //este script hace un update a la tabla medical_histories en el campo nombre rutina
 
 	public GameObject[] interfaz;
 	public InputField nombreDeRutina, descripcionDeRutina;
 	public InputField muestraRutina;
 	public Text advertencia;
 	public Text nombreTerapeuta;
-	public Dropdown rutinas;
-	public Dropdown pacientes;
+	public Text descripcionRutina;
+	public DropDownList rutinas;
+	public DropDownList pacientes;
 
+	//De este objeto se leeran las caracteristicas y parametros de la rutina en la sig. escena
+	public static RutinaData myRoutineData;
+
+	private bool rutinaSeleccionada=false;
+	private bool pacienteSeleccionado=false;
+	private string idPacienteSeleccionado;
+	private string _nombreRutinaSeleccionada;
 
 	private List<ActivaPanelDedos> _rutina = new List<ActivaPanelDedos> ();
-	private List<string> _nombresDeRuitinas = new List<string> ();
 	private string _nombresPacientes;
-	string _data;
-	int count = 0;
+	string _data, _routineData;
 	enum FlechasTeclado {Ninguna, Cualquiera, Arriba, Derecha, Abajo, Izquierda}
 	FlechasTeclado ElementoRutina;
 
 	void Awake(){
+		pacientes.Initialize ();
+		rutinas.Initialize ();
 		EntregaNombreTerapeuta ();
 		_nombresPacientes = "";
 		try {
-			//StartCoroutine (GetPatientsFromDoc(SelectorEscenas.terapeuta.Id.ToString()));
+			StartCoroutine (GetPatientsFromDoc(Admin_level0.terapeuta.Id.ToString ()));
 		} catch (Exception e) {
 			Debug.Log ("Problemas obteniendo pacientes del doc.");
 		}
 		//primero obtenemos todos los ducumentos que contengan rutinas
+		ObtieneRutinas();
+	}
+
+	void ObtieneRutinas(){
 		DirectoryInfo dir = new DirectoryInfo(GameSaveLoad._FileLocation);
 		FileInfo[] info = dir.GetFiles("*_SandwichmaniaRutina.xml");
 		foreach (FileInfo f in info)  
 		{ 
 			Debug.Log(f+"ruta");
-			//DropDownListItem atem=new DropDownListItem();
+			DropDownListItem temporal = new DropDownListItem();
 			//atem.ID=f.ToString();   //<=no me esta leyendo esta direccion en el ejecutable
+			temporal.Caption=f.ToString().Substring(f.ToString().LastIndexOf("\\")+1);
+			temporal.ID=GameSaveLoad._FileLocation+"\\"+temporal.Caption;
+			temporal.Caption=temporal.Caption.Substring(0,temporal.Caption.LastIndexOf("_"));
+			temporal.Caption=temporal.Caption.Substring(temporal.Caption.IndexOf("_")+1);
+			rutinas.Items.Add (temporal);
+		}
+		rutinas.RebuildPanel ();
+	}
 
-			//atem.Caption=f.ToString().Substring(f.ToString().LastIndexOf("\\")+1);
-			rutinas.itemText.text = f.ToString().Substring(f.ToString().LastIndexOf("\\")+1);
-			//atem.ID=GameSaveLoad._FileLocation+"\\"+atem.Caption;
-			// rutinas.
-			//atem.Caption=atem.Caption.Substring(0,atem.Caption.LastIndexOf("_"));
-			//atem.Caption=atem.Caption.Substring(atem.Caption.IndexOf("_")+1);
-			//DropDownList_Rutinas.Items.Add(atem);
+	private IEnumerator GetPatientsFromDoc(string id){
+		Debug.Log ("Obteniendo pacientes del Doc.");
+		string urlString = _postURL1 + "?"+"id_doc=" + WWW.EscapeURL (id);
+		WWW postName = new WWW (urlString);
+		yield return postName;
+		Debug.Log ("Pacientes:"+postName.text.ToString()+"FIN");
+		//namesP = postName.text.ToString ();
+
+		string[] patients = postName.text.ToString().Split (';');
+		foreach (string p in patients) 
+		{ 
+			if(p.Length>2){
+				Debug.Log(p+"paciente");
+				DropDownListItem etemporal=new DropDownListItem();
+				etemporal.Caption=p.ToString().Substring(0,p.LastIndexOf("_"));
+				//aaqui tengo que poner el id del paceinte
+				etemporal.ID=p.ToString().Substring(p.LastIndexOf("_")+1);
+				pacientes.Items.Add (etemporal);
+			}
+		}
+		Debug.Log (postName);
+		Debug.Log ("termine");
+		pacientes.RebuildPanel ();
+
+
+		Debug.Log ("termine");
+	}
+
+	//esta función se manda llamar desde el script DropDownList.cs al momento de seleccionar un paciente de la lista desplegable
+	public void RegisterPatientId(String patientId, String patientName){
+		//warning.gameObject.SetActive (false);
+		///pacienteSeleccionado = true;
+		//idPacienteSeleccionado = patientId;
+		//nombrePacienteSeleccionado = patientName;
+		//nombrePacienteSeleccionadoFile = patientName.ToUpper().Replace(" ",string.Empty)+"Data.xml";
+		//Debug.Log ("NOmbre del archvo que debo buscar"+nombrePacienteSeleccionado);
+		//Debug.Log (idPacienteSeleccionado);
+	}
+
+	public void ReadRutina(string path){
+		myRoutineData = new RutinaData();
+		_routineData=LoadRoutineXML(path);
+		if (_routineData.ToString () != "") {
+			myRoutineData = (RutinaData)DeserializeObject (_routineData);
+			//Debug.Log(myRoutineData.Descripcion.ToString());
+			//if(descripcionRutina)
+				descripcionRutina.text="\n"+myRoutineData.DescripcionDeRutina.ToString ()+"\n";
+//			if(nivelesRutina_text)
+//				nivelesRutina_text.text="No. de sets que contiene la rutina: "+myRoutineData.CantidadDeSets.ToString();
+//			if(tiempoDescansoRutina_text)
+//				tiempoDescansoRutina_text.text="Tiempo de descanso entre sets: "+myRoutineData.TiempoDeDescansoEntreSets.ToString()+"s.";
+			//			if(!Application.loadedLevelName.Equals("PreVisualizaRutina")){
+			//				if(myRoutineData.dispo.Equals(RutinaData.Dispositivo.KinectV2))
+			//					onlyKinectV2Panel.SetActive(true);
+			//				else
+			//					onlyKinectV2Panel.SetActive(false);
+			//			}
+			rutinaSeleccionada=true;
+			_nombreRutinaSeleccionada=Admin_level0.terapeuta.Id+"_"+myRoutineData.NombreDeRutina+"_SandwichmaniaRutina.xml";
+//			if(warning)
+//				warning.gameObject.SetActive(false);
+//		} else {
+//			rutinaSeleccionada=false;
+//			warning.gameObject.SetActive(true);
+//			warning.text="Existe un error con el archivo.\n Por favor seleccione otra rutina.";
 		}
 	}
 
-	void ImprimeRutinas(){
-		rutinas.AddOptions (_nombresDeRuitinas);
+	// Here we deserialize it back into its original form
+	public object DeserializeObject(string pXmlizedString)
+	{
+		XmlSerializer xs = new XmlSerializer(typeof(RutinaData));
+		MemoryStream memoryStream = new MemoryStream(GameSaveLoad.StringToUTF8ByteArray(pXmlizedString));
+		XmlTextWriter xmlTextWriter = new XmlTextWriter(memoryStream, Encoding.UTF8);
+		return xs.Deserialize(memoryStream);
+	}
+
+	static string LoadRoutineXML(string routinePath)
+	{
+		StreamReader r = File.OpenText(routinePath);
+		string _info = r.ReadToEnd();
+		r.Close();
+		string _data=_info;
+		Debug.Log("Routine Read");
+		return _data;
 	}
 
 	public void SeleccionaCategoria (int categoria){
@@ -149,12 +246,13 @@ public class InterfazMedico : MonoBehaviour {
 			break;
 		case 1:
 			Save ();
-			count += 1;
 			interfaz [0].gameObject.SetActive (true);
 			interfaz [3].gameObject.SetActive (false);
 			interfaz [8].gameObject.SetActive (false);
 			muestraRutina.text = "";
 			_rutina.Clear ();
+			rutinas.Items.Clear ();
+			ObtieneRutinas ();
 			break;
 		case 2:
 			interfaz [0].gameObject.SetActive (true);
@@ -182,10 +280,6 @@ public class InterfazMedico : MonoBehaviour {
 
 	public void BotonNoCerraSesion(){
 		interfaz [10].gameObject.SetActive (false);
-	}
-
-	// Use this for initialization
-	void Start () {
 	}
 
 	void ImprimeRutina(){
