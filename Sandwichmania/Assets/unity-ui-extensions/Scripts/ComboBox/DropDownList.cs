@@ -19,8 +19,8 @@ namespace UnityEngine.UI.Extensions
 		public List<DropDownListItem> Items;
 		public System.Action<int> OnSelectionChanged; // fires when selection is changed;
 
-		public GameObject tempObj;
-		public InterfazMedico tempScript;
+		//public GameObject tempObj;
+		public InterfazMedico scriptInterfazMedico;
 
 		//private bool isInitialized = false;
 		private bool _isPanelActive = false;
@@ -83,7 +83,7 @@ namespace UnityEngine.UI.Extensions
 			//if (Application.loadedLevelName.Equals ("AsignaNivel")) {
 			//	asignaScript = tempObj.GetComponent<AsignaNivel> ();
 			//} else {
-			tempScript = tempObj.GetComponent<InterfazMedico> ();
+			//tempScript = tempObj.GetComponent<InterfazMedico> ();
 			//}
 			//asignaScript=tempObj.GetComponent<AsignaNivel>();
 			bool success = true;
@@ -207,16 +207,22 @@ namespace UnityEngine.UI.Extensions
 
 			_selectedIndex = indx;
 			ToggleDropdownPanel(true);
-			UpdateSelected();
+			if (this.name.Equals ("SeleccionaRutina_DropDownList")) {
+				if (Items [indx].ID.ToString () != " ") {
+					scriptInterfazMedico.ReadRutina (Items [indx].ID.ToString ());
+					//BuscarRutina.ReadRutina (Items [indx].ID.ToString ());
+				}
+			}
 
-			if (this.name.Equals ("DropDownListP")) {
+			if (this.name.Equals ("SeleccionaPaciente_DropDownList")) {
 				if (Items [indx].ID.ToString () != " ") {
 					//if (!Application.loadedLevelName.Equals ("AsignaNivel"))
-						tempScript.RegisterPatientId (Items [indx].ID.ToString(),Items[indx].Caption.ToString()); //envio el ID del paciente y su nombre
+						scriptInterfazMedico.RegisterPatientId (Items [indx].ID.ToString(),Items[indx].Caption.ToString()); //envio el ID del paciente y su nombre
 					//else
 					//	asignaScript.RegisterPatientId(Items [indx].ID.ToString(),Items[indx].Caption.ToString());
 				}
 			}
+			UpdateSelected();
 		}
 
 		private void UpdateSelected()
