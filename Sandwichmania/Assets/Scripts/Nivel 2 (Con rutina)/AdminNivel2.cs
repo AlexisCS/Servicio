@@ -38,7 +38,7 @@ public class AdminNivel2 : MonoBehaviour {
 	void Awake(){
 		//_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Medio, ActivaPanelDedos.Anular, ActivaPanelDedos.Meñique};
 		_secuencia = Load ().Rutina;
-		_numeroDeRepeticiones = Load ().NumeroDeRepeticiones;
+		_numeroDeRepeticiones = 3;
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interfaz [0].gameObject.SetActive (true);

@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/_Scenes/Interfaz del Terapeuta.unity
+- path: Assets/_Scenes/Inicio.unity
   isLoaded: 1
   isActive: 1

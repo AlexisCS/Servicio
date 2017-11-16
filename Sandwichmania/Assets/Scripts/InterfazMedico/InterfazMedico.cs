@@ -16,6 +16,7 @@ public class InterfazMedico : MonoBehaviour {
 	private string _postURL1= "http://132.248.16.11/unity/verPacientes.php";
 	private string _urlAsignaRutina="http://132.248.16.11/unity/actualizaRutina.php"; //este script hace un update a la tabla medical_histories en el campo nombre rutina
 
+	public RectTransform[] panel;
 	public GameObject[] interfaz;
 	public InputField nombreDeRutina, descripcionDeRutina;
 	public InputField muestraRutina;
@@ -30,6 +31,7 @@ public class InterfazMedico : MonoBehaviour {
 	//De este objeto se leeran las caracteristicas y parametros de la rutina en la sig. escena
 	public static RutinaData myRoutineData;
 
+	private  int repeticiones;
 	private bool _rutinaSeleccionada = false;
 	private bool _pacienteSeleccionado = false;
 	private string _nombreRutinaSeleccionada;
@@ -57,9 +59,15 @@ public class InterfazMedico : MonoBehaviour {
 		ObtieneRutinas();
 	}
 
+
+	public void UltimosHijos(){
+		panel [0].SetAsLastSibling ();
+		panel [1].SetAsLastSibling ();
+	}
+
 	void ObtieneRutinas(){
 		DirectoryInfo dir = new DirectoryInfo(GameSaveLoad._FileLocation);
-		FileInfo[] info = dir.GetFiles("*_SandwichmaniaRutina.xml");
+		FileInfo[] info = dir.GetFiles("*_sandwichRutina.xml");
 		foreach (FileInfo f in info)  
 		{ 
 			Debug.Log(f+"ruta");
@@ -102,30 +110,58 @@ public class InterfazMedico : MonoBehaviour {
 		Debug.Log ("termine");
 	}
 
-	public void AsignarRutina(){
-//		if (!_pacienteSeleccionado) {
-//			//warning.gameObject.SetActive (true);
-//			//warning.text = "Por favor seleccione un paciente para continuar.";
-//			advertenciaSeleccion.text = "Por favor seleccione un paciente para continuar.";
-//			return;
-//		}
-//		if (!_rutinaSeleccionada) {
-//			//warning.gameObject.SetActive (true);
-//			//warning.text = "Por favor seleccione una rutina para continuar.";
-//			advertenciaSeleccion.text = "Por favor seleccione una rutina para continuar.";
-//			return;
-//		}
-//		StartCoroutine (ActualizaRutina());
+//	public void AsignarRutina(){
+////		if (!_pacienteSeleccionado) {
+////			//warning.gameObject.SetActive (true);
+////			//warning.text = "Por favor seleccione un paciente para continuar.";
+////			advertenciaSeleccion.text = "Por favor seleccione un paciente para continuar.";
+////			return;
+////		}
+////		if (!_rutinaSeleccionada) {
+////			//warning.gameObject.SetActive (true);
+////			//warning.text = "Por favor seleccione una rutina para continuar.";
+////			advertenciaSeleccion.text = "Por favor seleccione una rutina para continuar.";
+////			return;
+////		}
+////		
+//	}
+
+	IEnumerator IfNewUploadXMLToServer(){
+		yield return new WaitForSeconds (5f); 
+		string filePath = GameSaveLoad._FileLocation + "\\" +Admin_level0.terapeuta.Id +"_"+nombreDeRutina.text+"_sandwichRutina.xml";
+		// Create a Web Form
+		WWWForm form = new WWWForm();
+		if (File.Exists (filePath)) {
+			StreamReader r = File.OpenText (filePath); 
+			string _info = r.ReadToEnd (); 
+			r.Close (); 
+			Debug.Log ("File Read");
+			byte[] levelData =Encoding.UTF8.GetBytes(_info);
+			string fileName = Admin_level0.terapeuta.Id +"_"+nombreDeRutina.text+"_sandwichRutina.xml";
+			form.AddField("file","file");
+			form.AddBinaryData ( "file", levelData, fileName,"text/xml");
+			Debug.Log("sin error");
+			Debug.Log (fileName);
+			WWW w = new WWW("http://132.248.16.11/unity/uploadXML.php",form);
+			print("www created");
+			yield return w;
+			yield return new WaitForSeconds (5f);
+			Debug.Log("enviado");
+			Debug.Log("Me responde"+w.text.ToString());
+		} else {
+			Debug.Log("File Doesnt exist");
+		}
+//		panel_espereUnMomento.SetActive (false);
+//		panel_final.SetActive (true);
 	}
 
 	IEnumerator ActualizaRutina(){
 		if (_pacienteSeleccionado && _rutinaSeleccionada) {
-			string urlString = _urlAsignaRutina + "?id=" + _idPacienteSeleccionado +"&rutina="+ _nombreRutinaSeleccionada;
+			string urlString = _urlAsignaRutina + "?id=" + WWW.EscapeURL (_idPacienteSeleccionado)+"&rutina="+ WWW.EscapeURL (_nombreRutinaSeleccionada) +"&num_repeticiones="+ WWW.EscapeURL (numeroDeRepeticiones.text);
 			Debug.Log("Estoy mandando"+urlString);
 			WWW postName = new WWW (urlString);
 			yield return postName;
 			Debug.Log("La actualizacion retorno"+postName.text.ToString());
-			//noKinectBox.gameObject.SetActive(true);// en la escena de ver y asignar rutinas este panel en realidad muestra un mensaje de que la rutina se asigno correctamente
 		}
 	}
 
@@ -156,14 +192,9 @@ public class InterfazMedico : MonoBehaviour {
 	}
 	//esta función se manda llamar desde el script DropDownList.cs al momento de seleccionar un paciente de la lista desplegable
 	public void RegisterPatientId(String patientId, String patientName){
-		//warning.gameObject.SetActive (false);
 		_pacienteSeleccionado = true;
 		_idPacienteSeleccionado = patientId;
 		_nombrePacienteSleccionado = patientName;
-//		ReadRutina ();
-		//nombrePacienteSeleccionadoFile = patientName.ToUpper().Replace(" ",string.Empty)+"Data.xml";
-		//Debug.Log ("NOmbre del archvo que debo buscar"+nombrePacienteSeleccionado);
-		//Debug.Log (idPacienteSeleccionado);
 	}
 
 	public void ReadRutina(string path){
@@ -171,21 +202,12 @@ public class InterfazMedico : MonoBehaviour {
 		_routineData=LoadRoutineXML(path);
 		if (_routineData.ToString () != "") {
 			myRoutineData = (RutinaData)DeserializeObject (_routineData);
-			//Debug.Log(myRoutineData.Descripcion.ToString());
-			//if(descripcionRutina)
 			descripcionRutina.text="\n"+myRoutineData.DescripcionDeRutina.ToString ()+"\n";
-//			if(nivelesRutina_text)
-//				nivelesRutina_text.text="No. de sets que contiene la rutina: "+myRoutineData.CantidadDeSets.ToString();
-//			if(tiempoDescansoRutina_text)
-//				tiempoDescansoRutina_text.text="Tiempo de descanso entre sets: "+myRoutineData.TiempoDeDescansoEntreSets.ToString()+"s.";
-			//			if(!Application.loadedLevelName.Equals("PreVisualizaRutina")){
-			//				if(myRoutineData.dispo.Equals(RutinaData.Dispositivo.KinectV2))
-			//					onlyKinectV2Panel.SetActive(true);
-			//				else
-			//					onlyKinectV2Panel.SetActive(false);
-			//			}
+			for (int i = 0; i <= myRoutineData.Rutina.Count - 1; i++) {
+				descripcionRutina.text += myRoutineData.Rutina [i] +", ";
+			}
 			_rutinaSeleccionada=true;
-			_nombreRutinaSeleccionada=Admin_level0.terapeuta.Id+"_"+myRoutineData.NombreDeRutina+"_SandwichmaniaRutina.xml";
+			_nombreRutinaSeleccionada=Admin_level0.terapeuta.Id+"_"+myRoutineData.NombreDeRutina+"_sandwichRutina.xml";
 //			if(warning)
 //				warning.gameObject.SetActive(false);
 //		} else {
@@ -283,7 +305,6 @@ public class InterfazMedico : MonoBehaviour {
 			advertenciaSeleccion.text = "Por favor ingrese el numero de repeticiones para continuar.";
 			return;
 		}
-		//StartCoroutine (ActualizaRutina());
 		interfaz [7].gameObject.SetActive (true);
 	}
 
@@ -301,6 +322,8 @@ public class InterfazMedico : MonoBehaviour {
 	public void BotonSiGuardaRutina(){
 		interfaz [8].gameObject.SetActive (true);
 		interfaz [6].gameObject.SetActive (false);
+		Save ();
+		StartCoroutine (IfNewUploadXMLToServer ());
 	}
 
 	public void BotonNoGuardaRutina(){
@@ -315,7 +338,6 @@ public class InterfazMedico : MonoBehaviour {
 			ElementoRutina = FlechasTeclado.Cualquiera;
 			break;
 		case 1:
-			Save ();
 			interfaz [0].gameObject.SetActive (true);
 			interfaz [3].gameObject.SetActive (false);
 			interfaz [8].gameObject.SetActive (false);
@@ -329,11 +351,18 @@ public class InterfazMedico : MonoBehaviour {
 			interfaz [4].gameObject.SetActive (false);
 			interfaz [9].gameObject.SetActive (false);
 			break;
+		case 3:
+			interfaz [11].gameObject.SetActive (false);
+			break;
+		case 4:
+			interfaz [12].gameObject.SetActive (false);
+			break;
 		}
 	}
 
 	public void BotonSiAsignaRutina(){
 		interfaz [9].gameObject.SetActive (true);
+		StartCoroutine (ActualizaRutina());
 	}
 
 	public void BotonNoAsignaRutina(){
@@ -365,7 +394,6 @@ public class InterfazMedico : MonoBehaviour {
 		RutinaData myData = new RutinaData();
 		myData.NombreDeRutina = nombreDeRutina.text.ToString ();
 		myData.DescripcionDeRutina = descripcionDeRutina.text.ToString ();
-		myData.NumeroDeRepeticiones = 3;
 		myData.Rutina = _rutina;
 		//		if (RutinaOnlyForKinectV2) {
 		//			myData.dispo = RutinaData.Dispositivo.KinectV2;
@@ -399,7 +427,7 @@ public class InterfazMedico : MonoBehaviour {
 	void CreateXML() { 
 		StreamWriter writer; 
 		//FileInfo t = new FileInfo(GameSaveLoad._FileLocation+"\\"+"Terapeuta"+count+"_"+"ID"+"_PMRutina.xml"); 
-		FileInfo t= new FileInfo(GameSaveLoad._FileLocation + "\\" +Admin_level0.terapeuta.Id +"_"+nombreDeRutina.text+"_SandwichmaniaRutina.xml");
+		FileInfo t= new FileInfo(GameSaveLoad._FileLocation + "\\" +Admin_level0.terapeuta.Id +"_"+nombreDeRutina.text+"_sandwichRutina.xml");
 		//no se sobreescribira el archivo de la rutina
 		if(!t.Exists) { 
 			writer = t.CreateText(); 
@@ -444,6 +472,5 @@ public class InterfazMedico : MonoBehaviour {
 public class RutinaData{
 	public string NombreDeRutina;
 	public string DescripcionDeRutina;
-	public int NumeroDeRepeticiones;
 	public List <ActivaPanelDedos> Rutina;
 }

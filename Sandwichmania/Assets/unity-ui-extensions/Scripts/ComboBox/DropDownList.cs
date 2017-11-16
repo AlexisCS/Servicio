@@ -202,6 +202,7 @@ namespace UnityEngine.UI.Extensions
 
 		private void OnItemClicked(int indx)
 		{
+			scriptInterfazMedico.UltimosHijos ();
 			Debug.Log("item " + indx + " clicked");
 			if (indx != _selectedIndex && OnSelectionChanged != null) OnSelectionChanged(indx);
 
@@ -210,7 +211,6 @@ namespace UnityEngine.UI.Extensions
 			if (this.name.Equals ("SeleccionaRutina_DropDownList")) {
 				if (Items [indx].ID.ToString () != " ") {
 					scriptInterfazMedico.ReadRutina (Items [indx].ID.ToString ());
-					//BuscarRutina.ReadRutina (Items [indx].ID.ToString ());
 				}
 			}
 
