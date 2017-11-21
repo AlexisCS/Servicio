@@ -2,13 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Xml; 
+using System.Xml.Serialization; 
+using System.IO;
 using UnityEngine.UI;
+using Ionic.Zip;
 //using NUnit.Framework.Internal.Filters;
 
 public class Admin_level0 : MonoBehaviour {
 
 	public static InfoPartida datos;
 	public static TerapeutaData terapeuta;
+	public static Nivel2 datosRutina;
+	public static string nombreRutinaAJugar;
 
 //	public GameObject PanelAutenticaMedico;
 	public Text warning;
@@ -21,6 +27,9 @@ public class Admin_level0 : MonoBehaviour {
 	private string _postURL2 =  "http://132.248.16.11/unity/index.php"; 	//direccion que recibe el Id del paciente y devuelve su nombre y apellidos
 	private string _postURL3 = "http://132.248.16.11/unity/validaDoctor.php";  //me dice si existe o no existe el terapeuta
 	private string _postURL6 = "http://132.248.16.11/citan/authGame/";  //valida la contraseña del terapeuta
+	private string _urlRevisaSiTieneRutina="http://132.248.16.11/unity/rutinaAsignada.php"; //este php nos devuelve el nombre de la rutina que el paciente tenga asignada, en caso de no tener devuelve "Ninguna"
+
+	private string pathStoreAllInfo=GameSaveLoad._FileLocation;
 	private string _userName;
 
 	public void Setget (){
@@ -29,14 +38,15 @@ public class Admin_level0 : MonoBehaviour {
 		string contraseña = password.text.ToString ();
 		_idNumerico = int.TryParse (usuario, out i);
 		if(_idNumerico == true){
-				StartCoroutine (VerifyPatient (usuario, contraseña));
+			StartCoroutine (VerifyPatient (usuario, contraseña));
 		} else {
-				StartCoroutine (VerifyDoctor (usuario, contraseña));
+			StartCoroutine (VerifyDoctor (usuario, contraseña));
 		}
 	} 
 
 	void Awake () {
 		datos = new InfoPartida ();
+		datosRutina = new Nivel2 ();
 		_userName = " ";
 	}
 
@@ -49,6 +59,85 @@ public class Admin_level0 : MonoBehaviour {
 		}
 		if(Input.GetKeyDown (KeyCode.Return)){
 			Setget ();
+		}
+	}
+
+	private IEnumerator GetRutinasName(string id)
+	{
+		string urlString = _urlRevisaSiTieneRutina + "?"+"id=" + WWW.EscapeURL (id);
+		WWW postName = new WWW (urlString);
+		yield return postName;
+		Debug.Log ("Nombre Rutina:"+postName.text.ToString()+" XD.");
+		if (!postName.text.ToString ().Contains ("Ninguna") && postName.text.ToString ().Length > 2) {
+			nombreRutinaAJugar=postName.text.ToString();
+			Debug.Log (nombreRutinaAJugar);
+				string [] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml 
+				StartCoroutine (DownloadRoutine (rutina [0], postName.text.ToString ()));
+		} else
+			ShowPatientOpctionsNoRoutine ();
+	}
+
+	void ShowPatientOptionsRoutine(){
+//		veryAsignarRutina_button.gameObject.SetActive (false);
+//		PanelMensajeNoRutina.SetActive (false);
+//		tutorial_button.gameObject.SetActive (true);
+//		personaje_button.gameObject.SetActive (true);
+//		asignaNivel_button.gameObject.SetActive (false);
+//		if (AsistidoPorTerapeuta) {
+//			jugar_button.gameObject.SetActive (false);
+//			cargarRutina_button.gameObject.SetActive (true);
+//			crearRutina_button.gameObject.SetActive (true);
+//			seleccionarNivel_button.gameObject.SetActive (true);
+//		} else {
+//			jugar_button.gameObject.SetActive (true);
+//			cargarRutina_button.gameObject.SetActive (false);
+//			crearRutina_button.gameObject.SetActive (false);
+//			seleccionarNivel_button.gameObject.SetActive (false);
+//		}
+	}
+
+	void ShowPatientOpctionsNoRoutine(){
+//		veryAsignarRutina_button.gameObject.SetActive (false);
+//		jugar_button.gameObject.SetActive (false);
+//		tutorial_button.gameObject.SetActive (true);
+//		personaje_button.gameObject.SetActive (true);
+//		asignaNivel_button.gameObject.SetActive (false);
+//		if (AsistidoPorTerapeuta) {
+//			cargarRutina_button.gameObject.SetActive (true);
+//			crearRutina_button.gameObject.SetActive (true);
+//			personaje_button.gameObject.SetActive(true);
+//			seleccionarNivel_button.gameObject.SetActive (true);
+//		} else {
+//			cargarRutina_button.gameObject.SetActive (false);
+//			crearRutina_button.gameObject.SetActive (false);
+//			personaje_button.gameObject.SetActive(false);
+//			seleccionarNivel_button.gameObject.SetActive (false);
+//		}
+//		if (!_dontShowMessageNoRoutineAgain)
+//			PanelMensajeNoRutina.SetActive (true);
+	}
+
+	IEnumerator DownloadRoutine(string doc_id, string name){
+		string url = "http://132.248.16.11/unity/RutinasSandwich/"+WWW.EscapeURL(doc_id)+"/"+WWW.EscapeURL(name);
+		//WWWForm form = new WWWForm();
+		Debug.Log(url);
+		WWW ww = new WWW(url);
+		yield return ww;
+		Debug.Log("Descargando la rutina asignada.");
+		if (ww.error == null)
+		{	
+			//string fullPath = Application.dataPath+"\\"+name;   //probando
+			string fullPath=pathStoreAllInfo+"\\"+name; 
+			File.WriteAllBytes (fullPath, ww.bytes);
+			//nombreRutinaAJugar=fullPath; //esta direccion se utilizara en la escena PreJuega
+			Debug.Log("Rutinaddescargadaconexito");
+			//una vez que descargamos la rutina solo deben aparecer los botones jugar, estadisticas, seleccionar personaje y tutorial
+			//si no tiene rutina debe aparecer los botones estadisticas, seleccionar personaje y tutorial
+			ShowPatientOptionsRoutine ();
+		}
+		else
+		{
+			Debug.Log("ERROR: " + ww.error +"No hay XML en server");  //Probablemente no existe el archivo 
 		}
 	}
 
@@ -87,7 +176,8 @@ public class Admin_level0 : MonoBehaviour {
 		string realPassword = postName.text.ToString ();  //contraseña asociada al ID en CITAN
 		Debug.Log ("Real password"+realPassword);
 		if (InputPassword.Equals (realPassword)) {
-			SceneManager.LoadScene (1);
+			StartCoroutine (GetRutinasName (id));
+			//SceneManager.LoadScene (1);
 			//PanelAutenticaMedico.SetActive (true);	
 		} else {
 			warning.gameObject.SetActive(true);
@@ -148,5 +238,6 @@ public class Admin_level0 : MonoBehaviour {
 			warning.text="El usuario no existe.\n Por favor verifique e intente nuevamente.";
 		}
 	}
+
 
 }

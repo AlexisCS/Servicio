@@ -10,6 +10,7 @@ using System.Xml;
 using System.Xml.Serialization;  
 using System.Text;
 using UnityEngine.UI.Extensions;
+using Ionic.Zip;
 
 public class InterfazMedico : MonoBehaviour {
 
@@ -38,6 +39,9 @@ public class InterfazMedico : MonoBehaviour {
 	private string _idPacienteSeleccionado;
 	private string _nombrePacienteSleccionado;
 	private string namesP;
+	private string _urlZIP = "http://132.248.16.11/unity/createZIP.php?id=";//no crea (si existen) un ZIP de todas las rutinas creadas por el terapeuta 
+	private string _urlDeleteZIP="http://132.248.16.11/unity/deleteZIP.php?id="; //borra un archivo ZIP del servidor, se tiene que enviar el id del terapeuta
+	private string pathStoreAllInfo=GameSaveLoad._FileLocation;
 
 	private List<ActivaPanelDedos> _rutina = new List<ActivaPanelDedos> ();
 	private string _nombresPacientes;
@@ -57,6 +61,10 @@ public class InterfazMedico : MonoBehaviour {
 		}
 		//primero obtenemos todos los ducumentos que contengan rutinas
 		ObtieneRutinas();
+	}
+
+	void Start(){
+		DescomprimeZIP ();
 	}
 
 
@@ -151,6 +159,9 @@ public class InterfazMedico : MonoBehaviour {
 		} else {
 			Debug.Log("File Doesnt exist");
 		}
+		yield return new WaitForSeconds (5f);
+		interfaz [8].gameObject.SetActive (true);
+		interfaz [13].gameObject.SetActive (false);
 //		panel_espereUnMomento.SetActive (false);
 //		panel_final.SetActive (true);
 	}
@@ -320,7 +331,7 @@ public class InterfazMedico : MonoBehaviour {
 	}
 
 	public void BotonSiGuardaRutina(){
-		interfaz [8].gameObject.SetActive (true);
+		interfaz [13].gameObject.SetActive (true);
 		interfaz [6].gameObject.SetActive (false);
 		Save ();
 		StartCoroutine (IfNewUploadXMLToServer ());
@@ -440,6 +451,50 @@ public class InterfazMedico : MonoBehaviour {
 	void EntregaNombreTerapeuta(){
 //		nombreTerapeuta.text = Admin_level0.terapeuta.Nombre.ToString ();
 	}
+
+	public void DescomprimeZIP(){
+		StartCoroutine (DownloadDocRoutines(Admin_level0.terapeuta.Id));
+		//string zipfilePath = "C:/Users/Yoás/Desktop/YoisExample.zip";
+		//string exportLocation = "C:/Users/Yoás/Desktop/";
+		//ZipUtil.Unzip ( zipfilePath, exportLocation);
+
+	}
+
+	IEnumerator DownloadDocRoutines(int doc_id){
+		string url = _urlZIP+ doc_id+"&juego='sandwich'";
+		Debug.Log ("DEntro");
+		WWW postName = new WWW (url);
+		yield return postName;		//creamos el ZIP de las rutinas que ha creado el terapeuta se llama id_doc.zip ej. 13.zip
+		//yield return new WaitForSeconds (5f);
+		Debug.Log (postName.text.ToString() + "Hola");
+		if (postName.text.ToString ().Contains ("ZIPcreated")) { //si existen rutinas creadas por el terapeuta descargamos el zip de esas rutinas
+			url = "http://132.248.16.11/unity/"+doc_id+".zip";
+			//WWWForm form = new WWWForm();
+			WWW ww = new WWW(url);
+			yield return ww; //aqui ya descargamos el zip
+			if (ww.error == null)
+			{	
+				string fullPath = pathStoreAllInfo+"\\"+doc_id+".zip"; //ruta donde guardamos el ZIP que descargamos
+				File.WriteAllBytes (fullPath, ww.bytes);
+				string exportLocation = pathStoreAllInfo+"\\"; 	//ruta donde extraemos el contenido del ZIP ej. "C:/Users/Yoás/Desktop//"	
+				ZipUtil.Unzip ( fullPath, exportLocation);
+				//				using(ZipFile zip=ZipFile.Read(fullPath)){
+				//					//extrayendo
+				//					foreach(ZipEntry z in zip){
+				//						z.Extract(exportLocation,ExtractExistingFileAction.OverwriteSilently);
+				//					}
+				//				}
+
+				//yield return new WaitForSeconds(2f);
+				File.Delete(fullPath); //borramos el ZIP
+				//borramos el ZIP del servidor
+				url = _urlDeleteZIP+doc_id;
+				WWW postName2 = new WWW (url);
+				yield return postName2;
+			}
+		}
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.UpArrow) && ElementoRutina == FlechasTeclado.Cualquiera) {
