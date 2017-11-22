@@ -21,12 +21,13 @@ public class AdminNivel2 : MonoBehaviour {
 	public GameObject[] interfaz;
 	public Text mensajeFelicitacion;
 
-	private int _numeroDeRepeticiones;
+	public static int _numeroDeRepeticiones;
 
 	static string _data;
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
-	private List<ActivaPanelDedos> _secuencia;
+
+	public static List<ActivaPanelDedos> _secuencia;
 	private int _contadorCapa, _count, _limite; 
 	Mano _mano;
 	private bool _pan, _jamon, _queso, _jitomate;
@@ -37,7 +38,7 @@ public class AdminNivel2 : MonoBehaviour {
 
 	void Awake(){
 		//_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Medio, ActivaPanelDedos.Anular, ActivaPanelDedos.Meñique};
-		_secuencia = Load ().Rutina;
+		//_secuencia = ;
 		_numeroDeRepeticiones = 3;
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
@@ -67,51 +68,6 @@ public class AdminNivel2 : MonoBehaviour {
 		DetectaColision.OnJitomateApilado -= AgregaJitomate;
 	}
 
-
-	public static RutinaData Load(){ 
-		//Creamos el objeto de tipo PacienteData donde almacenaremos la info deserializada de _data
-		RutinaData myData2 = new RutinaData ();
-		//La información del XML la guardamos en la cadena _data
-		LoadXML(); 
-		if(_data.ToString() != "") 
-		{ 
-			// notice how I use a reference to type (PacienteData) here, you need this 
-			// so that the returned object is converted into the correct type 
-			myData2 = (RutinaData)DeserializeObject(_data); 
-		} 
-		return myData2;
-	}
-
-	public static byte[] StringToUTF8ByteArray(string pXmlString) 
-	{ 
-		UTF8Encoding encoding = new UTF8Encoding(); 
-		byte[] byteArray = encoding.GetBytes(pXmlString); 
-		return byteArray; 
-	} 
-
-	static object DeserializeObject(string pXmlizedString) 
-	{ 
-		XmlSerializer xs = new XmlSerializer(typeof(RutinaData)); 
-		MemoryStream memoryStream = new MemoryStream(StringToUTF8ByteArray(pXmlizedString)); 
-		XmlTextWriter xmlTextWriter = new XmlTextWriter(memoryStream, Encoding.UTF8); 
-		return xs.Deserialize(memoryStream); 
-	}
-
-	static void LoadXML() 
-	{ 
-		string filePath =(GameSaveLoad._FileLocation+"\\"+"Terapeuta0"+"_"+"ID"+"_PMRutina.xml").ToString();
-		if (File.Exists (filePath)) {
-			StreamReader r = File.OpenText (filePath); 
-			string _info = r.ReadToEnd (); 
-			r.Close (); 
-			_data = _info; 
-			Debug.Log ("File Read");
-		} else {
-			Debug.Log("File Doesnt exist");
-			_data="";
-		}
-	}
-		
 	void DecideSecuencia(){
 		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){ 
 			PanelActivado = ActivaPanelInteractivo.Exito;

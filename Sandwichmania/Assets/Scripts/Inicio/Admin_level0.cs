@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Xml; 
 using System.Xml.Serialization; 
+using System.Text;
 using System.IO;
 using UnityEngine.UI;
 using Ionic.Zip;
@@ -22,6 +23,7 @@ public class Admin_level0 : MonoBehaviour {
 	public InputField password;
 
 	private bool _idNumerico;
+	private string _routineData;
 
 	private string _postURL1= "http://132.248.16.11/unity/validaUsuario.php"; //direccion que recibe el Id del paciente y devuelve su contraseña (fecha de nacimiento)
 	private string _postURL2 =  "http://132.248.16.11/unity/index.php"; 	//direccion que recibe el Id del paciente y devuelve su nombre y apellidos
@@ -71,8 +73,9 @@ public class Admin_level0 : MonoBehaviour {
 		if (!postName.text.ToString ().Contains ("Ninguna") && postName.text.ToString ().Length > 2) {
 			nombreRutinaAJugar=postName.text.ToString();
 			Debug.Log (nombreRutinaAJugar);
-				string [] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml 
-				StartCoroutine (DownloadRoutine (rutina [0], postName.text.ToString ()));
+			string [] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml 
+			AdminNivel2._numeroDeRepeticiones =  int.Parse (rutina[2]);
+			StartCoroutine (DownloadRoutine (rutina [0], rutina [0]+"_"+rutina [1]+"_"+rutina [2], rutina[1]));
 		} else
 			ShowPatientOpctionsNoRoutine ();
 	}
@@ -117,8 +120,8 @@ public class Admin_level0 : MonoBehaviour {
 //			PanelMensajeNoRutina.SetActive (true);
 	}
 
-	IEnumerator DownloadRoutine(string doc_id, string name){
-		string url = "http://132.248.16.11/unity/RutinasSandwich/"+WWW.EscapeURL(doc_id)+"/"+WWW.EscapeURL(name);
+	IEnumerator DownloadRoutine(string doc_id, string name, string nameRutina){
+		string url = "http://132.248.16.11/unity/RutinasSandwich/"+WWW.EscapeURL(doc_id)+"/"+WWW.EscapeURL (name);
 		//WWWForm form = new WWWForm();
 		Debug.Log(url);
 		WWW ww = new WWW(url);
@@ -129,10 +132,9 @@ public class Admin_level0 : MonoBehaviour {
 			//string fullPath = Application.dataPath+"\\"+name;   //probando
 			string fullPath=pathStoreAllInfo+"\\"+name; 
 			File.WriteAllBytes (fullPath, ww.bytes);
-			//nombreRutinaAJugar=fullPath; //esta direccion se utilizara en la escena PreJuega
+			nombreRutinaAJugar=fullPath; //esta direccion se utilizara en la escena PreJuega
 			Debug.Log("Rutinaddescargadaconexito");
-			//una vez que descargamos la rutina solo deben aparecer los botones jugar, estadisticas, seleccionar personaje y tutorial
-			//si no tiene rutina debe aparecer los botones estadisticas, seleccionar personaje y tutorial
+			ReadRutina (nombreRutinaAJugar);
 			ShowPatientOptionsRoutine ();
 		}
 		else
@@ -140,6 +142,45 @@ public class Admin_level0 : MonoBehaviour {
 			Debug.Log("ERROR: " + ww.error +"No hay XML en server");  //Probablemente no existe el archivo 
 		}
 	}
+
+	public void ReadRutina(string path){
+
+		//BuscarRutina.myRoutineData = new RutinaData();
+		InterfazMedico.myRoutineData = new RutinaData();
+		_routineData=LoadRoutineXML(path); 
+
+		if (_routineData.ToString () != "") {
+
+			//BuscarRutina.myRoutineData = (RutinaData)DeserializeObject (_routineData);
+			InterfazMedico.myRoutineData = (RutinaData) DeserializeObject (_routineData);
+			AdminNivel2._secuencia = InterfazMedico.myRoutineData.Rutina;
+			SceneManager.LoadScene (1);
+		//if(warning)
+		//		warning.gameObject.SetActive(false);
+		//} else {
+		//	warning.gameObject.SetActive(true);
+		//	warning.text="Existe un error con el archivo.\n Por favor seleccione otra rutina.";
+		//} 
+		}
+	}
+
+	// Here we deserialize it back into its original form 
+	public object DeserializeObject(string pXmlizedString) 
+	{ 
+		XmlSerializer xs = new XmlSerializer(typeof(RutinaData)); 
+		MemoryStream memoryStream = new MemoryStream(GameSaveLoad.StringToUTF8ByteArray(pXmlizedString)); 
+		XmlTextWriter xmlTextWriter = new XmlTextWriter(memoryStream, Encoding.UTF8); 
+		return xs.Deserialize(memoryStream);  
+	} 
+
+	static string LoadRoutineXML(string routinePath) 
+	{ 
+		StreamReader r = File.OpenText(routinePath); 
+		string _info = r.ReadToEnd(); 
+		r.Close(); 
+		string _data=_info; 
+		return _data;
+	} 
 
 	private IEnumerator VerifyPatient(string id, string password){
 		//Buscando el ID en el sistema CITAN

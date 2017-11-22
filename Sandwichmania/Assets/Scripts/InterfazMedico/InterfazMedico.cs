@@ -287,10 +287,13 @@ public class InterfazMedico : MonoBehaviour {
 	public void ContinuarRutina(){
 		if (nombreDeRutina.text.Length.Equals (0)) {
 			advertencia.text = "Por favor, ingrese el nombre de la rutina";
-		} else {
-			advertencia.text = "";
-			interfaz [2].gameObject.SetActive (true);
-		}
+			return;
+		} 
+		string temp = nombreDeRutina.text.ToString ();
+		temp = temp.Replace (" ", ".");
+		nombreDeRutina.text = temp;
+		advertencia.text = "";
+		interfaz [2].gameObject.SetActive (true);
 	}
 
 	public void GuardarRutinaBoton(){
@@ -327,6 +330,9 @@ public class InterfazMedico : MonoBehaviour {
 	}
 
 	public void BotonNoContinuarRutina(){
+		string temp = nombreDeRutina.text.ToString ();
+		temp = temp.Replace (".", " ");
+		nombreDeRutina.text = temp;
 		interfaz [2].gameObject.SetActive (false);
 	}
 
@@ -406,13 +412,7 @@ public class InterfazMedico : MonoBehaviour {
 		myData.NombreDeRutina = nombreDeRutina.text.ToString ();
 		myData.DescripcionDeRutina = descripcionDeRutina.text.ToString ();
 		myData.Rutina = _rutina;
-		//		if (RutinaOnlyForKinectV2) {
-		//			myData.dispo = RutinaData.Dispositivo.KinectV2;
-		//		}
-		//		else
-		//			myData.dispo = RutinaData.Dispositivo.Any;
 		_data = SerializeObject(myData); 
-		// This is the final resulting XML from the serialization process 
 		CreateXML(); 
 		return;
 	} 
@@ -438,8 +438,9 @@ public class InterfazMedico : MonoBehaviour {
 	void CreateXML() { 
 		StreamWriter writer; 
 		//FileInfo t = new FileInfo(GameSaveLoad._FileLocation+"\\"+"Terapeuta"+count+"_"+"ID"+"_PMRutina.xml"); 
-		FileInfo t= new FileInfo(GameSaveLoad._FileLocation + "\\" +Admin_level0.terapeuta.Id +"_"+nombreDeRutina.text+"_sandwichRutina.xml");
+		FileInfo t= new FileInfo(GameSaveLoad._FileLocation + "\\" +Admin_level0.terapeuta.Id +"_"+nombreDeRutina.text.ToString ()+"_sandwichRutina.xml");
 		//no se sobreescribira el archivo de la rutina
+		Debug.Log ("no llega aqui");
 		if(!t.Exists) { 
 			writer = t.CreateText(); 
 			writer.Write(_data); 
