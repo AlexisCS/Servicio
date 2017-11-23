@@ -20,7 +20,13 @@ public class AdminMenu : MonoBehaviour {
 	private List<ActivaPanelDedos> _rutina;
 
 	void Start () {
+		if (Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada) {
+			panels [9].gameObject.SetActive (true);
+		}
 
+		if (Admin_level0.AsistidoPorTerapeuta && !Admin_level0.RutinaAsignada) {
+			panels [11].gameObject.SetActive (true);
+		}
 	}
 	
 	// Update is called once per frame
@@ -36,6 +42,27 @@ public class AdminMenu : MonoBehaviour {
 		datosNivel3 = new Nivel3 ();
 		panels [0].gameObject.SetActive (true);
 		panels [5].gameObject.SetActive (true);
+	}
+
+	public void DesaJugarRutinaAsignada(){
+		panels [0].gameObject.SetActive (false);
+		panels [9].gameObject.SetActive (false);
+		panels [4].gameObject.SetActive (true);
+		datosNivel2.nivel = 2;
+		datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
+	}
+
+	public void NoJugarRutinaAsignada(){
+		panels [9].gameObject.SetActive (false);
+		panels [10].gameObject.SetActive (true);
+	}
+
+	public void QuitarUbicacionDeRutina(){
+		panels [10].gameObject.SetActive (false);
+	}
+
+	public void QuitarNoRutinaAsignada(){
+		panels [11].gameObject.SetActive (false);
 	}
 
 	public void SelecNivel(int nivel){
@@ -89,8 +116,7 @@ public class AdminMenu : MonoBehaviour {
 
 
 	public void DecideTipoDeRutina(int seleccion){
-		switch (seleccion) {
-		case 0:
+		if (seleccion == 0) {
 			datosNivel2.RutinaSeleccionada = Rutina.SinRutina;
 			eligeRutinaToggle [0].isOn = false;
 			eligeRutinaToggle [1].isOn = false;
@@ -98,19 +124,40 @@ public class AdminMenu : MonoBehaviour {
 			eligeRutinaToggle [3].isOn = false;
 			panels [1].gameObject.SetActive (false);
 			panels [3].gameObject.SetActive (true);
-			break;
-		case 1:
+		}
+
+		if (seleccion == 1 && Admin_level0.RutinaAsignada) {
 			datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
 			panels [1].gameObject.SetActive (false);
 			panels [2].gameObject.SetActive (true);
-			break;
 		}
+
+		if (seleccion == 1 && !Admin_level0.RutinaAsignada) {
+			panels [11].gameObject.SetActive (true);
+		}
+//		switch (seleccion) {
+//		case 0:
+//			datosNivel2.RutinaSeleccionada = Rutina.SinRutina;
+//			eligeRutinaToggle [0].isOn = false;
+//			eligeRutinaToggle [1].isOn = false;
+//			eligeRutinaToggle [2].isOn = false;
+//			eligeRutinaToggle [3].isOn = false;
+//			panels [1].gameObject.SetActive (false);
+//			panels [3].gameObject.SetActive (true);
+//			break;
+//		case 1:
+//			datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
+//			panels [1].gameObject.SetActive (false);
+//			panels [2].gameObject.SetActive (true);
+//			break;
+//		}
 	}
 
 	public void JugarBoton(){
 		panels [2].gameObject.SetActive (false);
 		panels [4].gameObject.SetActive (true);
 	}
+
 	public void IngresaRutinaNivel2(int seleccion){
 		switch (seleccion) {
 		case 1:

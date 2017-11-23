@@ -21,13 +21,21 @@ public class AdminNivel2 : MonoBehaviour {
 	public GameObject[] interfaz;
 	public Text mensajeFelicitacion;
 
-	public static int _numeroDeRepeticiones;
+	private static int numeroDeRepeticiones;
+	public static int NumeroDeRepeticiones{
+		set {
+			numeroDeRepeticiones = value;
+		}
+		get {
+			return numeroDeRepeticiones;
+		}
+	}
 
-	static string _data;
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
 
 	public static List<ActivaPanelDedos> _secuencia;
+
 	private int _contadorCapa, _count, _limite; 
 	Mano _mano;
 	private bool _pan, _jamon, _queso, _jitomate;
@@ -37,9 +45,6 @@ public class AdminNivel2 : MonoBehaviour {
 	ActivaPanelDedos PanelDedosActivo;
 
 	void Awake(){
-		//_secuencia =  new List<ActivaPanelDedos> {ActivaPanelDedos.Indice, ActivaPanelDedos.Medio, ActivaPanelDedos.Anular, ActivaPanelDedos.Meñique};
-		//_secuencia = ;
-		_numeroDeRepeticiones = 3;
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interfaz [0].gameObject.SetActive (true);
@@ -69,13 +74,13 @@ public class AdminNivel2 : MonoBehaviour {
 	}
 
 	void DecideSecuencia(){
-		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){ 
+		if(_count == _secuencia.Count && _limite == numeroDeRepeticiones){ 
 			PanelActivado = ActivaPanelInteractivo.Exito;
 			PanelInteractivo ();
 			return;
 		}
 
-		if(_count == _secuencia.Count && _limite < _numeroDeRepeticiones){
+		if(_count == _secuencia.Count && _limite < numeroDeRepeticiones){
 			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
 			PanelInteractivo ();
 			return;
@@ -229,7 +234,7 @@ public class AdminNivel2 : MonoBehaviour {
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
 			DesactivaIngredientes ();
-			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + _numeroDeRepeticiones; 
+			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + numeroDeRepeticiones; 
 			interfaz [10].gameObject.SetActive (true);
 			break;
 		case ActivaPanelInteractivo.Exito:
@@ -252,7 +257,7 @@ public class AdminNivel2 : MonoBehaviour {
 
 
 	void Reinicio(){ 
-		if (_limite < _numeroDeRepeticiones) {
+		if (_limite < numeroDeRepeticiones) {
 			_pan = true;
 			_jamon = true;
 			_queso = true;

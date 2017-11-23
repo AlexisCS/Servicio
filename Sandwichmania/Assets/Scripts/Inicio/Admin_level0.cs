@@ -17,10 +17,20 @@ public class Admin_level0 : MonoBehaviour {
 	public static Nivel2 datosRutina;
 	public static string nombreRutinaAJugar;
 
-//	public GameObject PanelAutenticaMedico;
+	private static bool asistidoPorTerapeuta;
+	public static bool AsistidoPorTerapeuta{
+		get {return asistidoPorTerapeuta;}
+	}
+
+	private static bool rutinaAsignada;
+	public static bool RutinaAsignada{
+		get {return rutinaAsignada;}
+	}
+
 	public Text warning;
 	public InputField id;
 	public InputField password;
+	public GameObject panelAsistidoPorTerapeuta;
 
 	private bool _idNumerico;
 	private string _routineData;
@@ -50,6 +60,8 @@ public class Admin_level0 : MonoBehaviour {
 		datos = new InfoPartida ();
 		datosRutina = new Nivel2 ();
 		_userName = " ";
+		asistidoPorTerapeuta = false;
+		rutinaAsignada = false;
 	}
 
 	void Update(){
@@ -70,17 +82,22 @@ public class Admin_level0 : MonoBehaviour {
 		WWW postName = new WWW (urlString);
 		yield return postName;
 		Debug.Log ("Nombre Rutina:"+postName.text.ToString()+" XD.");
-		if (!postName.text.ToString ().Contains ("Ninguna") && postName.text.ToString ().Length > 2) {
-			nombreRutinaAJugar=postName.text.ToString();
-			Debug.Log (nombreRutinaAJugar);
-			string [] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml 
-			AdminNivel2._numeroDeRepeticiones =  int.Parse (rutina[2]);
-			StartCoroutine (DownloadRoutine (rutina [0], rutina [0]+"_"+rutina [1]+"_"+rutina [2], rutina[1]));
+		//if (!postName.text.ToString ().Contains ("Ninguna") && postName.text.ToString ().Length > 2){ 
+		if (postName.text.ToString ().Length > 2) {
+			Debug.Log ("Hay rutina");
+			rutinaAsignada = true;
+			nombreRutinaAJugar = postName.text.ToString ();
+			//Debug.Log (nombreRutinaAJugar);
+			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
+			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ());
+			StartCoroutine (DownloadRoutine (rutina [0], rutina [0] + "_" + rutina [1] + "_" + rutina [2], rutina [1]));
 		} else
-			ShowPatientOpctionsNoRoutine ();
+			Debug.Log ("No hay rutina");
+			rutinaAsignada = false;
+			SceneManager.LoadScene (1);
 	}
 
-	void ShowPatientOptionsRoutine(){
+//	void ShowPatientOptionsRoutine(){
 //		veryAsignarRutina_button.gameObject.SetActive (false);
 //		PanelMensajeNoRutina.SetActive (false);
 //		tutorial_button.gameObject.SetActive (true);
@@ -97,28 +114,11 @@ public class Admin_level0 : MonoBehaviour {
 //			crearRutina_button.gameObject.SetActive (false);
 //			seleccionarNivel_button.gameObject.SetActive (false);
 //		}
-	}
+//	}
 
-	void ShowPatientOpctionsNoRoutine(){
-//		veryAsignarRutina_button.gameObject.SetActive (false);
-//		jugar_button.gameObject.SetActive (false);
-//		tutorial_button.gameObject.SetActive (true);
-//		personaje_button.gameObject.SetActive (true);
-//		asignaNivel_button.gameObject.SetActive (false);
-//		if (AsistidoPorTerapeuta) {
-//			cargarRutina_button.gameObject.SetActive (true);
-//			crearRutina_button.gameObject.SetActive (true);
-//			personaje_button.gameObject.SetActive(true);
-//			seleccionarNivel_button.gameObject.SetActive (true);
-//		} else {
-//			cargarRutina_button.gameObject.SetActive (false);
-//			crearRutina_button.gameObject.SetActive (false);
-//			personaje_button.gameObject.SetActive(false);
-//			seleccionarNivel_button.gameObject.SetActive (false);
-//		}
-//		if (!_dontShowMessageNoRoutineAgain)
-//			PanelMensajeNoRutina.SetActive (true);
-	}
+//	void ShowPatientOpctionsNoRoutine(){
+		
+//	}
 
 	IEnumerator DownloadRoutine(string doc_id, string name, string nameRutina){
 		string url = "http://132.248.16.11/unity/RutinasSandwich/"+WWW.EscapeURL(doc_id)+"/"+WWW.EscapeURL (name);
@@ -129,13 +129,12 @@ public class Admin_level0 : MonoBehaviour {
 		Debug.Log("Descargando la rutina asignada.");
 		if (ww.error == null)
 		{	
-			//string fullPath = Application.dataPath+"\\"+name;   //probando
 			string fullPath=pathStoreAllInfo+"\\"+name; 
 			File.WriteAllBytes (fullPath, ww.bytes);
-			nombreRutinaAJugar=fullPath; //esta direccion se utilizara en la escena PreJuega
+			//nombreRutinaAJugar=fullPath; //esta direccion se utilizara en la escena PreJuega
 			Debug.Log("Rutinaddescargadaconexito");
-			ReadRutina (nombreRutinaAJugar);
-			ShowPatientOptionsRoutine ();
+			ReadRutina (fullPath);
+			//ShowPatientOptionsRoutine ();
 		}
 		else
 		{
@@ -144,14 +143,10 @@ public class Admin_level0 : MonoBehaviour {
 	}
 
 	public void ReadRutina(string path){
-
-		//BuscarRutina.myRoutineData = new RutinaData();
+		Debug.Log ("Hola");
 		InterfazMedico.myRoutineData = new RutinaData();
 		_routineData=LoadRoutineXML(path); 
-
 		if (_routineData.ToString () != "") {
-
-			//BuscarRutina.myRoutineData = (RutinaData)DeserializeObject (_routineData);
 			InterfazMedico.myRoutineData = (RutinaData) DeserializeObject (_routineData);
 			AdminNivel2._secuencia = InterfazMedico.myRoutineData.Rutina;
 			SceneManager.LoadScene (1);
@@ -217,9 +212,8 @@ public class Admin_level0 : MonoBehaviour {
 		string realPassword = postName.text.ToString ();  //contraseña asociada al ID en CITAN
 		Debug.Log ("Real password"+realPassword);
 		if (InputPassword.Equals (realPassword)) {
-			StartCoroutine (GetRutinasName (id));
-			//SceneManager.LoadScene (1);
-			//PanelAutenticaMedico.SetActive (true);	
+			panelAsistidoPorTerapeuta.gameObject.SetActive (true);
+			//StartCoroutine (GetRutinasName (id));
 		} else {
 			warning.gameObject.SetActive(true);
 			warning.text="Contraseña incorrecta.\n Por favor verifique e intente nuevamente.";
@@ -278,6 +272,15 @@ public class Admin_level0 : MonoBehaviour {
 			warning.gameObject.SetActive(true);
 			warning.text="El usuario no existe.\n Por favor verifique e intente nuevamente.";
 		}
+	}
+
+	void Asistido(){
+	}
+
+	public void NoAsistido(){
+		asistidoPorTerapeuta = true;
+		panelAsistidoPorTerapeuta.gameObject.SetActive (false);
+		StartCoroutine (GetRutinasName (id.text.ToString ()));
 	}
 
 
