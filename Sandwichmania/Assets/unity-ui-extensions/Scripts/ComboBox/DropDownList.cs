@@ -21,6 +21,7 @@ namespace UnityEngine.UI.Extensions
 
 		//public GameObject tempObj;
 		public InterfazMedico scriptInterfazMedico;
+		//public InterfazClinica scriptInterazClinica;
 
 		//private bool isInitialized = false;
 		private bool _isPanelActive = false;
@@ -205,12 +206,12 @@ namespace UnityEngine.UI.Extensions
 			scriptInterfazMedico.UltimosHijos ();
 			Debug.Log("item " + indx + " clicked");
 			if (indx != _selectedIndex && OnSelectionChanged != null) OnSelectionChanged(indx);
-
 			_selectedIndex = indx;
 			ToggleDropdownPanel(true);
 			if (this.name.Equals ("SeleccionaRutina_DropDownList")) {
 				if (Items [indx].ID.ToString () != " ") {
 					scriptInterfazMedico.ReadRutina (Items [indx].ID.ToString ());
+					//scriptInterazClinica.ReadRutina (Items [indx].ID.ToString ());
 				}
 			}
 

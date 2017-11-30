@@ -20,11 +20,11 @@ public class AdminMenu : MonoBehaviour {
 	private List<ActivaPanelDedos> _rutina;
 
 	void Start () {
-		if (Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada) {
+		if ((!Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada) || (Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada)) {
 			panels [9].gameObject.SetActive (true);
 		}
 
-		if (Admin_level0.AsistidoPorTerapeuta && !Admin_level0.RutinaAsignada) {
+		if (!Admin_level0.AsistidoPorTerapeuta && !Admin_level0.RutinaAsignada) {
 			panels [11].gameObject.SetActive (true);
 		}
 	}

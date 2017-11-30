@@ -24,13 +24,16 @@ public class Admin_level0 : MonoBehaviour {
 
 	private static bool rutinaAsignada;
 	public static bool RutinaAsignada{
-		get {return rutinaAsignada;}
+		set { rutinaAsignada = value; }
+		get { return rutinaAsignada; }
 	}
 
 	public Text warning;
 	public InputField id;
 	public InputField password;
+	public InputField idTerapeuta, passTerapeuta;
 	public GameObject panelAsistidoPorTerapeuta;
+	public GameObject panelIngresaTerapeuta;
 
 	private bool _idNumerico;
 	private string _routineData;
@@ -40,6 +43,8 @@ public class Admin_level0 : MonoBehaviour {
 	private string _postURL3 = "http://132.248.16.11/unity/validaDoctor.php";  //me dice si existe o no existe el terapeuta
 	private string _postURL6 = "http://132.248.16.11/citan/authGame/";  //valida la contraseña del terapeuta
 	private string _urlRevisaSiTieneRutina="http://132.248.16.11/unity/rutinaAsignada.php"; //este php nos devuelve el nombre de la rutina que el paciente tenga asignada, en caso de no tener devuelve "Ninguna"
+	private string _urlZIP = "http://132.248.16.11/unity/createZIP.php?id=";//no crea (si existen) un ZIP de todas las rutinas creadas por el terapeuta 
+	private string _urlDeleteZIP="http://132.248.16.11/unity/deleteZIP.php?id="; //borra un archivo ZIP del servidor, se tiene que enviar el id del terapeuta
 
 	private string pathStoreAllInfo=GameSaveLoad._FileLocation;
 	private string _userName;
@@ -87,38 +92,19 @@ public class Admin_level0 : MonoBehaviour {
 			Debug.Log ("Hay rutina");
 			rutinaAsignada = true;
 			nombreRutinaAJugar = postName.text.ToString ();
-			//Debug.Log (nombreRutinaAJugar);
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
 			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ());
 			StartCoroutine (DownloadRoutine (rutina [0], rutina [0] + "_" + rutina [1] + "_" + rutina [2], rutina [1]));
-		} else
-			Debug.Log ("No hay rutina");
-			rutinaAsignada = false;
-			SceneManager.LoadScene (1);
+		} else {
+			CargaJuegoSinPartidaAsignada ();
+		}
 	}
 
-//	void ShowPatientOptionsRoutine(){
-//		veryAsignarRutina_button.gameObject.SetActive (false);
-//		PanelMensajeNoRutina.SetActive (false);
-//		tutorial_button.gameObject.SetActive (true);
-//		personaje_button.gameObject.SetActive (true);
-//		asignaNivel_button.gameObject.SetActive (false);
-//		if (AsistidoPorTerapeuta) {
-//			jugar_button.gameObject.SetActive (false);
-//			cargarRutina_button.gameObject.SetActive (true);
-//			crearRutina_button.gameObject.SetActive (true);
-//			seleccionarNivel_button.gameObject.SetActive (true);
-//		} else {
-//			jugar_button.gameObject.SetActive (true);
-//			cargarRutina_button.gameObject.SetActive (false);
-//			crearRutina_button.gameObject.SetActive (false);
-//			seleccionarNivel_button.gameObject.SetActive (false);
-//		}
-//	}
-
-//	void ShowPatientOpctionsNoRoutine(){
-		
-//	}
+	void CargaJuegoSinPartidaAsignada(){
+		Debug.Log ("No hay rutina");
+		rutinaAsignada = false;
+		SceneManager.LoadScene (1);
+	}
 
 	IEnumerator DownloadRoutine(string doc_id, string name, string nameRutina){
 		string url = "http://132.248.16.11/unity/RutinasSandwich/"+WWW.EscapeURL(doc_id)+"/"+WWW.EscapeURL (name);
@@ -134,7 +120,6 @@ public class Admin_level0 : MonoBehaviour {
 			//nombreRutinaAJugar=fullPath; //esta direccion se utilizara en la escena PreJuega
 			Debug.Log("Rutinaddescargadaconexito");
 			ReadRutina (fullPath);
-			//ShowPatientOptionsRoutine ();
 		}
 		else
 		{
@@ -245,6 +230,12 @@ public class Admin_level0 : MonoBehaviour {
 				//GameSaveLoad._PacienteName=docName.Replace(" ","");
 				warning.gameObject.SetActive(false);
 				Debug.LogWarning("TODO CORRECTO SIR!!");
+				if (asistidoPorTerapeuta) {
+					DescomprimeZIP ();
+					yield return new WaitForSeconds (0.5f);
+					SceneManager.LoadScene (11);
+					yield break;
+				}
 				SceneManager.LoadScene (10);
 				//bienvenido.text=terapeuta.Nombre;
 				//opcionesCanvas.SetActive(true);
@@ -274,14 +265,58 @@ public class Admin_level0 : MonoBehaviour {
 		}
 	}
 
-	void Asistido(){
+	IEnumerator DownloadDocRoutines(int doc_id){
+		string url = _urlZIP+ doc_id+"&juego='sandwich'";
+		Debug.Log ("DEntro");
+		WWW postName = new WWW (url);
+		yield return postName;		//creamos el ZIP de las rutinas que ha creado el terapeuta se llama id_doc.zip ej. 13.zip
+		//yield return new WaitForSeconds (5f);
+		Debug.Log (postName.text.ToString() + "Hola");
+		if (postName.text.ToString ().Contains ("ZIPcreated")) { //si existen rutinas creadas por el terapeuta descargamos el zip de esas rutinas
+			url = "http://132.248.16.11/unity/"+doc_id+".zip";
+			//WWWForm form = new WWWForm();
+			WWW ww = new WWW(url);
+			yield return ww; //aqui ya descargamos el zip
+			if (ww.error == null)
+			{	
+				string fullPath = pathStoreAllInfo+"\\"+doc_id+".zip"; //ruta donde guardamos el ZIP que descargamos
+				File.WriteAllBytes (fullPath, ww.bytes);
+				string exportLocation = pathStoreAllInfo+"\\"; 	//ruta donde extraemos el contenido del ZIP ej. "C:/Users/Yoás/Desktop//"	
+				ZipUtil.Unzip ( fullPath, exportLocation);
+				File.Delete(fullPath); //borramos el ZIP
+				//borramos el ZIP del servidor
+				url = _urlDeleteZIP+doc_id;
+				WWW postName2 = new WWW (url);
+				yield return postName2;
+
+			}
+		}
 	}
 
-	public void NoAsistido(){
+	public void DescomprimeZIP(){
+		StartCoroutine (DownloadDocRoutines(Admin_level0.terapeuta.Id));
+		//string zipfilePath = "C:/Users/Yoás/Desktop/YoisExample.zip";
+		//string exportLocation = "C:/Users/Yoás/Desktop/";
+		//ZipUtil.Unzip ( zipfilePath, exportLocation);
+
+	}
+
+
+	public void Asistido(){
 		asistidoPorTerapeuta = true;
+		panelAsistidoPorTerapeuta.gameObject.SetActive (false);
+		panelIngresaTerapeuta.gameObject.SetActive (true);
+	}
+		
+
+	public void NoAsistido(){
+		asistidoPorTerapeuta = false;
 		panelAsistidoPorTerapeuta.gameObject.SetActive (false);
 		StartCoroutine (GetRutinasName (id.text.ToString ()));
 	}
 
-
+	public void IngresaTerapeuta(){
+		StartCoroutine (VerifyDoctor (idTerapeuta.text.ToString (), passTerapeuta.text.ToString ()));
+	}
+		
 }

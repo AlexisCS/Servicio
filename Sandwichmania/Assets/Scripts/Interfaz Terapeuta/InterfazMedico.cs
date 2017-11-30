@@ -12,10 +12,12 @@ using System.Text;
 using UnityEngine.UI.Extensions;
 using Ionic.Zip;
 
+enum FlechasTeclado {Ninguna, Cualquiera}
+
 public class InterfazMedico : MonoBehaviour {
 
 	private string _postURL1= "http://132.248.16.11/unity/verPacientes.php";
-	private string _urlAsignaRutina="http://132.248.16.11/unity/actualizaRutina.php"; //este script hace un update a la tabla medical_histories en el campo nombre rutina
+	private string _urlAsignaRutina="http://132.248.16.11/unity/actualizaRutinaConSets.php"; //este script hace un update a la tabla medical_histories en el campo nombre rutina
 
 	public RectTransform[] panel;
 	public GameObject[] interfaz;
@@ -46,7 +48,7 @@ public class InterfazMedico : MonoBehaviour {
 	private List<ActivaPanelDedos> _rutina = new List<ActivaPanelDedos> ();
 	private string _nombresPacientes;
 	string _data, _routineData;
-	enum FlechasTeclado {Ninguna, Cualquiera, Arriba, Derecha, Abajo, Izquierda}
+
 	FlechasTeclado ElementoRutina;
 
 	void Awake(){
@@ -450,7 +452,7 @@ public class InterfazMedico : MonoBehaviour {
 	} 
 
 	void EntregaNombreTerapeuta(){
-//		nombreTerapeuta.text = Admin_level0.terapeuta.Nombre.ToString ();
+		nombreTerapeuta.text = Admin_level0.terapeuta.Nombre.ToString ();
 	}
 
 	public void DescomprimeZIP(){

@@ -13,14 +13,6 @@ public class InfoPartida  {
 	public List <Nivel1> HistorialPartidasNivel1 = new List<Nivel1> ();
 	public List <Nivel2> HistorialPartidasNivel2 = new List<Nivel2> ();
 	public List <Nivel3> HistorialPartidasNivel3 = new List<Nivel3>();
-//	public int mano; //mano derecha 1 y mano izquierda 0
-//	public int nivel;
-//	public int rutina; //0 >>> Rutina ... 1 >>> Sin Rutina
-//	public int numeroDeRepeticiones;
-//	public int numeroDeIngredientes;
-//	public int numeroDeRepeticionesNivel3;
-//	public int numeroDeIngredientesNivel3;
-//	public float tiempoDedoIndice, tiempoDedoMedio, tiempoDedoAnular, tiempoDedoMeñique;
 }
 
 public class TerapeutaData{
