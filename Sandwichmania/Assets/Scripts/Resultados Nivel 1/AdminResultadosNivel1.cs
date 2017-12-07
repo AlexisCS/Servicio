@@ -60,13 +60,6 @@ public class AdminResultadosNivel1 : MonoBehaviour {
 		
 	void Awake(){
 		EntregaResultado ();
-		//Nivel1 datosTemp=new Nivel1();
-		//datosTemp=AdminMenu.datosNivel1;
-		//temp.Add (datosTemp);
-
-		//temp.Add (AdminMenu.datosNivel1);
-		//Admin_level0.datos.HistorialPartidasNivel1 = temp;
-
 		Admin_level0.datos.HistorialPartidasNivel1.Add (AdminMenu.datosNivel1);
 		GameSaveLoad.Save (Admin_level0.datos);
 	}

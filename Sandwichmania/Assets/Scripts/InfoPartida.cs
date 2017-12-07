@@ -5,7 +5,6 @@ using System.Xml;
 using System.Xml.Serialization;
 
 public enum Mano {Derecha, Izquierda};
-public enum Rutina {SinRutina, ConRutina}
 
 public class InfoPartida  {
 	public string nombre;
@@ -31,9 +30,12 @@ public class Nivel1{
 
 public class Nivel2{
 	public int nivel;
-	public Rutina RutinaSeleccionada;
+	public string nombreDeRutina;
+	//public Rutina RutinaSeleccionada;
 	public Mano ManoSeleccionada;
 	public List<ActivaPanelDedos> Rutina;
+	public List<float> tiempos = new List<float>();
+	public float tiempoPromedio;
 	public int numeroDeRepeticiones;
 	public int numeroDeIngredientes;
 }
@@ -43,4 +45,8 @@ public class Nivel3{
 	public Mano ManoSeleccionada;
 	public int numeroDeRepeticiones;
 	public int numeroDeIngredientes;
+	public float porcentajDeErrorPan;
+	public float porcentajDeErrorJamon;
+	public float porcentajDeErrorQueso;
+	public float porcentajDeErrorJitomate;
 }

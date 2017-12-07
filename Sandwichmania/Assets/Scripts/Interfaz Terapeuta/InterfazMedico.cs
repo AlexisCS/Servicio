@@ -521,6 +521,8 @@ public class InterfazMedico : MonoBehaviour {
 		}
 
 		if ((Input.GetKeyDown (KeyCode.Delete) || Input.GetKeyDown (KeyCode.Backspace)) && ElementoRutina == FlechasTeclado.Cualquiera) {
+			if (_rutina.Count == 0)
+				return;
 			_rutina.RemoveAt (_rutina.Count - 1);
 			ImprimeRutina ();
 		}

@@ -4,23 +4,30 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
+public enum Rutina {SinRutina, ConRutina}
+
 public class AdminMenu : MonoBehaviour {
 
 	public static Nivel1 datosNivel1;
-	public static Nivel2 datosNivel2;
 	public static Nivel3 datosNivel3;
 
 	public GameObject[] panels;
 	public InputField cantidadDeRepeticiones, cantidadDeIngredientesNivel3, cantidadDeRepeticionesNivel3;
 	public Text Advertencia, advertenciaNivel3, nombreDeUsuario;
+	public Text rutinaAsignada;
 	public Toggle[] eligeRutinaToggle;
 
-	// Use this for initialization
+	private static Rutina rutinaSeleccionada;
+	public static Rutina RutinaSeleccionada{
+		get { return rutinaSeleccionada; }
+	}
+
 
 	private List<ActivaPanelDedos> _rutina;
 
 	void Start () {
 		if ((!Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada) || (Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada)) {
+			rutinaAsignada.text = "Tiene asignada la rutina: " + '"' + Admin_level0.datosNivel2.nombreDeRutina + '"' + ". ¿Desea jugarla?";
 			panels [9].gameObject.SetActive (true);
 		}
 
@@ -38,7 +45,6 @@ public class AdminMenu : MonoBehaviour {
 		ImprimeNombreUsuario ();
 		_rutina = new List<ActivaPanelDedos> ();
 		datosNivel1 = new Nivel1 ();
-		datosNivel2 = new Nivel2 ();
 		datosNivel3 = new Nivel3 ();
 		panels [0].gameObject.SetActive (true);
 		panels [5].gameObject.SetActive (true);
@@ -48,8 +54,9 @@ public class AdminMenu : MonoBehaviour {
 		panels [0].gameObject.SetActive (false);
 		panels [9].gameObject.SetActive (false);
 		panels [4].gameObject.SetActive (true);
-		datosNivel2.nivel = 2;
-		datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
+		Admin_level0.datosNivel2.nivel = 2;
+		rutinaSeleccionada = Rutina.ConRutina;
+		//Admin_level0.datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
 	}
 
 	public void NoJugarRutinaAsignada(){
@@ -61,8 +68,9 @@ public class AdminMenu : MonoBehaviour {
 		panels [10].gameObject.SetActive (false);
 	}
 
-	public void QuitarNoRutinaAsignada(){
+	public void OkBoton(){
 		panels [11].gameObject.SetActive (false);
+		panels [12].gameObject.SetActive (false);
 	}
 
 	public void SelecNivel(int nivel){
@@ -73,14 +81,18 @@ public class AdminMenu : MonoBehaviour {
 			panels [4].gameObject.SetActive (true);
 			break;
 		case 2:
-		datosNivel2.nivel = nivel;
+			Admin_level0.datosNivel2.nivel = nivel;
 			panels [0].gameObject.SetActive (false);
 			panels [1].gameObject.SetActive (true);
 			break;
 		case 3:
-			datosNivel3.nivel = nivel;
-			panels [0].gameObject.SetActive (false);
-			panels [7].gameObject.SetActive (true);
+			if (AdminNivel1.JugueNivel1 && (AdminNivel2.JugueNivel2ConRutina || AdminNivel2SinRutina.JugueNivel2SinRutina)) {
+				datosNivel3.nivel = nivel;
+				panels [0].gameObject.SetActive (false);
+				panels [7].gameObject.SetActive (true);
+			} else {
+				panels [12].gameObject.SetActive (true);
+			}
 			break;
 		}
 	}
@@ -91,8 +103,9 @@ public class AdminMenu : MonoBehaviour {
 			if (datosNivel1.nivel == 1) {
 				datosNivel1.ManoSeleccionada = Mano.Izquierda;
 			}
-			if (datosNivel2.nivel == 2) {
-				datosNivel2.ManoSeleccionada = Mano.Izquierda;
+			if (Admin_level0.datosNivel2.nivel == 2) {
+				Admin_level0.datosNivel2.ManoSeleccionada = Mano.Izquierda;
+				//datosNivel2.ManoSeleccionada = Mano.Izquierda;
 			}
 			if (datosNivel3.nivel == 3) {
 				datosNivel3.ManoSeleccionada = Mano.Izquierda;
@@ -102,8 +115,9 @@ public class AdminMenu : MonoBehaviour {
 			if (datosNivel1.nivel == 1) {
 				datosNivel1.ManoSeleccionada = Mano.Derecha;
 			}
-			if (datosNivel2.nivel == 2) {
-				datosNivel2.ManoSeleccionada = Mano.Derecha;
+			if (Admin_level0.datosNivel2.nivel == 2) {
+				Admin_level0.datosNivel2.ManoSeleccionada = Mano.Derecha;
+				//datosNivel2.ManoSeleccionada = Mano.Derecha;
 			}
 			if (datosNivel3.nivel == 3) {
 				datosNivel3.ManoSeleccionada = Mano.Derecha;
@@ -117,7 +131,9 @@ public class AdminMenu : MonoBehaviour {
 
 	public void DecideTipoDeRutina(int seleccion){
 		if (seleccion == 0) {
-			datosNivel2.RutinaSeleccionada = Rutina.SinRutina;
+			rutinaSeleccionada = Rutina.SinRutina;
+			//Admin_level0.datosNivel2.RutinaSeleccionada = Rutina.SinRutina;
+			//datosNivel2.RutinaSeleccionada = Rutina.SinRutina;
 			eligeRutinaToggle [0].isOn = false;
 			eligeRutinaToggle [1].isOn = false;
 			eligeRutinaToggle [2].isOn = false;
@@ -127,9 +143,11 @@ public class AdminMenu : MonoBehaviour {
 		}
 
 		if (seleccion == 1 && Admin_level0.RutinaAsignada) {
-			datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
+			rutinaSeleccionada = Rutina.ConRutina;
+			//datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
 			panels [1].gameObject.SetActive (false);
-			panels [2].gameObject.SetActive (true);
+			panels [4].gameObject.SetActive (true);
+			//panels [2].gameObject.SetActive (true);
 		}
 
 		if (seleccion == 1 && !Admin_level0.RutinaAsignada) {
@@ -153,10 +171,10 @@ public class AdminMenu : MonoBehaviour {
 //		}
 	}
 
-	public void JugarBoton(){
-		panels [2].gameObject.SetActive (false);
-		panels [4].gameObject.SetActive (true);
-	}
+//	public void JugarBoton(){
+//		panels [2].gameObject.SetActive (false);
+//		panels [4].gameObject.SetActive (true);
+//	}
 
 	public void IngresaRutinaNivel2(int seleccion){
 		switch (seleccion) {
@@ -167,7 +185,6 @@ public class AdminMenu : MonoBehaviour {
 				ActivaPanelDedos.Anular,
 				ActivaPanelDedos.Meñique
 			};
-			AdminMenu.datosNivel2.Rutina = _rutina;
 			break;
 		case 2:
 			_rutina = new List<ActivaPanelDedos> {
@@ -176,7 +193,6 @@ public class AdminMenu : MonoBehaviour {
 				ActivaPanelDedos.Medio,
 				ActivaPanelDedos.Indice
 			};
-			AdminMenu.datosNivel2.Rutina = _rutina;
 			break;
 		case 3:
 			_rutina = new List<ActivaPanelDedos> {
@@ -188,7 +204,6 @@ public class AdminMenu : MonoBehaviour {
 				ActivaPanelDedos.Medio,
 				ActivaPanelDedos.Indice
 			};
-			AdminMenu.datosNivel2.Rutina = _rutina;
 			break;
 		case 4:
 			_rutina = new List<ActivaPanelDedos> {
@@ -200,9 +215,9 @@ public class AdminMenu : MonoBehaviour {
 				ActivaPanelDedos.Anular,
 				ActivaPanelDedos.Meñique
 			};
-			AdminMenu.datosNivel2.Rutina = _rutina;
 			break;
 		}
+		Admin_level0.datosNivel2.Rutina = _rutina;
 	}
 
 
@@ -217,7 +232,8 @@ public class AdminMenu : MonoBehaviour {
 			Advertencia.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
 			return;
 		} 
-		datosNivel2.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
+		Admin_level0.datosNivel2.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
+		//datosNivel2.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
 		panels [8].gameObject.SetActive (false);
 		panels [4].gameObject.SetActive (true);
 	}
@@ -274,10 +290,10 @@ public class AdminMenu : MonoBehaviour {
 			if (datosNivel1.nivel == 1) {
 				panels [0].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
-			} else if (datosNivel2.nivel == 2 && datosNivel2.RutinaSeleccionada == Rutina.ConRutina) {
-				panels [2].gameObject.SetActive (true);
+			} else if (Admin_level0.datosNivel2.nivel == 2 && rutinaSeleccionada == Rutina.ConRutina) {
+				panels [1].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
-			} else if (datosNivel2.nivel == 2 && datosNivel2.RutinaSeleccionada == Rutina.SinRutina) {
+			} else if (Admin_level0.datosNivel2.nivel == 2 && rutinaSeleccionada == Rutina.SinRutina) {
 				panels [8].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
 			} else if (datosNivel3.nivel == 3) {
@@ -314,7 +330,7 @@ public class AdminMenu : MonoBehaviour {
 
 	public void Calibrar(){
 		if (datosNivel1.ManoSeleccionada == Mano.Derecha || datosNivel1.ManoSeleccionada == Mano.Izquierda ||
-			datosNivel2.ManoSeleccionada == Mano.Derecha || datosNivel2.ManoSeleccionada == Mano.Izquierda ||
+			Admin_level0.datosNivel2.ManoSeleccionada == Mano.Derecha || Admin_level0.datosNivel2.ManoSeleccionada == Mano.Izquierda ||
 			datosNivel3.ManoSeleccionada == Mano.Derecha || datosNivel3.ManoSeleccionada == Mano.Izquierda) {
 			SceneManager.LoadScene (2);
 		}

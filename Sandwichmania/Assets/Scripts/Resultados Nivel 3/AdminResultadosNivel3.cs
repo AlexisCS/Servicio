@@ -28,6 +28,8 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 		_erroresJamon = 0;
 		_erroresQueso = 0;
 		_erroresJitomate = 0;
+		Admin_level0.datos.HistorialPartidasNivel3.Add (AdminMenu.datosNivel3);
+		GameSaveLoad.Save (Admin_level0.datos);
 	}
 
 	// Use this for initialization
@@ -93,30 +95,38 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 	void EntregaPorcentajeError(){
 		float porcentajeTemp;
 		if (_cantidadDePan == 0) {
+			AdminMenu.datosNivel3.porcentajDeErrorPan = -1;
 			porcentajeDeErrorPan.text = "Pan\n<Indice>\n\nNo generado";
 		} else {
 			porcentajeTemp = CalculaPorcentajeError (_cantidadDePan, _erroresPan);
+			AdminMenu.datosNivel3.porcentajDeErrorPan = porcentajeTemp;
 			porcentajeDeErrorPan.text = "Pan\n<Indice>\n\n" + porcentajeTemp + "%";
 		}
 
 		if (_cantidadDeJamon == 0) {
+			AdminMenu.datosNivel3.porcentajDeErrorJamon = -1;
 			porcentajeDeErrorJamon.text = "Jamon\n<Medio>\n\nNo generado";
 		} else {
 			porcentajeTemp = CalculaPorcentajeError (_cantidadDeJamon, _erroresJamon);
+			AdminMenu.datosNivel3.porcentajDeErrorJamon = porcentajeTemp;
 			porcentajeDeErrorJamon.text = "Jamon\n<Medio>\n\n" + porcentajeTemp + "%";
 		}
 
 		if (_cantidadDeQueso == 0) {
+			AdminMenu.datosNivel3.porcentajDeErrorQueso = -1;
 			porcentajeDeErrorQueso.text = "Queso\n<Anular>\n\nNo generado";
 		} else {
 			porcentajeTemp = CalculaPorcentajeError (_cantidadDeQueso, _erroresQueso);
+			AdminMenu.datosNivel3.porcentajDeErrorQueso = porcentajeTemp;
 			porcentajeDeErrorQueso.text = "Queso\n<Anular>\n\n" + porcentajeTemp + "%";
 		}
 
 		if (_cantidadDeJitomate == 0) {
+			AdminMenu.datosNivel3.porcentajDeErrorJitomate = -1;
 			porcentajeDeErrorJitomate.text = "Jitomate\n<Meñique>\n\nNo generado";
 		} else {
 			porcentajeTemp = CalculaPorcentajeError (_cantidadDeJitomate, _erroresJitomate);
+			AdminMenu.datosNivel3.porcentajDeErrorJitomate = porcentajeTemp;
 			porcentajeDeErrorJitomate.text = "Jitomate\n<Meñique>\n\n" + porcentajeTemp + "%";
 		}
 	}

@@ -17,6 +17,11 @@ public class AdminNivel1 : MonoBehaviour {
 	public Text cantidadQuesoText;
 	public Text cantidadJitomateText;
 
+	private static bool jugueNivel1 = false;
+	public static bool JugueNivel1 {
+		get{ return jugueNivel1; }
+	}
+
 	private GameObject _ingredienteClon;
 	private int __seleccionPanel, _cantidad, _umbral;
 	Mano _mano;
@@ -214,6 +219,7 @@ public class AdminNivel1 : MonoBehaviour {
 			}
 			DesactivaIngredientes ();
 			interfaz [10].gameObject.SetActive (true);
+			jugueNivel1 = true;
 			break;
 		}
 	}

@@ -16,13 +16,24 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	public GameObject[] interfaz;
 	public Text mensajeFelicitacion;
 
+	private static bool jugueNivel2SinRutina = false;
+	public static bool JugueNivel2SinRutina {
+		get{ return jugueNivel2SinRutina; }
+	}
+
+//	private static List<float> tiemposDeRepetciones;
+//	public static List<float> TiemposDeRepeticiones {
+//		get { return tiemposDeRepetciones; }
+//	}
+
 	private int _numeroDeRepeticiones;
-	private GameObject _ingredienteClon, _ingredienteExtra, _destruirIngredienteExtra;
+	private GameObject _ingredienteClon, _ingredienteExtra;
 	private GameObject[] _destruir;
-	private List<ActivaPanelDedos> _secuencia;
+	private List<ActivaPanelDedos> _secuencia; 
 	private int _contadorCapa, _count, _limite; 
+	private float _tiempoTemp;
 	Mano _mano;
-	private bool _pan, _jamon, _queso, _jitomate, _panExtra;
+	private bool _pan, _jamon, _queso, _jitomate, _panExtra, _iniciaCronometro;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoParcial, SegundoInicio, Exito}
 	ActivaPanelInteractivo PanelActivado;
@@ -30,14 +41,15 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	ActivaPanelDedos PanelDedosActivo;
 
 	void Awake(){
+		//tiemposDeRepetciones = new List<float> ();
 		_secuencia = new List<ActivaPanelDedos> ();
-		_secuencia = AdminMenu.datosNivel2.Rutina;
+		_secuencia = Admin_level0.datosNivel2.Rutina;
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interfaz [0].gameObject.SetActive (true);
 		interfaz [13].gameObject.SetActive (true);
-		_mano = AdminMenu.datosNivel2.ManoSeleccionada;
-		_numeroDeRepeticiones = AdminMenu.datosNivel2.numeroDeRepeticiones;
+		_mano = Admin_level0.datosNivel2.ManoSeleccionada;
+		_numeroDeRepeticiones = Admin_level0.datosNivel2.numeroDeRepeticiones;
 		_contadorCapa = 0;
 		_count = 0;
 		_limite = 1;
@@ -46,6 +58,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		_queso = true;
 		_jitomate = true;
 		_panExtra = true;
+		_iniciaCronometro = false;
 	}
 
 	void OnEnable(){
@@ -66,12 +79,14 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		if(_count>_secuencia.Count) //se supone que nunca debe entrar aquí, pero a veces lo hace así que matamos a la función
 			return;
 		
-		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){		
+		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){
+			Admin_level0.datosNivel2.tiempos.Add (_tiempoTemp);
 			StartCoroutine (PausaPanelExito ());
 			return;
 		}
 
 		if(_count == _secuencia.Count && _limite < _numeroDeRepeticiones){
+			Admin_level0.datosNivel2.tiempos.Add (_tiempoTemp);
 			_count++;
 			StartCoroutine (PausaPanelExitoParcial ());
 			return;
@@ -236,18 +251,22 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			PanelActivado = ActivaPanelInteractivo.Juegue;
 			PanelDedosActivo = _secuencia [0];
 			PanelDedos (_mano);
+			_iniciaCronometro = true;
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
 			DesactivaIngredientes ();
-			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + _numeroDeRepeticiones;
+			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite + "  de  " + _numeroDeRepeticiones;
 			interfaz [10].gameObject.SetActive (true);
+			_iniciaCronometro = false;
 			break;
 		case ActivaPanelInteractivo.Exito:
 			if (AudiodeExito != null) {
 				AudiodeExito ();
 			}
 			DesactivaIngredientes ();
+			jugueNivel2SinRutina = true;
 			interfaz [11].gameObject.SetActive (true);
+			_iniciaCronometro = false;
 			break;
 		}
 	}
@@ -269,10 +288,14 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			_jitomate = true;
 			_panExtra = true;
 			_count = 0;
+			_tiempoTemp = 0;
 			_limite += 1;
 			PanelActivado = ActivaPanelInteractivo.Juegue;
-			_destruirIngredienteExtra = GameObject.FindGameObjectWithTag ("PanNivel3");
-			Destroy (_destruirIngredienteExtra);
+			Debug.Log ("Debo destruir");
+			_destruir = GameObject.FindGameObjectsWithTag ("PanNivel3");
+			for (int i = 0; i <= _destruir.Length - 1; i++) {
+				Destroy (_destruir [i]);
+			}
 			_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
 			for (int i = 0; i <= _destruir.Length - 1; i++) {
 				Destroy (_destruir [i]);
@@ -293,7 +316,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	}
 
 	void Exito(){
-		SceneManager.LoadScene (1);
+		SceneManager.LoadScene (8);
 	}
 
 	void SpawnPanExtra(){
@@ -338,6 +361,10 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (_iniciaCronometro == true) {
+			_tiempoTemp += Time.deltaTime;
+		}
+
 		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && 
 			(PanelActivado == ActivaPanelInteractivo.Bienvenido || PanelActivado == ActivaPanelInteractivo.Siguiente || PanelActivado == ActivaPanelInteractivo.Inicio || 
 				PanelActivado == ActivaPanelInteractivo.ExitoParcial)){

@@ -14,7 +14,7 @@ public class Admin_level0 : MonoBehaviour {
 
 	public static InfoPartida datos;
 	public static TerapeutaData terapeuta;
-	public static Nivel2 datosRutina;
+	public static Nivel2 datosNivel2;
 	public static string nombreRutinaAJugar;
 
 	private static bool asistidoPorTerapeuta;
@@ -63,7 +63,7 @@ public class Admin_level0 : MonoBehaviour {
 
 	void Awake () {
 		datos = new InfoPartida ();
-		datosRutina = new Nivel2 ();
+		datosNivel2 = new Nivel2 ();
 		_userName = " ";
 		asistidoPorTerapeuta = false;
 		rutinaAsignada = false;
@@ -93,8 +93,11 @@ public class Admin_level0 : MonoBehaviour {
 			rutinaAsignada = true;
 			nombreRutinaAJugar = postName.text.ToString ();
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
+			string nombreRutinaTemp = rutina[1].ToString ();
 			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ());
-			StartCoroutine (DownloadRoutine (rutina [0], rutina [0] + "_" + rutina [1] + "_" + rutina [2], rutina [1]));
+			//AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ()); 
+			datosNivel2.nombreDeRutina = nombreRutinaTemp.Replace (".", " ");
+			StartCoroutine (DownloadRoutine (rutina [0], rutina [0] + "_" + rutina [1] + "_" + rutina [2]));
 		} else {
 			CargaJuegoSinPartidaAsignada ();
 		}
@@ -106,7 +109,7 @@ public class Admin_level0 : MonoBehaviour {
 		SceneManager.LoadScene (1);
 	}
 
-	IEnumerator DownloadRoutine(string doc_id, string name, string nameRutina){
+	IEnumerator DownloadRoutine(string doc_id, string name){
 		string url = "http://132.248.16.11/unity/RutinasSandwich/"+WWW.EscapeURL(doc_id)+"/"+WWW.EscapeURL (name);
 		//WWWForm form = new WWWForm();
 		Debug.Log(url);
@@ -134,6 +137,7 @@ public class Admin_level0 : MonoBehaviour {
 		if (_routineData.ToString () != "") {
 			InterfazMedico.myRoutineData = (RutinaData) DeserializeObject (_routineData);
 			AdminNivel2._secuencia = InterfazMedico.myRoutineData.Rutina;
+			//AdminNivel2._secuencia = InterfazMedico.myRoutineData.Rutina;
 			SceneManager.LoadScene (1);
 		//if(warning)
 		//		warning.gameObject.SetActive(false);

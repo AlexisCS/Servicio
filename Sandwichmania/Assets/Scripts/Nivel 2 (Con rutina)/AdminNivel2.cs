@@ -21,6 +21,11 @@ public class AdminNivel2 : MonoBehaviour {
 	public GameObject[] interfaz;
 	public Text mensajeFelicitacion;
 
+	private static bool jugueNivel2ConRutina = false;
+	public static bool JugueNivel2ConRutina {
+		get{ return jugueNivel2ConRutina; }
+	}
+
 	private static int numeroDeRepeticiones;
 	public static int NumeroDeRepeticiones{
 		set {
@@ -33,23 +38,25 @@ public class AdminNivel2 : MonoBehaviour {
 
 	private GameObject _ingredienteClon; 
 	private GameObject[] _destruir;
-
 	public static List<ActivaPanelDedos> _secuencia;
-
-	private int _contadorCapa, _count, _limite; 
+	private int _contadorCapa, _count, _limite;
+	private float _tiempoTemp;
 	Mano _mano;
-	private bool _pan, _jamon, _queso, _jitomate;
+	private bool _pan, _jamon, _queso, _jitomate,_iniciaCronometro;
 
 	enum ActivaPanelInteractivo {Bienvenido, Siguiente, Inicio, Juegue, ExitoParcial, SegundoInicio, Exito}
 	ActivaPanelInteractivo PanelActivado;
 	ActivaPanelDedos PanelDedosActivo;
 
 	void Awake(){
+		Admin_level0.datosNivel2.Rutina = _secuencia;
+		Admin_level0.datosNivel2.numeroDeRepeticiones = numeroDeRepeticiones;
+		Admin_level0.datosNivel2.numeroDeIngredientes = _secuencia.Count;
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interfaz [0].gameObject.SetActive (true);
 		interfaz [13].gameObject.SetActive (true);
-		_mano = AdminMenu.datosNivel2.ManoSeleccionada;
+		_mano = Admin_level0.datosNivel2.ManoSeleccionada;
 		_contadorCapa = 0;
 		_count = 0;
 		_limite = 1;
@@ -57,6 +64,7 @@ public class AdminNivel2 : MonoBehaviour {
 		_jamon = true;
 		_queso = true;
 		_jitomate = true;
+		_tiempoTemp = 0;
 	}
 		
 	void OnEnable(){
@@ -74,13 +82,18 @@ public class AdminNivel2 : MonoBehaviour {
 	}
 
 	void DecideSecuencia(){
-		if(_count == _secuencia.Count && _limite == numeroDeRepeticiones){ 
+		if(_count>_secuencia.Count)
+			return;
+
+		if(_count == _secuencia.Count && _limite == numeroDeRepeticiones){
+			Admin_level0.datosNivel2.tiempos.Add (_tiempoTemp);
 			PanelActivado = ActivaPanelInteractivo.Exito;
 			PanelInteractivo ();
 			return;
 		}
 
 		if(_count == _secuencia.Count && _limite < numeroDeRepeticiones){
+			Admin_level0.datosNivel2.tiempos.Add (_tiempoTemp);
 			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
 			PanelInteractivo ();
 			return;
@@ -231,11 +244,13 @@ public class AdminNivel2 : MonoBehaviour {
 			PanelActivado = ActivaPanelInteractivo.Juegue;
 			PanelDedosActivo = _secuencia [0];
 			PanelDedos (_mano);
+			_iniciaCronometro = true;
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
 			DesactivaIngredientes ();
 			mensajeFelicitacion.text = "Lo estás haciendo genial ¡Sigue asi!\n\n" + _limite  + "  de  " + numeroDeRepeticiones; 
 			interfaz [10].gameObject.SetActive (true);
+			_iniciaCronometro = false;
 			break;
 		case ActivaPanelInteractivo.Exito:
 			if (AudiodeExito != null) {
@@ -243,6 +258,8 @@ public class AdminNivel2 : MonoBehaviour {
 			}
 			DesactivaIngredientes ();
 			interfaz [11].gameObject.SetActive (true);
+			jugueNivel2ConRutina = true;
+			_iniciaCronometro = false;
 			break;
 		}
 	}
@@ -264,6 +281,7 @@ public class AdminNivel2 : MonoBehaviour {
 			_jitomate = true;
 			_count = 0;
 			_limite += 1;
+			_tiempoTemp = 0;
 			PanelActivado = ActivaPanelInteractivo.Juegue;
 			_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
 			for (int i = 0; i <= _destruir.Length - 1; i++) {
@@ -285,7 +303,7 @@ public class AdminNivel2 : MonoBehaviour {
 	}
 		
 	void Exito(){
-		SceneManager.LoadScene (1);
+		SceneManager.LoadScene (8);
 	}
 
 	void SpawnPan(){
@@ -314,6 +332,10 @@ public class AdminNivel2 : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
+		if (_iniciaCronometro == true) {
+			_tiempoTemp += Time.deltaTime;
+		}
+
 		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && 
 		   (PanelActivado == ActivaPanelInteractivo.Bienvenido || PanelActivado == ActivaPanelInteractivo.Siguiente || PanelActivado == ActivaPanelInteractivo.Inicio || 
 			PanelActivado == ActivaPanelInteractivo.ExitoParcial)){

@@ -307,6 +307,7 @@ public class InterfazClinica : MonoBehaviour {
 		_routineData=LoadRoutineXML(path);
 		if (_routineData.ToString () != "") {
 			myRoutineData = (RutinaData)DeserializeObject (_routineData);
+			//Admin_level0.datosNivel2.Rutina = myRoutineData.Rutina;
 			AdminNivel2._secuencia = myRoutineData.Rutina;
 			descripcionRutina.text="\n"+myRoutineData.DescripcionDeRutina.ToString ()+"\n";
 			for (int i = 0; i <= myRoutineData.Rutina.Count - 1; i++) {
@@ -357,7 +358,10 @@ public class InterfazClinica : MonoBehaviour {
 			Admin_level0.RutinaAsignada = true;
 			Admin_level0.nombreRutinaAJugar = postName.text.ToString ();
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
+			string nombreRutinaTemp = rutina[1].ToString (); 
+			Admin_level0.datosNivel2.nombreDeRutina = nombreRutinaTemp.Replace (".", " ");
 			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ());
+			//Admin_level0.datosNivel2.numeroDeRepeticiones = int.Parse (rutina [3].ToString ());
 			string fullPath=pathStoreAllInfo+"\\"+rutina [0].ToString () + "_" + rutina [1].ToString () + "_" + rutina [2].ToString (); 
 			Debug.Log (fullPath);
 			ReadRutinaToPlay (fullPath);
@@ -371,6 +375,7 @@ public class InterfazClinica : MonoBehaviour {
 		_routineData=LoadRoutineXML(path); 
 		if (_routineData.ToString () != "") {
 			myRoutineData = (RutinaData) DeserializeObject (_routineData);
+			//Admin_level0.datosNivel2.Rutina = myRoutineData.Rutina;
 			AdminNivel2._secuencia = myRoutineData.Rutina;
 			//AdminNivel2._secuencia = InterfazMedico.myRoutineData.Rutina;
 			SceneManager.LoadScene (1);
