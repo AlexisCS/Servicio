@@ -101,7 +101,7 @@ public static class GameSaveLoad {
 	static void CreateXML() 
 	{ 
 		StreamWriter writer; 
-		FileInfo t = new FileInfo(_FileLocation+"\\"+_PacienteName+"Data.xml"); 
+		FileInfo t = new FileInfo(_FileLocation+"\\"+_PacienteName+"_Data.xml"); 
 		if(!t.Exists) 
 		{ 
 			writer = t.CreateText(); 
@@ -111,7 +111,7 @@ public static class GameSaveLoad {
 			InfoPartida myFinalData = new InfoPartida ();
 			InfoPartida myNewData = new InfoPartida ();
 			//primero cargamos la informacion que ya existia en el archivo
-			StreamReader r = File.OpenText(_FileLocation+"\\"+_PacienteName+"Data.xml"); 
+			StreamReader r = File.OpenText(_FileLocation+"\\"+_PacienteName+"_Data.xml"); 
 			string _oldData = r.ReadToEnd(); 
 			r.Close();  
 			t.Delete(); 
@@ -148,7 +148,7 @@ public static class GameSaveLoad {
 	//Deserializamos la info del xml y la guardamos en la cadena _data
 	static void LoadXML() 
 	{ 
-		string filePath =( _FileLocation + "\\" + _PacienteName + "Data.xml").ToString();
+		string filePath =( _FileLocation + "\\" + _PacienteName + "_Data.xml").ToString();
 		if (File.Exists (filePath)) {
 			StreamReader r = File.OpenText (filePath); 
 			string _info = r.ReadToEnd (); 

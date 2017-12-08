@@ -15,7 +15,12 @@ public class Admin_level0 : MonoBehaviour {
 	public static InfoPartida datos;
 	public static TerapeutaData terapeuta;
 	public static Nivel2 datosNivel2;
-	public static string nombreRutinaAJugar;
+	//public static string nombreRutinaAJugar;
+
+	private static string nombreRutinaTemp;
+	public static string NombreRutinaTemp{
+		get { return nombreRutinaTemp; }
+	}
 
 	private static bool asistidoPorTerapeuta;
 	public static bool AsistidoPorTerapeuta{
@@ -91,11 +96,11 @@ public class Admin_level0 : MonoBehaviour {
 		if (postName.text.ToString ().Length > 2) {
 			Debug.Log ("Hay rutina");
 			rutinaAsignada = true;
-			nombreRutinaAJugar = postName.text.ToString ();
+			//nombreRutinaAJugar = postName.text.ToString ();
+			//Debug.Log ("XXD" + nombreRutinaAJugar);
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
-			string nombreRutinaTemp = rutina[1].ToString ();
-			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ());
-			//AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ()); 
+			nombreRutinaTemp = rutina[1].ToString ();
+			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ()); 
 			datosNivel2.nombreDeRutina = nombreRutinaTemp.Replace (".", " ");
 			StartCoroutine (DownloadRoutine (rutina [0], rutina [0] + "_" + rutina [1] + "_" + rutina [2]));
 		} else {
@@ -170,6 +175,7 @@ public class Admin_level0 : MonoBehaviour {
 		//Buscando el ID en el sistema CITAN
 		string urlString = _postURL2 + "?"+"id=" + WWW.EscapeURL (id);
 		Admin_level0.datos.id = int.Parse (WWW.EscapeURL (id));
+		GameSaveLoad._PacienteName =  Admin_level0.datos.id.ToString ();
 		WWW postName = new WWW (urlString);
 		yield return postName;
 		//recibimos el nombre asociado al id

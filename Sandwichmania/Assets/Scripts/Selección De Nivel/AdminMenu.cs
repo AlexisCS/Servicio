@@ -217,7 +217,7 @@ public class AdminMenu : MonoBehaviour {
 			};
 			break;
 		}
-		Admin_level0.datosNivel2.Rutina = _rutina;
+		AdminNivel2SinRutina._secuenciaSinRutina = _rutina;
 	}
 
 
@@ -232,7 +232,7 @@ public class AdminMenu : MonoBehaviour {
 			Advertencia.text = "El mínimo de repeticiones es 1 y el máximo de 100 ...";
 			return;
 		} 
-		Admin_level0.datosNivel2.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
+		AdminNivel2SinRutina._numeroDeRepeticiones = cantidadDeRepeticionesTemp;
 		//datosNivel2.numeroDeRepeticiones = cantidadDeRepeticionesTemp;
 		panels [8].gameObject.SetActive (false);
 		panels [4].gameObject.SetActive (true);

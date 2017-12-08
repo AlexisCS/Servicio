@@ -21,15 +21,10 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		get{ return jugueNivel2SinRutina; }
 	}
 
-//	private static List<float> tiemposDeRepetciones;
-//	public static List<float> TiemposDeRepeticiones {
-//		get { return tiemposDeRepetciones; }
-//	}
-
-	private int _numeroDeRepeticiones;
+	public static int _numeroDeRepeticiones;
 	private GameObject _ingredienteClon, _ingredienteExtra;
 	private GameObject[] _destruir;
-	private List<ActivaPanelDedos> _secuencia; 
+	public static List<ActivaPanelDedos> _secuenciaSinRutina; 
 	private int _contadorCapa, _count, _limite; 
 	private float _tiempoTemp;
 	Mano _mano;
@@ -42,8 +37,10 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 	void Awake(){
 		//tiemposDeRepetciones = new List<float> ();
-		_secuencia = new List<ActivaPanelDedos> ();
-		_secuencia = Admin_level0.datosNivel2.Rutina;
+		Admin_level0.datosNivel2.nombreDeRutina = "Sin Rutina";
+		Admin_level0.datosNivel2.Rutina = _secuenciaSinRutina;
+		Admin_level0.datosNivel2.numeroDeRepeticiones = _numeroDeRepeticiones;
+		Admin_level0.datosNivel2.numeroDeIngredientes = _secuenciaSinRutina.Count;
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
 		interfaz [0].gameObject.SetActive (true);
@@ -76,23 +73,23 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	}
 
 	void DecideSecuencia(){
-		if(_count>_secuencia.Count) //se supone que nunca debe entrar aquí, pero a veces lo hace así que matamos a la función
+		if(_count>_secuenciaSinRutina.Count) //se supone que nunca debe entrar aquí, pero a veces lo hace así que matamos a la función
 			return;
 		
-		if(_count == _secuencia.Count && _limite == _numeroDeRepeticiones){
+		if(_count == _secuenciaSinRutina.Count && _limite == _numeroDeRepeticiones){
 			Admin_level0.datosNivel2.tiempos.Add (_tiempoTemp);
 			StartCoroutine (PausaPanelExito ());
 			return;
 		}
 
-		if(_count == _secuencia.Count && _limite < _numeroDeRepeticiones){
+		if(_count == _secuenciaSinRutina.Count && _limite < _numeroDeRepeticiones){
 			Admin_level0.datosNivel2.tiempos.Add (_tiempoTemp);
 			_count++;
 			StartCoroutine (PausaPanelExitoParcial ());
 			return;
 		}
 
-		switch (_secuencia[_count]) {
+		switch (_secuenciaSinRutina[_count]) {
 		case ActivaPanelDedos.Indice:
 			PanelDedosActivo = ActivaPanelDedos.Indice;
 			PanelDedos (_mano);
@@ -127,7 +124,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			_panExtra = false;
 			break;
 		}
-		if(_count <_secuencia.Count){
+		if(_count <_secuenciaSinRutina.Count){
 			_count += 1;
 		}
 	}
@@ -249,7 +246,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 			interfaz [1].gameObject.SetActive (false);
 			interfaz [10].gameObject.SetActive (false);
 			PanelActivado = ActivaPanelInteractivo.Juegue;
-			PanelDedosActivo = _secuencia [0];
+			PanelDedosActivo = _secuenciaSinRutina [0];
 			PanelDedos (_mano);
 			_iniciaCronometro = true;
 			break;
@@ -321,7 +318,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 	void SpawnPanExtra(){
 		Vector3 PosicionPanExtra;
-		if (_count == _secuencia.Count) {
+		if (_count == _secuenciaSinRutina.Count) {
 			PosicionPanExtra = new Vector3 (4.5f, 10.0f, 0.0f);
 			_ingredienteExtra = (GameObject)Instantiate (ingredientes [4], PosicionPanExtra, Quaternion.identity);
 			_ingredienteExtra.gameObject.GetComponent<Renderer> ().sortingOrder = 100;
@@ -368,6 +365,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && 
 			(PanelActivado == ActivaPanelInteractivo.Bienvenido || PanelActivado == ActivaPanelInteractivo.Siguiente || PanelActivado == ActivaPanelInteractivo.Inicio || 
 				PanelActivado == ActivaPanelInteractivo.ExitoParcial)){
+
 			if (PanelActivado == ActivaPanelInteractivo.Bienvenido) {
 				PanelActivado = ActivaPanelInteractivo.Siguiente;
 				PanelInteractivo ();

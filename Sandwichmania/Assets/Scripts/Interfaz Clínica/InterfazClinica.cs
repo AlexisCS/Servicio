@@ -356,7 +356,7 @@ public class InterfazClinica : MonoBehaviour {
 		if (postName.text.ToString ().Length > 2) {
 			Debug.Log ("Hay rutina");
 			Admin_level0.RutinaAsignada = true;
-			Admin_level0.nombreRutinaAJugar = postName.text.ToString ();
+			//Admin_level0.nombreRutinaAJugar = postName.text.ToString ();
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
 			string nombreRutinaTemp = rutina[1].ToString (); 
 			Admin_level0.datosNivel2.nombreDeRutina = nombreRutinaTemp.Replace (".", " ");

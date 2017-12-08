@@ -82,7 +82,7 @@ public class AdminNivel2 : MonoBehaviour {
 	}
 
 	void DecideSecuencia(){
-		if(_count>_secuencia.Count)
+		if(_count > _secuencia.Count)
 			return;
 
 		if(_count == _secuencia.Count && _limite == numeroDeRepeticiones){
@@ -93,7 +93,6 @@ public class AdminNivel2 : MonoBehaviour {
 		}
 
 		if(_count == _secuencia.Count && _limite < numeroDeRepeticiones){
-			Admin_level0.datosNivel2.tiempos.Add (_tiempoTemp);
 			PanelActivado = ActivaPanelInteractivo.ExitoParcial;
 			PanelInteractivo ();
 			return;
@@ -274,6 +273,7 @@ public class AdminNivel2 : MonoBehaviour {
 
 
 	void Reinicio(){ 
+		Admin_level0.datosNivel2.tiempos.Add (_tiempoTemp);
 		if (_limite < numeroDeRepeticiones) {
 			_pan = true;
 			_jamon = true;
@@ -339,6 +339,7 @@ public class AdminNivel2 : MonoBehaviour {
 		if((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow)) && 
 		   (PanelActivado == ActivaPanelInteractivo.Bienvenido || PanelActivado == ActivaPanelInteractivo.Siguiente || PanelActivado == ActivaPanelInteractivo.Inicio || 
 			PanelActivado == ActivaPanelInteractivo.ExitoParcial)){
+
 			if (PanelActivado == ActivaPanelInteractivo.Bienvenido) {
 				PanelActivado = ActivaPanelInteractivo.Siguiente;
 				PanelInteractivo ();
@@ -354,7 +355,6 @@ public class AdminNivel2 : MonoBehaviour {
 				Reinicio ();
 				DecideSecuencia ();
 			}
-
 		}
 
 		if ((Input.GetKeyDown (KeyCode.Return) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.DownArrow) 

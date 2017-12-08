@@ -17,26 +17,29 @@ public class AdminResultadosNivel2 : MonoBehaviour {
 
 
 	void Awake (){
+		if (AdminMenu.RutinaSeleccionada == Rutina.SinRutina) {
+			Admin_level0.datosNivel2.nombreDeRutina = "Sin Rutina";
+		}
 		_tiemposText = new StringBuilder ();
 		PromedioTiempos ();
+		Admin_level0.datosNivel2.tiempoPromedio = DelimitaSegundos (_promedioEnSegundos);
+		listadoDeTiempos ();
 		EntregaResultados ();
 		RedondeoTiempos ();
-		Admin_level0.datos.HistorialPartidasNivel2.Add (Admin_level0.datosNivel2);
-		GameSaveLoad.Save (Admin_level0.datos);
 	}
 
 	void Start () {
-		listadoDeTiempos ();
 		numeroDeRepeticiones.text = "No. Repeticiones: " + Admin_level0.datosNivel2.numeroDeRepeticiones;
 		numeroDeIngredientes.text = "No. Ingredientes por repetición: " + Admin_level0.datosNivel2.Rutina.Count;
-		//numeroDeRepeticiones.text = "No. Repeticiones: " + AdminMenu.datosNivel2.numeroDeRepeticiones;
-		//numeroDeIngredientes.text = "No. Ingredientes por repetición: " + AdminMenu.datosNivel2.Rutina.Count;
+		Admin_level0.datos.HistorialPartidasNivel2.Add (Admin_level0.datosNivel2);
+		GameSaveLoad.Save (Admin_level0.datos);
+		Admin_level0.datosNivel2.nombreDeRutina = Admin_level0.NombreRutinaTemp;
 	}
 
 	public void SiguienteBoton(){
 		SceneManager.LoadScene (1);
 		Admin_level0.datosNivel2.tiempos.Clear ();
-		//AdminMenu.datosNivel2.tiempos.Clear ();
+		Admin_level0.datosNivel2.tiempoPromedio = 0;
 	}
 	
 	// Update is called once per frame
@@ -63,7 +66,6 @@ public class AdminResultadosNivel2 : MonoBehaviour {
 			sumaDeTiempos += listaTemp [i];
 		}
 		_promedioEnSegundos = sumaDeTiempos / listaTemp.Count;
-		Admin_level0.datosNivel2.tiempoPromedio = DelimitaSegundos (_promedioEnSegundos);
 	}
 
 	void listadoDeTiempos(){
