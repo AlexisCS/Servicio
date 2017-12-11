@@ -14,7 +14,8 @@ using Ionic.Zip;
 
 
 public class InterfazClinica : MonoBehaviour {
-	
+
+	public RectTransform[] enviaAlFinalPanel;
 	public GameObject salirPanel, cerrarSesionPanel;
 	public GameObject opcionesPanel;
 	public GameObject descripcionDeRutinaPanel, ingresaRutinaPanel, mensajeContinuar;
@@ -32,6 +33,10 @@ public class InterfazClinica : MonoBehaviour {
 	public DropDownListClinica rutinas;
 
 	public static RutinaData myRoutineData;
+	private static bool entreInterfazClinica;
+	public static bool EntreInterfazClinica{
+		get { return entreInterfazClinica; }
+	}
 
 	FlechasTeclado ElementoDeRutina;
 
@@ -51,12 +56,19 @@ public class InterfazClinica : MonoBehaviour {
 		_rutina = new List<ActivaPanelDedos> ();
 		_rutinaText = new StringBuilder ();
 		ObtieneRutinas ();
+		entreInterfazClinica = false;
 	}
 
 	// Use this for initialization
 	void Start () {
 		
 
+	}
+
+	public void EnviaAlFinal(){
+		enviaAlFinalPanel [0].SetAsLastSibling ();
+		enviaAlFinalPanel [1].SetAsLastSibling ();
+		enviaAlFinalPanel [2].SetAsLastSibling ();
 	}
 
 	public void SalirBoton (){
@@ -310,9 +322,14 @@ public class InterfazClinica : MonoBehaviour {
 			//Admin_level0.datosNivel2.Rutina = myRoutineData.Rutina;
 			AdminNivel2._secuencia = myRoutineData.Rutina;
 			descripcionRutina.text="\n"+myRoutineData.DescripcionDeRutina.ToString ()+"\n";
+			descripcionRutina.text += "[ ";
 			for (int i = 0; i <= myRoutineData.Rutina.Count - 1; i++) {
-				descripcionRutina.text += myRoutineData.Rutina [i] +", ";
+				descripcionRutina.text += myRoutineData.Rutina [i];
+				if (i < myRoutineData.Rutina.Count - 1) {
+					descripcionRutina.text += ", ";
+				}
 			}
+			descripcionRutina.text += " ]";
 			_rutinaSeleccionada=true;
 			_nombreRutinaSeleccionada=Admin_level0.terapeuta.Id+"_"+myRoutineData.NombreDeRutina+"_sandwichRutina.xml";
 		}
@@ -358,33 +375,23 @@ public class InterfazClinica : MonoBehaviour {
 			Admin_level0.RutinaAsignada = true;
 			//Admin_level0.nombreRutinaAJugar = postName.text.ToString ();
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
-			string nombreRutinaTemp = rutina[1].ToString (); 
-			Admin_level0.datosNivel2.nombreDeRutina = nombreRutinaTemp.Replace (".", " ");
+			string nombreRutinaTemp = rutina[1].ToString ().Replace ("."," ");
+			Admin_level0.datosNivel2.nombreDeRutina = nombreRutinaTemp;
 			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ());
-			//Admin_level0.datosNivel2.numeroDeRepeticiones = int.Parse (rutina [3].ToString ());
 			string fullPath=pathStoreAllInfo+"\\"+rutina [0].ToString () + "_" + rutina [1].ToString () + "_" + rutina [2].ToString (); 
 			Debug.Log (fullPath);
 			ReadRutinaToPlay (fullPath);
-			//StartCoroutine (DownloadRoutine (rutina [0], rutina [0] + "_" + rutina [1] + "_" + rutina [2], rutina [1]));
 		}
 	}
 
 	public void ReadRutinaToPlay(string path){
-		Debug.Log ("Hola");
 		myRoutineData = new RutinaData();
 		_routineData=LoadRoutineXML(path); 
 		if (_routineData.ToString () != "") {
 			myRoutineData = (RutinaData) DeserializeObject (_routineData);
-			//Admin_level0.datosNivel2.Rutina = myRoutineData.Rutina;
 			AdminNivel2._secuencia = myRoutineData.Rutina;
-			//AdminNivel2._secuencia = InterfazMedico.myRoutineData.Rutina;
-			SceneManager.LoadScene (1);
-			//if(warning)
-			//		warning.gameObject.SetActive(false);
-			//} else {
-			//	warning.gameObject.SetActive(true);
-			//	warning.text="Existe un error con el archivo.\n Por favor seleccione otra rutina.";
-			//} 
+			entreInterfazClinica = true;
+			SceneManager.LoadScene (1); 
 		}
 	}
 	

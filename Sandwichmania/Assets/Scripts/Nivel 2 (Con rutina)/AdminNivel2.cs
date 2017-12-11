@@ -21,7 +21,7 @@ public class AdminNivel2 : MonoBehaviour {
 	public GameObject[] interfaz;
 	public Text mensajeFelicitacion;
 
-	private static bool jugueNivel2ConRutina = false;
+	private static bool jugueNivel2ConRutina;
 	public static bool JugueNivel2ConRutina {
 		get{ return jugueNivel2ConRutina; }
 	}

@@ -138,9 +138,9 @@ public static class GameSaveLoad {
 		writer.Write(_data); 
 		writer.Close(); 
 		//Limpiando
-		//SelectorEscenas.paciente.HistorialPartidas.Clear ();
-		//SelectorEscenas.paciente.HistorialPartidasPersonalizadas.Clear ();
-
+		Admin_level0.datos.HistorialPartidasNivel1.Clear ();
+		Admin_level0.datos.HistorialPartidasNivel2.Clear ();
+		Admin_level0.datos.HistorialPartidasNivel3.Clear ();
 		Debug.Log("File written and data cleared."); 
 	} 
 

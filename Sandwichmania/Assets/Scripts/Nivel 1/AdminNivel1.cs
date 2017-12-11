@@ -17,7 +17,7 @@ public class AdminNivel1 : MonoBehaviour {
 	public Text cantidadQuesoText;
 	public Text cantidadJitomateText;
 
-	private static bool jugueNivel1 = false;
+	private static bool jugueNivel1;
 	public static bool JugueNivel1 {
 		get{ return jugueNivel1; }
 	}

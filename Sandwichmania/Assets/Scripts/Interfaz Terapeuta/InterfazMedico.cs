@@ -216,17 +216,16 @@ public class InterfazMedico : MonoBehaviour {
 		if (_routineData.ToString () != "") {
 			myRoutineData = (RutinaData)DeserializeObject (_routineData);
 			descripcionRutina.text="\n"+myRoutineData.DescripcionDeRutina.ToString ()+"\n";
+			descripcionRutina.text += "[ ";
 			for (int i = 0; i <= myRoutineData.Rutina.Count - 1; i++) {
-				descripcionRutina.text += myRoutineData.Rutina [i] +", ";
+				descripcionRutina.text += myRoutineData.Rutina [i];
+				if (i < myRoutineData.Rutina.Count - 1) {
+					descripcionRutina.text += ", ";
+				}
 			}
+			descripcionRutina.text += " ]";
 			_rutinaSeleccionada=true;
 			_nombreRutinaSeleccionada=Admin_level0.terapeuta.Id+"_"+myRoutineData.NombreDeRutina+"_sandwichRutina.xml";
-//			if(warning)
-//				warning.gameObject.SetActive(false);
-//		} else {
-//			rutinaSeleccionada=false;
-//			warning.gameObject.SetActive(true);
-//			warning.text="Existe un error con el archivo.\n Por favor seleccione otra rutina.";
 		}
 	}
 

@@ -12,6 +12,7 @@ public class AdminMenu : MonoBehaviour {
 	public static Nivel3 datosNivel3;
 
 	public GameObject[] panels;
+	public Button volver, cerrarSesion;
 	public InputField cantidadDeRepeticiones, cantidadDeIngredientesNivel3, cantidadDeRepeticionesNivel3;
 	public Text Advertencia, advertenciaNivel3, nombreDeUsuario;
 	public Text rutinaAsignada;
@@ -26,6 +27,12 @@ public class AdminMenu : MonoBehaviour {
 	private List<ActivaPanelDedos> _rutina;
 
 	void Start () {
+		if (InterfazClinica.EntreInterfazClinica) {
+			volver.gameObject.SetActive (true);
+			cerrarSesion.gameObject.SetActive (false);
+			return;
+		}
+			
 		if ((!Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada) || (Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada)) {
 			rutinaAsignada.text = "Tiene asignada la rutina: " + '"' + Admin_level0.datosNivel2.nombreDeRutina + '"' + ". ¿Desea jugarla?";
 			panels [9].gameObject.SetActive (true);
@@ -34,6 +41,7 @@ public class AdminMenu : MonoBehaviour {
 		if (!Admin_level0.AsistidoPorTerapeuta && !Admin_level0.RutinaAsignada) {
 			panels [11].gameObject.SetActive (true);
 		}
+
 	}
 	
 	// Update is called once per frame
@@ -48,7 +56,15 @@ public class AdminMenu : MonoBehaviour {
 		datosNivel3 = new Nivel3 ();
 		panels [0].gameObject.SetActive (true);
 		panels [5].gameObject.SetActive (true);
+		AdminMenu.datosNivel1.nivel = 0;
+		Admin_level0.datosNivel2.nivel = 0;
+		AdminMenu.datosNivel3.nivel = 0;
 	}
+		
+	public void Volver(){
+		SceneManager.LoadScene (11);
+	}
+
 
 	public void DesaJugarRutinaAsignada(){
 		panels [0].gameObject.SetActive (false);
@@ -90,9 +106,10 @@ public class AdminMenu : MonoBehaviour {
 				datosNivel3.nivel = nivel;
 				panels [0].gameObject.SetActive (false);
 				panels [7].gameObject.SetActive (true);
-			} else {
-				panels [12].gameObject.SetActive (true);
-			}
+				return;
+			} 
+			panels [12].gameObject.SetActive (true);
+	
 			break;
 		}
 	}
@@ -275,6 +292,7 @@ public class AdminMenu : MonoBehaviour {
 	public void RegresaBoton (int seccion) {
 		switch (seccion) {
 		case 0:
+			Admin_level0.datosNivel2.nivel = 0;
 			panels [0].gameObject.SetActive (true);
 			panels [1].gameObject.SetActive (false);
 			break;
@@ -288,17 +306,29 @@ public class AdminMenu : MonoBehaviour {
 			break;
 		case 3:
 			if (datosNivel1.nivel == 1) {
+				datosNivel1.nivel = 0;
 				panels [0].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
-			} else if (Admin_level0.datosNivel2.nivel == 2 && rutinaSeleccionada == Rutina.ConRutina) {
+				return;
+			} 
+
+			if (Admin_level0.datosNivel2.nivel == 2 && rutinaSeleccionada == Rutina.ConRutina) {
 				panels [1].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
-			} else if (Admin_level0.datosNivel2.nivel == 2 && rutinaSeleccionada == Rutina.SinRutina) {
+				return;
+			} 
+
+			if (Admin_level0.datosNivel2.nivel == 2 && rutinaSeleccionada == Rutina.SinRutina) {
 				panels [8].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
-			} else if (datosNivel3.nivel == 3) {
-				panels [0].gameObject.SetActive (true);
+				return;
+			} 
+
+			if (datosNivel3.nivel == 3) {
+				datosNivel3.nivel = 0;
+				panels [7].gameObject.SetActive (true);
 				panels [4].gameObject.SetActive (false);
+				return;
 			}
 			break;
 		case 4:

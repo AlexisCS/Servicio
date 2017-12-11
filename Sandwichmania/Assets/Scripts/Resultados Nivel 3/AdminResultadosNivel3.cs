@@ -28,16 +28,17 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 		_erroresJamon = 0;
 		_erroresQueso = 0;
 		_erroresJitomate = 0;
+		CuentaIngredientesAleatorios ();
+		CuentaErrores ();
+		EntregaInformacion ();
+		EntregaPorcentajeError ();
 		Admin_level0.datos.HistorialPartidasNivel3.Add (AdminMenu.datosNivel3);
 		GameSaveLoad.Save (Admin_level0.datos);
 	}
 
 	// Use this for initialization
 	void Start () {
-		CuentaIngredientesAleatorios ();
-		CuentaErrores ();
-		EntregaInformacion ();
-		EntregaPorcentajeError ();
+
 	}
 
 	void CuentaIngredientesAleatorios(){

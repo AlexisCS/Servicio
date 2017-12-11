@@ -201,7 +201,7 @@ namespace UnityEngine.UI.Extensions
 
 		private void OnItemClicked(int indx)
 		{
-			//scriptInterfazMedico.UltimosHijos ();
+			scriptInterazClinica.EnviaAlFinal ();
 			Debug.Log("item " + indx + " clicked");
 			if (indx != _selectedIndex && OnSelectionChanged != null) OnSelectionChanged(indx);
 			_selectedIndex = indx;

@@ -99,9 +99,9 @@ public class Admin_level0 : MonoBehaviour {
 			//nombreRutinaAJugar = postName.text.ToString ();
 			//Debug.Log ("XXD" + nombreRutinaAJugar);
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
-			nombreRutinaTemp = rutina[1].ToString ();
+			nombreRutinaTemp = rutina[1].ToString ().Replace (".", " ");
 			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ()); 
-			datosNivel2.nombreDeRutina = nombreRutinaTemp.Replace (".", " ");
+			datosNivel2.nombreDeRutina = nombreRutinaTemp;
 			StartCoroutine (DownloadRoutine (rutina [0], rutina [0] + "_" + rutina [1] + "_" + rutina [2]));
 		} else {
 			CargaJuegoSinPartidaAsignada ();
