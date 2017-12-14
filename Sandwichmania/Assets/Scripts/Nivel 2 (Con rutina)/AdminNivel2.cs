@@ -332,7 +332,7 @@ public class AdminNivel2 : MonoBehaviour {
 		
 	// Update is called once per frame
 	void Update () {
-		if (_iniciaCronometro == true) {
+		if (_iniciaCronometro) {
 			_tiempoTemp += Time.deltaTime;
 		}
 

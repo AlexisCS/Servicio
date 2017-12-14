@@ -31,7 +31,6 @@ public class Nivel1{
 public class Nivel2{
 	public int nivel;
 	public string nombreDeRutina;
-	//public Rutina RutinaSeleccionada;
 	public Mano ManoSeleccionada;
 	public List<ActivaPanelDedos> Rutina;
 	public List<float> tiempos = new List<float>();
@@ -45,6 +44,7 @@ public class Nivel3{
 	public Mano ManoSeleccionada;
 	public int numeroDeRepeticiones;
 	public int numeroDeIngredientes;
+	public List<float> tiempos = new List<float>();
 	public float porcentajDeErrorPan;
 	public float porcentajDeErrorJamon;
 	public float porcentajDeErrorQueso;

@@ -18,6 +18,7 @@ public class AdminNivel3 : MonoBehaviour {
 	public GameObject[] interfaz;
 	public GameObject[] ingredientes;
 	public Text noRepeticionesExito1, noRepeticionesExito2, noRepeticionesExito3;
+	public Text espereMensaje;
 	public Button ayudaBoton;
 
 	private static List <List<ActivaPanelDedos>> guardaResultados;
@@ -66,11 +67,11 @@ public class AdminNivel3 : MonoBehaviour {
 	private GameObject[] _destruir;
 	private int _numeroDeIngredientes, _numeroDeRepeticiones, _contadorCapa, _contadorIngredientesDeUsuario, _limite, _errores;
 	Mano _mano;
-	private float _tiempoDePausaEntreIngredientes;
+	private float _tiempoDePausaEntreIngredientes, _tiempoTemp;
 	private List <Transform> _posicionDeIngredientesClon; 
 	private List <ActivaPanelDedos>[] _guardaErrores;
 	private List <ActivaPanelDedos> _ingredientesDeUsuario;
-	private Dictionary<int, List<ActivaPanelDedos>> _informacionPartida;
+	private bool _iniciaCronometro;
 
 
 	enum ActivaPanelInteractivo {SinPanel, Bienvenido, Inicio, Juegue, ExitoParcial, Reinicio, Exito}
@@ -107,6 +108,7 @@ public class AdminNivel3 : MonoBehaviour {
 		for (int i = 0; i <= _numeroDeRepeticiones - 1; i++) {
 			_guardaErrores[i] = new List<ActivaPanelDedos>();
 		}
+		_iniciaCronometro = false;
 		guardaResultados = new List<List<ActivaPanelDedos>> ();
 		ActivaTecla = Teclado.SinPresionar;
 		PanelActivado = ActivaPanelInteractivo.SinPanel;
@@ -250,7 +252,6 @@ public class AdminNivel3 : MonoBehaviour {
 			}
 			ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (numeroAleatorio));
 			ingredienteAnterior = numeroAleatorio;
-
 		}
 		ingredientesAleatorios.Add (SeleccionaIngredienteAleatorio (0));
 	}
@@ -270,6 +271,8 @@ public class AdminNivel3 : MonoBehaviour {
 	}
 
 	IEnumerator GeneraSandwich(){
+		interfaz [9].gameObject.SetActive (true);
+		espereMensaje.text = "Espere...";
 		for (int i = 0; i <= ingredientesAleatorios.Count - 1; i++) {
 			switch (ingredientesAleatorios [i]) {
 			case ActivaPanelDedos.Indice:
@@ -287,8 +290,12 @@ public class AdminNivel3 : MonoBehaviour {
 			}
 			yield return new WaitForSeconds (_tiempoDePausaEntreIngredientes);
 		}
-		yield return new WaitForSeconds (1.5f);
+		yield return new WaitForSeconds (2.0f);
+		espereMensaje.text = "¡Ahora!";
+		yield return new WaitForSeconds (1.0f);
+		interfaz[9].gameObject.SetActive (false);
 		ActivaTecla = Teclado.PresionaCualquiera;
+		_iniciaCronometro = true;
 	}
 		
 
@@ -334,6 +341,7 @@ public class AdminNivel3 : MonoBehaviour {
 //	}
 
 	void Reinicio(){
+		AdminMenu.datosNivel3.tiempos.Add (_tiempoTemp);
 		if (_limite == _numeroDeRepeticiones) {
 			ActivaTecla = Teclado.SinPresionar;
 			PanelActivado = ActivaPanelInteractivo.Exito;
@@ -342,9 +350,11 @@ public class AdminNivel3 : MonoBehaviour {
 		}
 
 		if (_limite < _numeroDeRepeticiones) {
+			_iniciaCronometro = true;
 			_ingredientesDeUsuario.Clear ();
 			_errores = 0;
 			_contadorIngredientesDeUsuario = 0;
+			_tiempoTemp = 0;
 			_destruir = GameObject.FindGameObjectsWithTag ("Estatico");
 			for (int i = 0; i <= _destruir.Length - 1; i++) {
 				Destroy (_destruir [i]);
@@ -369,17 +379,18 @@ public class AdminNivel3 : MonoBehaviour {
 			StartCoroutine (GeneraSandwich ());
 			break;
 		case ActivaPanelInteractivo.ExitoParcial:
+			_iniciaCronometro = false;
 			int temp;
 			temp = _numeroDeIngredientes / 2;
 			if (_errores == 0) {
 				interfaz [2].gameObject.SetActive (true);
-				noRepeticionesExito1.text = _limite + " de " +_numeroDeRepeticiones;
+				noRepeticionesExito1.text = _limite + " de " + _numeroDeRepeticiones;
 			} else if (_errores <= temp) {
 				interfaz [3].gameObject.SetActive (true);
-				noRepeticionesExito2.text = _limite + " de " +_numeroDeRepeticiones;
+				noRepeticionesExito2.text = _limite + " de " + _numeroDeRepeticiones;
 			} else if (_errores > temp) {
 				interfaz [4].gameObject.SetActive (true);
-				noRepeticionesExito3.text = _limite + " de " +_numeroDeRepeticiones;
+				noRepeticionesExito3.text = _limite + " de " + _numeroDeRepeticiones;
 			}
 			break;
 		case ActivaPanelInteractivo.Reinicio:
@@ -388,6 +399,9 @@ public class AdminNivel3 : MonoBehaviour {
 			interfaz [4].gameObject.SetActive (false);
 			break;
 		case ActivaPanelInteractivo.Exito:
+			for (int i = 0; i <= AdminMenu.datosNivel3.tiempos.Count - 1; i++) {
+				Debug.Log (AdminMenu.datosNivel3.tiempos[i]);
+			}
 			if (AudiodeExitoNivel3 != null) {
 				AudiodeExitoNivel3 ();
 			}
@@ -403,6 +417,10 @@ public class AdminNivel3 : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if (_iniciaCronometro) {
+			_tiempoTemp += Time.deltaTime;
+		}
+			
 		if (Input.GetKeyDown (KeyCode.UpArrow) || Input.GetKeyDown (KeyCode.RightArrow) || Input.GetKeyDown (KeyCode.DownArrow) || Input.GetKeyDown (KeyCode.LeftArrow)
 			&& (PanelActivado == ActivaPanelInteractivo.SinPanel || PanelActivado == ActivaPanelInteractivo.Inicio || PanelActivado == ActivaPanelInteractivo.ExitoParcial || PanelActivado == ActivaPanelInteractivo.Exito)) {
 			if (PanelActivado == ActivaPanelInteractivo.SinPanel) {

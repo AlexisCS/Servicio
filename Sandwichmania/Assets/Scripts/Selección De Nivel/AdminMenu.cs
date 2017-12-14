@@ -30,24 +30,23 @@ public class AdminMenu : MonoBehaviour {
 		if (InterfazClinica.EntreInterfazClinica) {
 			volver.gameObject.SetActive (true);
 			cerrarSesion.gameObject.SetActive (false);
-			return;
 		}
 			
-		if ((!Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada) || (Admin_level0.AsistidoPorTerapeuta && Admin_level0.RutinaAsignada)) {
+		if (Admin_level0.RutinaAsignada) {
 			rutinaAsignada.text = "Tiene asignada la rutina: " + '"' + Admin_level0.datosNivel2.nombreDeRutina + '"' + ". ¿Desea jugarla?";
 			panels [9].gameObject.SetActive (true);
 		}
 
-		if (!Admin_level0.AsistidoPorTerapeuta && !Admin_level0.RutinaAsignada) {
+		if (!Admin_level0.RutinaAsignada) {
 			panels [11].gameObject.SetActive (true);
 		}
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 	}
+
 
 	void Awake(){
 		ImprimeNombreUsuario ();
@@ -72,7 +71,6 @@ public class AdminMenu : MonoBehaviour {
 		panels [4].gameObject.SetActive (true);
 		Admin_level0.datosNivel2.nivel = 2;
 		rutinaSeleccionada = Rutina.ConRutina;
-		//Admin_level0.datosNivel2.RutinaSeleccionada = Rutina.ConRutina;
 	}
 
 	public void NoJugarRutinaAsignada(){
@@ -102,14 +100,14 @@ public class AdminMenu : MonoBehaviour {
 			panels [1].gameObject.SetActive (true);
 			break;
 		case 3:
-			if (AdminNivel1.JugueNivel1 && (AdminNivel2.JugueNivel2ConRutina || AdminNivel2SinRutina.JugueNivel2SinRutina)) {
+			if ((AdminNivel1.JugueNivel1 && (AdminNivel2.JugueNivel2ConRutina || AdminNivel2SinRutina.JugueNivel2SinRutina)) || InterfazClinica.EntreInterfazClinica) {
 				datosNivel3.nivel = nivel;
 				panels [0].gameObject.SetActive (false);
 				panels [7].gameObject.SetActive (true);
 				return;
-			} 
+			}
+
 			panels [12].gameObject.SetActive (true);
-	
 			break;
 		}
 	}
@@ -122,7 +120,6 @@ public class AdminMenu : MonoBehaviour {
 			}
 			if (Admin_level0.datosNivel2.nivel == 2) {
 				Admin_level0.datosNivel2.ManoSeleccionada = Mano.Izquierda;
-				//datosNivel2.ManoSeleccionada = Mano.Izquierda;
 			}
 			if (datosNivel3.nivel == 3) {
 				datosNivel3.ManoSeleccionada = Mano.Izquierda;

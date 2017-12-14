@@ -36,7 +36,6 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 	ActivaPanelDedos PanelDedosActivo;
 
 	void Awake(){
-		//tiemposDeRepetciones = new List<float> ();
 		Admin_level0.datosNivel2.nombreDeRutina = "Sin Rutina";
 		Admin_level0.datosNivel2.Rutina = _secuenciaSinRutina;
 		Admin_level0.datosNivel2.numeroDeRepeticiones = _numeroDeRepeticiones;
@@ -358,7 +357,7 @@ public class AdminNivel2SinRutina : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (_iniciaCronometro == true) {
+		if (_iniciaCronometro) {
 			_tiempoTemp += Time.deltaTime;
 		}
 

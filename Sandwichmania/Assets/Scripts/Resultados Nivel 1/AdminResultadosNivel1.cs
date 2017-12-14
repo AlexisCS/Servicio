@@ -57,9 +57,17 @@ public class AdminResultadosNivel1 : MonoBehaviour {
 		minutos = Mathf.Round ((segundos / 60f) * 10f) / 10f;
 		return minutos;
 	}
+
+	void RedondeaSegundos(){
+		AdminMenu.datosNivel1.tiempoDedoIndice = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoIndice * 10f) / 10f;
+		AdminMenu.datosNivel1.tiempoDedoMedio = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoMedio * 10f) / 10f;
+		AdminMenu.datosNivel1.tiempoDedoAnular = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoAnular * 10f) / 10f;
+		AdminMenu.datosNivel1.tiempoDedoMeñique = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoMeñique * 10f) / 10f;
+	}
 		
 	void Awake(){
 		EntregaResultado ();
+		RedondeaSegundos ();
 		Admin_level0.datos.HistorialPartidasNivel1.Add (AdminMenu.datosNivel1);
 		GameSaveLoad.Save (Admin_level0.datos);
 	}

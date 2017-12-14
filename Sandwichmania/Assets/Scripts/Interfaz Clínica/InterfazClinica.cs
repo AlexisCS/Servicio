@@ -375,12 +375,15 @@ public class InterfazClinica : MonoBehaviour {
 			Admin_level0.RutinaAsignada = true;
 			//Admin_level0.nombreRutinaAJugar = postName.text.ToString ();
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
-			string nombreRutinaTemp = rutina[1].ToString ().Replace ("."," ");
+			string nombreRutinaTemp = rutina [1].ToString ().Replace (".", " ");
 			Admin_level0.datosNivel2.nombreDeRutina = nombreRutinaTemp;
 			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ());
-			string fullPath=pathStoreAllInfo+"\\"+rutina [0].ToString () + "_" + rutina [1].ToString () + "_" + rutina [2].ToString (); 
-			Debug.Log (fullPath);
+			string fullPath = pathStoreAllInfo + "\\" + rutina [0].ToString () + "_" + rutina [1].ToString () + "_" + rutina [2].ToString (); 
 			ReadRutinaToPlay (fullPath);
+		} else {
+			Admin_level0.RutinaAsignada = false;
+			entreInterfazClinica = true;
+			SceneManager.LoadScene (1);
 		}
 	}
 
