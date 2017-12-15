@@ -59,12 +59,18 @@ public class AdminResultadosNivel1 : MonoBehaviour {
 	}
 
 	void RedondeaSegundos(){
-		AdminMenu.datosNivel1.tiempoDedoIndice = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoIndice * 10f) / 10f;
-		AdminMenu.datosNivel1.tiempoDedoMedio = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoMedio * 10f) / 10f;
-		AdminMenu.datosNivel1.tiempoDedoAnular = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoAnular * 10f) / 10f;
-		AdminMenu.datosNivel1.tiempoDedoMeñique = Mathf.Round (AdminMenu.datosNivel1.tiempoDedoMeñique * 10f) / 10f;
+		AdminMenu.datosNivel1.tiempoDedoIndice = DelimitaSegundos (AdminMenu.datosNivel1.tiempoDedoIndice); 
+		AdminMenu.datosNivel1.tiempoDedoMedio = DelimitaSegundos (AdminMenu.datosNivel1.tiempoDedoMedio);
+		AdminMenu.datosNivel1.tiempoDedoAnular = DelimitaSegundos (AdminMenu.datosNivel1.tiempoDedoAnular);
+		AdminMenu.datosNivel1.tiempoDedoMeñique = DelimitaSegundos (AdminMenu.datosNivel1.tiempoDedoMeñique);
 	}
-		
+
+	float DelimitaSegundos(float segundos){
+		float segundosConUnDecimal;
+		segundosConUnDecimal = Mathf.Round (segundos * 10f) / 10f;
+		return segundosConUnDecimal;
+	}
+
 	void Awake(){
 		EntregaResultado ();
 		RedondeaSegundos ();

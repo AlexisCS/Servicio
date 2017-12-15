@@ -41,6 +41,18 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 
 	}
 
+	void RedondeoTiempos(){
+		for (int i = 0; i <= AdminMenu.datosNivel3.tiempos.Count - 1; i++) {
+			AdminMenu.datosNivel3.tiempos[i] = DelimitaSegundos (AdminMenu.datosNivel3.tiempos[i]);
+		}
+	}
+
+	float DelimitaSegundos(float segundos){
+		float segundosConUnDecimal;
+		segundosConUnDecimal = Mathf.Round (segundos * 10f) / 10f;
+		return segundosConUnDecimal;
+	}
+
 	void CuentaIngredientesAleatorios(){
 		for (int i = 0; i <= AdminNivel3.IngredientesAleatorios.Count - 1; i++) {
 			switch (AdminNivel3.IngredientesAleatorios [i]) {
