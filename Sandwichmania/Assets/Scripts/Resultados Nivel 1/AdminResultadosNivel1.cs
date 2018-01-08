@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -71,11 +72,13 @@ public class AdminResultadosNivel1 : MonoBehaviour {
 		return segundosConUnDecimal;
 	}
 
+
 	void Awake(){
 		EntregaResultado ();
 		RedondeaSegundos ();
 		Admin_level0.datos.HistorialPartidasNivel1.Add (AdminMenu.datosNivel1);
 		GameSaveLoad.Save (Admin_level0.datos);
+		StartCoroutine (GameSaveLoad.IfNewUploadXMLToServer ());
 	}
 		
 }

@@ -20,6 +20,7 @@ public class TerapeutaData{
 }
 	
 public class Nivel1{
+	public string fecha;
 	public int nivel;
 	public Mano ManoSeleccionada;
 	public float tiempoDedoIndice; 
@@ -29,6 +30,7 @@ public class Nivel1{
 }
 
 public class Nivel2{
+	public string fecha;
 	public int nivel;
 	public string nombreDeRutina;
 	public Mano ManoSeleccionada;
@@ -40,6 +42,7 @@ public class Nivel2{
 }
 
 public class Nivel3{
+	public string fecha;
 	public int nivel;
 	public Mano ManoSeleccionada;
 	public int numeroDeRepeticiones;

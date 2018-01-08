@@ -32,8 +32,10 @@ public class AdminResultadosNivel3 : MonoBehaviour {
 		CuentaErrores ();
 		EntregaInformacion ();
 		EntregaPorcentajeError ();
+		RedondeoTiempos ();
 		Admin_level0.datos.HistorialPartidasNivel3.Add (AdminMenu.datosNivel3);
 		GameSaveLoad.Save (Admin_level0.datos);
+		StartCoroutine (GameSaveLoad.IfNewUploadXMLToServer ());
 	}
 
 	// Use this for initialization

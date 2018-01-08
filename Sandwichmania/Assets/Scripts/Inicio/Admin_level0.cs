@@ -72,6 +72,8 @@ public class Admin_level0 : MonoBehaviour {
 		_userName = " ";
 		asistidoPorTerapeuta = false;
 		rutinaAsignada = false;
+		string culture = "es-MX";
+		Debug.Log (System.DateTime.Now);
 	}
 
 	void Update(){
@@ -303,6 +305,27 @@ public class Admin_level0 : MonoBehaviour {
 		}
 	}
 
+
+	IEnumerator CheckIfDataExistInServerAndDownload(){
+		string url = "http://132.248.16.11/unity/ResultadosSandwich/" + GameSaveLoad._PacienteName + "Data.xml";
+		WWW ww = new WWW(url);
+		yield return ww;
+		Debug.Log("Verificando si existe un XML en el server");
+		if (ww.error == null)
+		{
+			//Debug.Log("exito" + ww.data.ToString().Substring(152));
+			string fullPath = pathStoreAllInfo+"\\$"+GameSaveLoad._PacienteName+"Data.xml";  //El $ al inicio del archivo indica que es una versión descargada pero no la definitiva
+			File.WriteAllBytes (fullPath, ww.bytes);
+			//_DataFileDownloaded=true;
+			Debug.Log("Archivo descargado con exito: guardado como $NombrePaciente");
+		}
+		else
+		{
+			Debug.Log("ERROR: " + ww.error +"No hay XML en server");  //Probablemente no existe el archivo
+			//_DataFileDownloaded=false;
+		}
+	}
+
 	public void DescomprimeZIP(){
 		StartCoroutine (DownloadDocRoutines(Admin_level0.terapeuta.Id));
 		//string zipfilePath = "C:/Users/Yoás/Desktop/YoisExample.zip";
@@ -322,6 +345,7 @@ public class Admin_level0 : MonoBehaviour {
 	public void NoAsistido(){
 		asistidoPorTerapeuta = false;
 		panelAsistidoPorTerapeuta.gameObject.SetActive (false);
+		StartCoroutine (CheckIfDataExistInServerAndDownload ());
 		StartCoroutine (GetRutinasName (id.text.ToString ()));
 	}
 

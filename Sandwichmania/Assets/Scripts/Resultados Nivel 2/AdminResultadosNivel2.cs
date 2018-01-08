@@ -33,6 +33,7 @@ public class AdminResultadosNivel2 : MonoBehaviour {
 		numeroDeIngredientes.text = "No. Ingredientes por repetición: " + Admin_level0.datosNivel2.Rutina.Count;
 		Admin_level0.datos.HistorialPartidasNivel2.Add (Admin_level0.datosNivel2);
 		GameSaveLoad.Save (Admin_level0.datos);
+		StartCoroutine (GameSaveLoad.IfNewUploadXMLToServer ());
 		Admin_level0.datosNivel2.nombreDeRutina = Admin_level0.NombreRutinaTemp;
 	}
 

@@ -220,6 +220,7 @@ public class AdminNivel1 : MonoBehaviour {
 			DesactivaIngredientes ();
 			interfaz [10].gameObject.SetActive (true);
 			jugueNivel1 = true;
+			AdminMenu.datosNivel1.fecha = System.DateTime.Now.ToString ("yyyy-MM-dd HH:mm:ss");
 			break;
 		}
 	}

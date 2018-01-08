@@ -1,5 +1,6 @@
 ﻿using UnityEngine; 
-using System.Collections; 
+using System.Collections;
+using System.Collections.Generic;
 using System.Xml; 
 using System.Xml.Serialization; 
 using System.IO; 
@@ -101,7 +102,7 @@ public static class GameSaveLoad {
 	static void CreateXML() 
 	{ 
 		StreamWriter writer; 
-		FileInfo t = new FileInfo(_FileLocation+"\\"+_PacienteName+"_Data.xml"); 
+		FileInfo t = new FileInfo(_FileLocation+"\\"+_PacienteName+"_DataSandwich.xml"); 
 		if(!t.Exists) 
 		{ 
 			writer = t.CreateText(); 
@@ -111,7 +112,7 @@ public static class GameSaveLoad {
 			InfoPartida myFinalData = new InfoPartida ();
 			InfoPartida myNewData = new InfoPartida ();
 			//primero cargamos la informacion que ya existia en el archivo
-			StreamReader r = File.OpenText(_FileLocation+"\\"+_PacienteName+"_Data.xml"); 
+			StreamReader r = File.OpenText(_FileLocation+"\\"+_PacienteName+"_DataSandwich.xml"); 
 			string _oldData = r.ReadToEnd(); 
 			r.Close();  
 			t.Delete(); 
@@ -144,11 +145,38 @@ public static class GameSaveLoad {
 		Debug.Log("File written and data cleared."); 
 	} 
 
+	public static IEnumerator IfNewUploadXMLToServer(){ 
+		string filePath = GameSaveLoad._FileLocation +"\\"+GameSaveLoad._PacienteName+"_DataSandwich.xml";
+		Debug.Log (filePath);
+		// Create a Web Form
+		WWWForm form = new WWWForm();
+		if (File.Exists (filePath)) {
+			StreamReader r = File.OpenText (filePath); 
+			string _info = r.ReadToEnd (); 
+			r.Close (); 
+			Debug.Log ("File Read");
+			byte[] levelData =Encoding.UTF8.GetBytes(_info);
+			string fileName = Admin_level0.datos.id.ToString ()+"_"+"DataSandwich.xml";
+			form.AddField("file","file");
+			form.AddBinaryData ( "file", levelData, fileName,"text/xml");
+			Debug.Log("sin error");
+			Debug.Log (fileName);
+			WWW w = new WWW("http://132.248.16.11/unity/uploadXML.php",form);
+			//print("www created");
+			yield return w;
+			yield return new WaitForSeconds (1f);
+			Debug.Log("enviado");
+			Debug.Log("Me responde"+w.text.ToString());
+		} else {
+			Debug.Log("File Doesnt exist");
+		}
+	}
+
 
 	//Deserializamos la info del xml y la guardamos en la cadena _data
 	static void LoadXML() 
 	{ 
-		string filePath =( _FileLocation + "\\" + _PacienteName + "_Data.xml").ToString();
+		string filePath =( _FileLocation + "\\" + _PacienteName + "_DataSandwich").ToString();
 		if (File.Exists (filePath)) {
 			StreamReader r = File.OpenText (filePath); 
 			string _info = r.ReadToEnd (); 
