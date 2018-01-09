@@ -259,6 +259,7 @@ public class AdminNivel2 : MonoBehaviour {
 			interfaz [11].gameObject.SetActive (true);
 			jugueNivel2ConRutina = true;
 			_iniciaCronometro = false;
+			Admin_level0.datosNivel2.fecha = System.DateTime.Now.ToString ("yyyy-MM-dd HH:mm:ss");
 			break;
 		}
 	}

@@ -400,12 +400,13 @@ public class AdminNivel3 : MonoBehaviour {
 			break;
 		case ActivaPanelInteractivo.Exito:
 			for (int i = 0; i <= AdminMenu.datosNivel3.tiempos.Count - 1; i++) {
-				Debug.Log (AdminMenu.datosNivel3.tiempos[i]);
+				Debug.Log (AdminMenu.datosNivel3.tiempos [i]);
 			}
 			if (AudiodeExitoNivel3 != null) {
 				AudiodeExitoNivel3 ();
 			}
 			interfaz [5].gameObject.SetActive (true);
+			AdminMenu.datosNivel3.fecha = System.DateTime.Now.ToString ("yyyy-MM-dd HH:mm:ss");
 			break;
 		}
 		

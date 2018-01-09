@@ -307,14 +307,15 @@ public class Admin_level0 : MonoBehaviour {
 
 
 	IEnumerator CheckIfDataExistInServerAndDownload(){
-		string url = "http://132.248.16.11/unity/ResultadosSandwich/" + GameSaveLoad._PacienteName + "Data.xml";
+		string url = "http://132.248.16.11/unity/ResultadosSandwich/" + GameSaveLoad._PacienteName + "_DataSandwich.xml";
+		Debug.Log (url);
 		WWW ww = new WWW(url);
 		yield return ww;
 		Debug.Log("Verificando si existe un XML en el server");
 		if (ww.error == null)
 		{
 			//Debug.Log("exito" + ww.data.ToString().Substring(152));
-			string fullPath = pathStoreAllInfo+"\\$"+GameSaveLoad._PacienteName+"Data.xml";  //El $ al inicio del archivo indica que es una versión descargada pero no la definitiva
+			string fullPath = pathStoreAllInfo+"\\"+GameSaveLoad._PacienteName+"_DataSandwich.xml";  //El $ al inicio del archivo indica que es una versión descargada pero no la definitiva
 			File.WriteAllBytes (fullPath, ww.bytes);
 			//_DataFileDownloaded=true;
 			Debug.Log("Archivo descargado con exito: guardado como $NombrePaciente");
@@ -338,6 +339,7 @@ public class Admin_level0 : MonoBehaviour {
 	public void Asistido(){
 		asistidoPorTerapeuta = true;
 		panelAsistidoPorTerapeuta.gameObject.SetActive (false);
+		StartCoroutine (CheckIfDataExistInServerAndDownload ());
 		panelIngresaTerapeuta.gameObject.SetActive (true);
 	}
 		
