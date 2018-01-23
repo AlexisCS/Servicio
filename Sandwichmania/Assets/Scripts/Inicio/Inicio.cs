@@ -16,7 +16,7 @@ public class Inicio : MonoBehaviour {
 	}
 
 	public void Jugar() {
-		//SceneManager.LoadScene ("Login");
+		SceneManager.LoadScene (12);
 	}
 
 	void Awake(){

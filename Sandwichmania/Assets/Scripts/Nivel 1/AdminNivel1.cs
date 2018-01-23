@@ -60,7 +60,8 @@ public class AdminNivel1 : MonoBehaviour {
 		interfaz [11].gameObject.SetActive (false);
 		PanelActivado = ActivaPanelInteractivo.Bienvenido;
 		PanelDedosActivo = ActivaPanelDedos.SinSeleccion;
-		_mano = AdminMenu.datosNivel1.ManoSeleccionada;
+		_mano = Mano.Derecha;
+		//_mano = AdminMenu.datosNivel1.ManoSeleccionada;
 		_umbral = 1;
 		_panListo = false;
 		_jamonListo = true;
@@ -285,25 +286,25 @@ public class AdminNivel1 : MonoBehaviour {
 		}
 
 
-		if (_panListo == false  && _iniciaCronometro == true) {
-			_tiempoDeApiladoPan += Time.deltaTime;
-			AdminMenu.datosNivel1.tiempoDedoIndice = _tiempoDeApiladoPan;
-		}
-
-		if (_jamonListo == false  && _iniciaCronometro == true) {
-			_tiempoDeApiladoJamon += Time.deltaTime;
-			AdminMenu.datosNivel1.tiempoDedoMedio = _tiempoDeApiladoJamon;
-		}
-
-		if (_quesoListo == false  && _iniciaCronometro == true) {
-			_tiempoDeApiladoQueso += Time.deltaTime;
-			AdminMenu.datosNivel1.tiempoDedoAnular = _tiempoDeApiladoQueso;
-		}
-
-		if (_jitomateListo == false  && _iniciaCronometro == true) {
-			_tiempoDeApiladoJitomate += Time.deltaTime;
-			AdminMenu.datosNivel1.tiempoDedoMeñique = _tiempoDeApiladoJitomate;
-		}
+//		if (_panListo == false  && _iniciaCronometro == true) {
+//			_tiempoDeApiladoPan += Time.deltaTime;
+//			AdminMenu.datosNivel1.tiempoDedoIndice = _tiempoDeApiladoPan;
+//		}
+//
+//		if (_jamonListo == false  && _iniciaCronometro == true) {
+//			_tiempoDeApiladoJamon += Time.deltaTime;
+//			AdminMenu.datosNivel1.tiempoDedoMedio = _tiempoDeApiladoJamon;
+//		}
+//
+//		if (_quesoListo == false  && _iniciaCronometro == true) {
+//			_tiempoDeApiladoQueso += Time.deltaTime;
+//			AdminMenu.datosNivel1.tiempoDedoAnular = _tiempoDeApiladoQueso;
+//		}
+//
+//		if (_jitomateListo == false  && _iniciaCronometro == true) {
+//			_tiempoDeApiladoJitomate += Time.deltaTime;
+//			AdminMenu.datosNivel1.tiempoDedoMeñique = _tiempoDeApiladoJitomate;
+//		}
 
 		if (Input.GetKeyDown(KeyCode.UpArrow) && _panListo == false && PanelActivado == ActivaPanelInteractivo.Juegue){
 			_iniciaCronometro = true;
