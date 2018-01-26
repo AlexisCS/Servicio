@@ -23,6 +23,7 @@ public class InterfazClinica : MonoBehaviour {
 	public GameObject pantallaDeCargaPanel;
 	public GameObject asignaRutinaPanel;
 	public GameObject confirmarAsignarRutinaPanel, asignacionExitosaPanel, falloAsignacionPanel;
+	public GameObject VerResultadosPanel;
 	public InputField nombreDeRutina, descripcionDeRutina;
 	public InputField muestraRutina;
 	public InputField numeroDeRepeticiones;
@@ -65,6 +66,11 @@ public class InterfazClinica : MonoBehaviour {
 
 	}
 
+	public void VerResultados(){
+		opcionesPanel.gameObject.SetActive (false);
+		VerResultadosPanel.gameObject.SetActive (true);
+	}
+
 	public void EnviaAlFinal(){
 		enviaAlFinalPanel [0].SetAsLastSibling ();
 		enviaAlFinalPanel [1].SetAsLastSibling ();
@@ -102,6 +108,7 @@ public class InterfazClinica : MonoBehaviour {
 		opcionesPanel.gameObject.SetActive (false);
 		descripcionDeRutinaPanel.gameObject.SetActive (true);
 	}
+
 
 	public void ContinuarRutina(){
 		if (nombreDeRutina.text.Length.Equals (0)) {

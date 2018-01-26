@@ -34,11 +34,11 @@ public class Admin_level0 : MonoBehaviour {
 		get { return rutinaAsignada; }
 	}
 
-	public Image ayuda;
 	public Text warning;
 	public InputField id;
 	public InputField password;
 	public InputField idTerapeuta, passTerapeuta;
+	public GameObject loginInicial;
 	public GameObject panelAsistidoPorTerapeuta;
 	public GameObject panelIngresaTerapeuta;
 
@@ -57,11 +57,7 @@ public class Admin_level0 : MonoBehaviour {
 	private string _userName;
 
 
-	public void MuestraAyuda(){
-		ayuda.gameObject.SetActive (true);
-	}
-
-	public void Setget (){
+	public void CompruebaUsuario (){
 		int i = 0;
 		string usuario = id.text.ToString ();
 		string contraseña = password.text.ToString ();
@@ -79,19 +75,29 @@ public class Admin_level0 : MonoBehaviour {
 		_userName = " ";
 		asistidoPorTerapeuta = false;
 		rutinaAsignada = false;
-		string culture = "es-MX";
-		Debug.Log (System.DateTime.Now);
 	}
 
 	void Update(){
-		if (Input.GetKeyDown (KeyCode.Tab)) {
+		if (Input.GetKeyDown (KeyCode.Tab) && loginInicial.activeSelf) {
 			if (!id.isFocused)
 				id.Select ();
 			else
 				password.Select ();
 		}
-		if(Input.GetKeyDown (KeyCode.Return)){
-			Setget ();
+
+		if(Input.GetKeyDown (KeyCode.Return) && loginInicial.activeSelf){
+			CompruebaUsuario ();
+		}
+
+		if (Input.GetKeyDown (KeyCode.Tab) && panelIngresaTerapeuta.activeSelf) {
+			if (!idTerapeuta.isFocused)
+				idTerapeuta.Select ();
+			else
+				passTerapeuta.Select ();
+		}
+
+		if(Input.GetKeyDown (KeyCode.Return) && panelIngresaTerapeuta.activeSelf){
+			IngresaTerapeuta ();
 		}
 	}
 
@@ -105,8 +111,6 @@ public class Admin_level0 : MonoBehaviour {
 		if (postName.text.ToString ().Length > 2) {
 			Debug.Log ("Hay rutina");
 			rutinaAsignada = true;
-			//nombreRutinaAJugar = postName.text.ToString ();
-			//Debug.Log ("XXD" + nombreRutinaAJugar);
 			string[] rutina = postName.text.ToString ().Split ('_'); //el formato del nombre de la rutina debe ser IdDoc_NombreRutinaRutina.xml
 			nombreRutinaTemp = rutina[1].ToString ().Replace (".", " ");
 			AdminNivel2.NumeroDeRepeticiones = int.Parse (rutina [3].ToString ()); 
@@ -145,7 +149,6 @@ public class Admin_level0 : MonoBehaviour {
 	}
 
 	public void ReadRutina(string path){
-		Debug.Log ("Hola");
 		InterfazMedico.myRoutineData = new RutinaData();
 		_routineData=LoadRoutineXML(path); 
 		if (_routineData.ToString () != "") {
@@ -216,8 +219,9 @@ public class Admin_level0 : MonoBehaviour {
 		string realPassword = postName.text.ToString ();  //contraseña asociada al ID en CITAN
 		Debug.Log ("Real password"+realPassword);
 		if (InputPassword.Equals (realPassword)) {
+			warning.text = "";
+			loginInicial.gameObject.SetActive (false);
 			panelAsistidoPorTerapeuta.gameObject.SetActive (true);
-			//StartCoroutine (GetRutinasName (id));
 		} else {
 			warning.gameObject.SetActive(true);
 			warning.text="Contraseña incorrecta.\n Por favor verifique e intente nuevamente.";
@@ -233,20 +237,14 @@ public class Admin_level0 : MonoBehaviour {
 		yield return postName;
 		Debug.Log ("Doctor"+postName.text+"ok");
 		if (postName.text.Length>4 && !postName.text.Equals("Inexistente")) {
-			//_userName = postName.text.ToString ().Substring(0,postName.text.LastIndexOf("-")).ToUpper();
 			docName = postName.text.ToString ().ToUpper();
 			urlString = _postURL6+ WWW.EscapeURL (userName)+"/"+WWW.EscapeURL(password); //ahora revisaremos si la contraseña es correcta
 			WWW postName2 = new WWW (urlString);
 			yield return postName2;
-			//string pass = postName.text.ToString ().Substring (postName.text.LastIndexOf ("-") + 1);
-			//pass = pass.Substring (0, pass.Length-1);
-			//if(password.Equals(pass)){  //Todo correcto, procesa los datos
 			if(postName2.text.Equals("true")){
 				terapeuta = new TerapeutaData();
 				terapeuta.Nombre=docName.Substring(0,docName.LastIndexOf(" "));
 				terapeuta.Id=int.Parse(docName.Substring(docName.LastIndexOf(" ")));
-				//GameSaveLoad._PacienteNameWithSpaces=docName;
-				//GameSaveLoad._PacienteName=docName.Replace(" ","");
 				warning.gameObject.SetActive(false);
 				Debug.LogWarning("TODO CORRECTO SIR!!");
 				if (asistidoPorTerapeuta) {
@@ -256,30 +254,11 @@ public class Admin_level0 : MonoBehaviour {
 					yield break;
 				}
 				SceneManager.LoadScene (10);
-				//bienvenido.text=terapeuta.Nombre;
-				//opcionesCanvas.SetActive(true);
-				//inicioCanvas.SetActive(false);
-				//cerrarSesion_button.gameObject.SetActive(true);
-				//crearRutina_button.interactable=true;
-				//crearRutina_button.gameObject.SetActive(true);
-				//seleccionarNivel_button.gameObject.SetActive(false);
-				//cargarRutina_button.gameObject.SetActive(false);
-				//veryAsignarRutina_button.gameObject.SetActive(true);
-				//asignaNivel_button.gameObject.SetActive (true);
-				//jugar_button.gameObject.SetActive(false);
-				//tutorial_button.gameObject.SetActive(false);
-				//personaje_button.gameObject.SetActive(false);
-				//IsMedico=true;
-				//inicioSesion=true;
-				//Online=true;
-				//DescomprimeZIP(); //descargamos del servidor las rutinas que haya creado el terapeuta
 			}
-			else{
-				warning.gameObject.SetActive(true);
+			else {
 				warning.text="Contraseña incorrecta.\n Por favor verifique e intente nuevamente.";
 			}
 		} else {
-			warning.gameObject.SetActive(true);
 			warning.text="El usuario no existe.\n Por favor verifique e intente nuevamente.";
 		}
 	}
@@ -360,6 +339,10 @@ public class Admin_level0 : MonoBehaviour {
 
 	public void IngresaTerapeuta(){
 		StartCoroutine (VerifyDoctor (idTerapeuta.text.ToString (), passTerapeuta.text.ToString ()));
+	}
+
+	public void RegresaEscenaInicio(){
+		SceneManager.LoadScene (0);
 	}
 		
 }
