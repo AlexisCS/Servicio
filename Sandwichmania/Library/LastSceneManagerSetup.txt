@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/_Scenes/Inicia Sesion.unity
+- path: Assets/_Scenes/InterfazDeClinica.unity
   isLoaded: 1
   isActive: 1
