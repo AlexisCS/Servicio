@@ -22,8 +22,6 @@ public class InterfazClinica : MonoBehaviour {
 	public GameObject pantallaDeCargaPanel;
 	public GameObject asignaRutinaPanel;
 	public GameObject confirmarAsignarRutinaPanel, asignacionExitosaPanel, falloAsignacionPanel;
-	public GameObject verResultadosPanel;
-	public GameObject resultadosNivel1Panel, resultadosNivel2Panel, resultadosNivel3Panel;
 	public InputField nombreDeRutina, descripcionDeRutina;
 	public InputField muestraRutina;
 	public InputField numeroDeRepeticiones;
@@ -66,31 +64,8 @@ public class InterfazClinica : MonoBehaviour {
 
 	}
 
-	public void VerResultadosNivel1Boton(){
-		verResultadosPanel.gameObject.SetActive (false);
-		resultadosNivel1Panel.gameObject.SetActive (true);
-	}
-
-	public void VerResultadosNivel2Boton(){
-		verResultadosPanel.gameObject.SetActive (false);
-		resultadosNivel2Panel.gameObject.SetActive (true);
-	}
-
-	public void VerResultadosNivel3Boton(){
-		verResultadosPanel.gameObject.SetActive (false);
-		resultadosNivel3Panel.gameObject.SetActive (true);
-	}
-
-	public void RegresarBoton(){
-		verResultadosPanel.gameObject.SetActive (true);
-		resultadosNivel1Panel.gameObject.SetActive (false);
-		resultadosNivel2Panel.gameObject.SetActive (false);
-		resultadosNivel3Panel.gameObject.SetActive (false);
-	}
-		
-	public void VerResultados(){
-		opcionesPanel.gameObject.SetActive (false);
-		verResultadosPanel.gameObject.SetActive (true);
+	public void VerResultadosBoton(){
+		SceneManager.LoadScene ("Resultados Clinica");
 	}
 
 	public void EnviaAlFinal(){
@@ -215,10 +190,6 @@ public class InterfazClinica : MonoBehaviour {
 		asignaRutinaPanel.gameObject.SetActive (false);
 		descripcionDeRutinaPanel.gameObject.SetActive (false);
 		ingresaRutinaPanel.gameObject.SetActive (false);
-		verResultadosPanel.gameObject.SetActive (false);
-		resultadosNivel1Panel.gameObject.SetActive (false);
-		resultadosNivel2Panel.gameObject.SetActive (false);
-		resultadosNivel3Panel.gameObject.SetActive (false);
 	}
 
 	public void OkBoton(string panel){
