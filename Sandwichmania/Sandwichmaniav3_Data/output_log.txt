@@ -1,0 +1,287 @@
+Initialize engine version: 5.6.0f3 (497a0f351392)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: AMD Radeon (TM) R9 200 Series (ID=0x6811)
+    Vendor:   ATI
+    VRAM:     2026 MB
+    Driver:   21.19.384.0
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\Ionic.Zip.dll (this message is harmless)
+Loading C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\Ionic.Zip.dll into Unity Child Domain
+- Completed reload, in  0.018 seconds
+Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\System.dll (this message is harmless)
+<RI> Initializing input.
+XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
+<RI> Input initialized.
+desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
+<RI> Initialized touch support.
+UnloadTime: 0.910335 ms
+boton enviaTrueen el awake
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+encontre main camera
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+enntre estatic
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Unloading 8 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 4.625804 ms
+boton enviaTrueen el awake
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+encontre main camera
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+enntre estatic
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+
+Unloading 30 unused Assets to reduce memory usage. Loaded Objects now: 721.
+Total: 0.449893 ms (FindLiveObjects: 0.063007 ms CreateObjectMapping: 0.021952 ms MarkObjects: 0.312758 ms  DeleteObjects: 0.051603 ms)
+
+Nombre asociado al ID:PRUEBAS  DEVHR 2017ok
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+comprobando contraseña
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Sending: http://132.248.16.11/unity/validaUsuario.php?id=36
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Real password20101010
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+http://132.248.16.11/unity/ResultadosSandwich/36_DataSandwich.xml
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Verificando si existe un XML en el server
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Archivo descargado con exito: guardado como $NombrePaciente
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Enviandohttp://132.248.16.11/unity/validaDoctor.php?user_unity=yoas
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+DoctorYoás Ramírez Graullera 13ok
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+TODO CORRECTO SIR!!
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+DEntro
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Voy a crear zip en/var/www/html/unity/RutinasSandwich/13ZIPcreatedHola
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+ArgumentException: Encoding name 'IBM437' not supported
+Parameter name: name
+  at System.Text.Encoding.GetEncoding (System.String name) [0x00000] in <filename unknown>:0 
+  at Ionic.Zip.ZipFile..cctor () [0x00000] in <filename unknown>:0 
+Rethrow as TypeInitializationException: An exception was thrown by the type initializer for Ionic.Zip.ZipFile
+  at ZipUtil.Unzip (System.String zipFilePath, System.String location) [0x00000] in <filename unknown>:0 
+  at Admin_level0+<DownloadDocRoutines>c__Iterator5.MoveNext () [0x00000] in <filename unknown>:0 
+  at UnityEngine.SetupCoroutine.InvokeMoveNext (IEnumerator enumerator, IntPtr returnValueAddress) [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.484675 ms
+Reconstruido
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Alexis.CS_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_gyuy_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_la.buena.de.buenas_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_lola@lala_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_probando2_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_probandoAlexis_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina 14_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina 15_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina 23_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina.en.clinica_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina.prueba.clinica_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina.Y_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina.Z_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_rutinaDos_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_tur_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Reconstruido
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+
+Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 1527.
+Total: 1.127299 ms (FindLiveObjects: 0.091803 ms CreateObjectMapping: 0.051033 ms MarkObjects: 0.948824 ms  DeleteObjects: 0.034782 ms)
+
+Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.762936 ms
+
+Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 757.
+Total: 0.480399 ms (FindLiveObjects: 0.038774 ms CreateObjectMapping: 0.022238 ms MarkObjects: 0.317320 ms  DeleteObjects: 0.101496 ms)
+
+File Read
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\System.Xml.dll (this message is harmless)
+14:20:05LALALA
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+14
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+20
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+05
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13:13:03LALALA
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+03
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+18:07:35LALALA
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+18
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+07
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+35
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+dias nivel 1 6631.597, dias nivel 2 6626.551y dias del nivel 3 6627.755
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Partida0
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Partida105
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Partida210
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Partida315
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Partida420
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Partida525
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Partida630
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Setting up 4 worker threads for Enlighten.
+  Thread -> id: 16b0 -> priority: 1 
+  Thread -> id: 1560 -> priority: 1 
+  Thread -> id: 2134 -> priority: 1 
+  Thread -> id: 2b74 -> priority: 1 

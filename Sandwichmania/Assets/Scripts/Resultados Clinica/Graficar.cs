@@ -13,9 +13,8 @@ public class Graficar : MonoBehaviour {
 //	[Tooltip("Probando rangos")]
 //	[Range(-1.0f,1.0f)]
 //	private float velocidad;
-	
-	[Tooltip(" masdas")]
-	private GameObject resultadosPanel;
+
+	public GameObject resultadosPanel;
 	public GameObject resultadosNivel1Panel;
 	public GameObject resultadosNivel2Panel;
 	public GameObject resultadosNivel3Panel;
@@ -27,6 +26,7 @@ public class Graficar : MonoBehaviour {
 	public Text ultimaPartida;
 
 	public Image workSpace; //aqui es donde se dibujara la grafica, es el area en blanco
+	public UILineTextureRenderer puntosDePartidas; //el line renderer que dibuja la grafica
 	public UILineTextureRenderer graficaIndice; //el line renderer que dibuja la grafica
 	public UILineTextureRenderer graficaMedio; //el line renderer que dibuja la grafica
 	public UILineTextureRenderer graficaAnular; //el line renderer que dibuja la grafica
@@ -44,6 +44,7 @@ public class Graficar : MonoBehaviour {
 	private List<GameObject> cuadrosDeInfo;
 	private string _fechaPartidaNivel1, _fechaPartidaNivel2, _fechaPartidaNivel3;
 	private StringBuilder _datosUltimaPartida;
+	private StringBuilder _datosEnVentanas;
 	private string _nombrePaciente;
 
 	UltimaPartidaJugada DecideUltimaPartida;
@@ -60,6 +61,7 @@ public class Graficar : MonoBehaviour {
 		dataForRead = new InfoPartida ();
 		dataForRead = GameSaveLoad.Load (GameSaveLoad._FileLocation +"\\"+GameSaveLoad._PacienteName+"_DataSandwich.xml");
 		_datosUltimaPartida = new StringBuilder ();
+		_datosEnVentanas = new StringBuilder ();
 		//lista que almacenara los botones creados en la grafica por nivel para despues remover los listeners de cada boton
 		botonesxNivel = new List<Button> ();
 		//lista que almacena las ventanas que contienen la informacion de cada partida cuando se presiona algun boton de la lista botonesxNivel 
@@ -149,91 +151,149 @@ public class Graficar : MonoBehaviour {
 			ultimaPartida.text = _datosUltimaPartida.ToString ();
 		}
 
-		DibujaGrafica ();
+		DibujaBotonesEjeX ();
+		//DibujaGraficaDedoIndice ();
+		//DibujaGraficaDedoMedio ();
+		//DibujaGraficaDedoAnular ();
+//		DibujaGraficaDedoMeñique ();
 	}
 
-	void DibujaGrafica(){
-		/*si el numero de partidas jugadas es mayor a 21 entocnes se tendra que aumentar el tamaño
-		*tento del workspace como de Grid asi como su posicion, por cada 2 partidas el tamaño de 
-		*workspace aumentara en +55 width y -172.5 PosX   
-		*y el de grid en  +55 width y +27.5 PosX
-		 */
+	void DibujaCuadricula(){
+		
+	}
 
-		//		_noPartidasJugadas = 55;
-		//nombrePaciente2.text = nombrePaciente.text;
-//		int aAumentar=1;
-//		if (_noPartidasJugadas > 21) {
-//			aAumentar=(int)((_noPartidasJugadas-21)/2f);
-//			float tempW=workSpace.GetComponent<RectTransform> ().rect.width;
-//			float tempH=workSpace.GetComponent<RectTransform> ().rect.height;
-//			tempW += 55f * aAumentar;
-//			//aumentando el ancho del WorkSpace
-//			workSpace.GetComponent<RectTransform> ().sizeDelta=new Vector2(tempW, tempH);
-//			float tempX=workSpace.GetComponent<RectTransform> ().anchoredPosition.x;
-//			tempX -= 172.5f * aAumentar;
-//			//Se tiene que mover la posX del WorkSpace porque al aumentar su ancho se desajusta
-//			workSpace.GetComponent<RectTransform> ().anchoredPosition=new Vector2(tempX, -7.9f);
-//			float tempW2=grid.GetComponent<RectTransform> ().rect.width;
-//			float tempH2=grid.GetComponent<RectTransform> ().rect.height;
-//			tempW2 += 55f * aAumentar;
-//			//aumentando el ancho del grid en proporcion al ancho que se aumento el WorkSpace
-//			grid.GetComponent<RectTransform> ().sizeDelta=new Vector2(tempW2, tempH2);
-//			float tempX2=grid.GetComponent<RectTransform> ().anchoredPosition.x;
-//			tempX2 += 27.5f * aAumentar;
-//			//de igual forma que con el Workspace, se tiene que cambiar la posX del grid para que no se desajuste
-//			grid.GetComponent<RectTransform> ().anchoredPosition=new Vector2(tempX2, 158.4315f);
-//
-//		}
-//
+	void DibujaGraficaDedoIndice(){
 		//Para la grafica cada dia sera una unidad en el eje X y en el eje Y cada 10% de exito sera una unidad
-
-		//int fecha_inicial = CalculaDiasTranscurridos (dataForRead.HistorialPartidas [0].Date);
-		int fecha_inicial = CalculaDiasTranscurridos (dataForRead.HistorialPartidasNivel1[0].fecha);
-
+		float escala = 735.0f / _noPartidasJugadasNivel1;
 		graficaIndice.Points = new Vector2[_noPartidasJugadasNivel1];
-		for (int i=0; i<graficaIndice.Points.Length; i++) {
-			float partida_x = CalculaDiasTranscurridos (dataForRead.HistorialPartidasNivel1 [i].fecha)%fecha_inicial;
-			float tiempo_y = dataForRead.HistorialPartidasNivel1 [i].tiempoDedoIndice;
-			Debug.Log("Partida"+ partida_x);
-			Debug.Log("Tiempo"+ tiempo_y);
-
-			//graphic.Points[i].Set(27.5f*i,27.5f*i);
-			//graphic.Points[i].Set(27.5f*time_x,27.5f*exito_y);
-			if(_noPartidasJugadasNivel1>1)
-				graficaIndice.Points[i].Set(30f*partida_x,9f*tiempo_y);
+		for (int i=0; i < graficaIndice.Points.Length; i++) {
+			float partidasEjeX = escala * i;
+			float tiemposEjeY = dataForRead.HistorialPartidasNivel1 [i].tiempoDedoIndice;
+			Debug.Log("Partida"+ partidasEjeX);
+			Debug.Log("Tiempo"+ tiemposEjeY);
+			if(_noPartidasJugadasNivel1 > 1)
+				graficaIndice.Points[i].Set(partidasEjeX, 10*tiemposEjeY);
 			else{
 				graficaIndice.gameObject.SetActive(false);
 			}
-			//Se crea un boton por cada partida jugada
-			Button partida_button=Instantiate(graphic_button);
-			partida_button.transform.SetParent(workSpace.transform);
-			Vector2 button_position=new Vector2(20f*partida_x, 9f*tiempo_y);
-			partida_button.GetComponent<RectTransform>().anchoredPosition=button_position;
-			//partida_button.name="partida_"+i;
-			partida_button.name=i.ToString();
-			//importante quitar los listener cuando el GameObject se destruya o deshabilite con DestroyListener
-			//A cada boton que se ha creado se le agrega un listener para poder llamar a la funcion MoreInfoPartida tomando como argumento
-			//el nombre del boton para saber el indice de la partida y mostrar sus respectiva info.
-			partida_button.onClick.AddListener(()=>MoreInfoPartida(int.Parse(partida_button.name),"Grafica_Panel",button_position));
-			botonesxNivel.Add(partida_button);
 		}
 	}
 
+//	void DibujaGraficaDedoMedio(){
+//		//Para la grafica cada dia sera una unidad en el eje X y en el eje Y cada 10% de exito sera una unidad
+//		float escala = 735.0f / _noPartidasJugadasNivel1;
+//		graficaMedio.Points = new Vector2[_noPartidasJugadasNivel1];
+//		for (int i=0; i < graficaMedio.Points.Length; i++) {
+//			float partidasEjeX = escala * i;
+//			float tiemposEjeY = dataForRead.HistorialPartidasNivel1 [i].tiempoDedoMedio;
+//			Debug.Log("Partida"+ partidasEjeX);
+//			Debug.Log("Tiempo"+ tiemposEjeY);
+//			if(_noPartidasJugadasNivel1 > 1)
+//				graficaIndice.Points[i].Set(partidasEjeX, 10*tiemposEjeY);
+//			else{
+//				graficaIndice.gameObject.SetActive(false);
+//			}
+//		}
+//	}
+//
+//	void DibujaGraficaDedoAnular(){
+//		//Para la grafica cada dia sera una unidad en el eje X y en el eje Y cada 10% de exito sera una unidad
+//		float escala = 735.0f / _noPartidasJugadasNivel1;
+//		graficaAnular.Points = new Vector2[_noPartidasJugadasNivel1];
+//		for (int i=0; i < graficaAnular.Points.Length; i++) {
+//			float partidasEjeX = escala * i;
+//			float tiemposEjeY = dataForRead.HistorialPartidasNivel1 [i].tiempoDedoAnular;
+//			Debug.Log("Partida"+ partidasEjeX);
+//			Debug.Log("Tiempo"+ tiemposEjeY);
+//			if(_noPartidasJugadasNivel1 > 1)
+//				graficaIndice.Points[i].Set(partidasEjeX, 10*tiemposEjeY);
+//			else{
+//				graficaIndice.gameObject.SetActive(false);
+//			}
+//		}
+//	}
+//
+//	void DibujaGraficaDedoMeñique(){
+//		//Para la grafica cada dia sera una unidad en el eje X y en el eje Y cada 10% de exito sera una unidad
+//		float escala = 735.0f / _noPartidasJugadasNivel1;
+//		graficaMeñique.Points = new Vector2[_noPartidasJugadasNivel1];
+//		for (int i=0; i < graficaMeñique.Points.Length; i++) {
+//			float partidasEjeX = escala * i;
+//			float tiemposEjeY = dataForRead.HistorialPartidasNivel1 [i].tiempoDedoMeñique;
+//			Debug.Log("Partida"+ partidasEjeX);
+//			Debug.Log("Tiempo"+ tiemposEjeY);
+//			if(_noPartidasJugadasNivel1 > 1)
+//				graficaIndice.Points[i].Set(partidasEjeX, 10*tiemposEjeY);
+//			else{
+//				graficaIndice.gameObject.SetActive(false);
+//			}
+//		}
+//	}
+
+	void DibujaBotonesEjeX(){
+		float escala = 735.0f / _noPartidasJugadasNivel1;
+		puntosDePartidas.Points = new Vector2[_noPartidasJugadasNivel1];
+		for (int i = 0; i < puntosDePartidas.Points.Length; i++) {
+			float partidasEjeX = escala * i	;
+			Debug.Log("Partida"+ partidasEjeX);
+			//Se crea un boton por cada partida jugada
+			Button partida_button = Instantiate(graphic_button);
+			partida_button.transform.SetParent(workSpace.transform);
+			Vector2 button_position = new Vector2(partidasEjeX , -11.3f);
+			partida_button.GetComponent<RectTransform>().anchoredPosition = button_position;
+			//partida_button.name="partida_"+i;
+			partida_button.name = i.ToString();
+			partida_button.GetComponentInChildren<Text> ().text = (i + 1).ToString ();
+			//importante quitar los listener cuando el GameObject se destruya o deshabilite con DestroyListener
+			//A cada boton que se ha creado se le agrega un listener para poder llamar a la funcion MoreInfoPartida tomando como argumento
+			//el nombre del boton para saber el indice de la partida y mostrar sus respectiva info.
+			partida_button.onClick.AddListener(()=>MoreInfoPartida(int.Parse(partida_button.name),"Grid_Image",button_position));
+			botonesxNivel.Add(partida_button);
+		}
+	
+	}
+		
 	public void MoreInfoPartida(int index, string nameOfParentPanel, Vector2 button_position){
 		//Se instancia la pequeña ventana de datos y se agrega a la lista de ventanas
 		//Se crea una ventana cada vez que se presiona el boton corresopndiente a la partida jugada
 		if (data_window) {
-			GameObject window = (GameObject)Instantiate (data_window, transform.position + new Vector3 (button_position.x - 150f, button_position.y - 200f, 0f), transform.rotation);
+			
+			GameObject window = (GameObject)Instantiate (data_window, new Vector3 ( Random.Range (-200,200) + 900.0f, Random.Range (-200,200) + 600.0f, 0f), transform.rotation);
 			window.transform.SetParent (GameObject.Find (nameOfParentPanel).transform);
-			window.transform.localScale = new Vector3 (1f, 1f, 1f);
+			//window.transform.localScale = new Vector3 (1f, 1f, 1f);
 			cuadrosDeInfo.Add (window);
 			//Si se necesitara ahondar mas niveles de jerarquía sería Find("NameOfGameObject/NameOfGameObject/.../NameOfTarget")
 			//window.transform.Find ("Fecha").GetComponent<Text> ().text = dataForRead.HistorialPartidas [index].Date;
-			window.transform.Find ("Fecha").GetComponent<Text> ().text = dataForRead.HistorialPartidasNivel1[index].fecha;
-			window.transform.Find ("Nivel").GetComponent<Text> ().text += dataForRead.HistorialPartidasNivel1 [index].nivel.ToString () + System.Math.Round ((button_position.y / 27.5f) * 10f, 2).ToString ();
-			window.transform.Find ("Mano Seleccionada").GetComponent<Text> ().text += dataForRead.HistorialPartidasNivel1 [index].ManoSeleccionada.ToString ();
-			window.transform.Find ("Tiempo Dedo Indice").GetComponent<Text> ().text += dataForRead.HistorialPartidasNivel1 [index].tiempoDedoIndice.ToString () + "segundos"; //nosets
+			_datosEnVentanas.Append ("Fecha:\n");
+			_datosEnVentanas.Append (dataForRead.HistorialPartidasNivel1[index].fecha.ToString ());
+			_datosEnVentanas.Append ("\nPartda: ");
+			_datosEnVentanas.Append ((index + 1).ToString ());
+			_datosEnVentanas.Append ("\nMano: ");
+			_datosEnVentanas.Append (dataForRead.HistorialPartidasNivel1 [index].ManoSeleccionada.ToString ());
+			_datosEnVentanas.Append ("\nTiempo que le tomó \napilar cada uno de \nlos ingredientes:\n");
+			_datosEnVentanas.AppendLine ("- Indice: " + dataForRead.HistorialPartidasNivel1[index].tiempoDedoIndice.ToString () + "s.");
+			_datosEnVentanas.AppendLine ("- Medio: " + dataForRead.HistorialPartidasNivel1[index].tiempoDedoMedio.ToString () + "s.");
+			_datosEnVentanas.AppendLine ("- Anular: " + dataForRead.HistorialPartidasNivel1[index].tiempoDedoAnular.ToString () + "s.");
+			_datosEnVentanas.AppendLine ("- Meñique: " + dataForRead.HistorialPartidasNivel1[index].tiempoDedoMeñique.ToString () + "s.");
+			window.transform.FindChild ("Info_Text").GetComponent<Text> ().text = _datosEnVentanas.ToString ();
+			_datosEnVentanas.Remove (0,_datosEnVentanas.Length);
 		}
+	}
+
+	void RemoveInfoWindows(){
+		foreach (GameObject cuadro in cuadrosDeInfo)
+			Destroy (cuadro);
+		cuadrosDeInfo.Clear ();
+	}
+
+	void RemoveListeners(List<Button> botonesDePartidas){
+		if (botonesDePartidas.Count != 0) {
+			foreach(Button p in botonesDePartidas){
+				p.onClick.RemoveAllListeners();
+				Destroy(p.gameObject);
+			} 
+		}
+		botonesDePartidas.Clear ();
 	}
 
 	//Devuelve true si la partida mas reciente es la Personal, false si la partida mas reciente es la que se jugo por Nivel
@@ -350,6 +410,11 @@ public class Graficar : MonoBehaviour {
 
 	public void CancelarBoton(){
 		SceneManager.LoadScene ("Interfaz De Clinica");
+	}
+
+	public void QuitarInformacion(){
+		RemoveInfoWindows ();
+		RemoveListeners (botonesxNivel);
 	}
 
 	public void RegresarBoton(){
