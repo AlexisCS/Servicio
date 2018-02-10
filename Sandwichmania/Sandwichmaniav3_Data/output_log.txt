@@ -17,7 +17,7 @@ Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sand
 Loading C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
 Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\Ionic.Zip.dll (this message is harmless)
 Loading C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\Ionic.Zip.dll into Unity Child Domain
-- Completed reload, in  0.018 seconds
+- Completed reload, in  0.016 seconds
 Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\computo\Documents\GitHub\Servicio\Sandwichmania\Sandwichmaniav3_Data\Managed\System.dll (this message is harmless)
 <RI> Initializing input.
@@ -25,7 +25,7 @@ XInput1_3.dll not found. Trying XInput9_1_0.dll instead...
 <RI> Input initialized.
 desktop: 1920x1080 60Hz; virtual: 1920x1080 at 0,0
 <RI> Initialized touch support.
-UnloadTime: 0.910335 ms
+UnloadTime: 0.919743 ms
 boton enviaTrueen el awake
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -39,7 +39,7 @@ enntre estatic
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 Unloading 8 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 4.625804 ms
+UnloadTime: 4.152817 ms
 boton enviaTrueen el awake
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -53,8 +53,8 @@ enntre estatic
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 
-Unloading 30 unused Assets to reduce memory usage. Loaded Objects now: 721.
-Total: 0.449893 ms (FindLiveObjects: 0.063007 ms CreateObjectMapping: 0.021952 ms MarkObjects: 0.312758 ms  DeleteObjects: 0.051603 ms)
+Unloading 30 unused Assets to reduce memory usage. Loaded Objects now: 722.
+Total: 0.436778 ms (FindLiveObjects: 0.034782 ms CreateObjectMapping: 0.021097 ms MarkObjects: 0.325873 ms  DeleteObjects: 0.054169 ms)
 
 Nombre asociado al ID:PRUEBAS  DEVHR 2017ok
  
@@ -116,7 +116,7 @@ Rethrow as TypeInitializationException: An exception was thrown by the type init
 (Filename:  Line: -1)
 
 Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.484675 ms
+UnloadTime: 0.456165 ms
 Reconstruido
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
@@ -186,14 +186,14 @@ Reconstruido
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
 
-Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 1527.
-Total: 1.127299 ms (FindLiveObjects: 0.091803 ms CreateObjectMapping: 0.051033 ms MarkObjects: 0.948824 ms  DeleteObjects: 0.034782 ms)
+Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 1528.
+Total: 0.777192 ms (FindLiveObjects: 0.052173 ms CreateObjectMapping: 0.033357 ms MarkObjects: 0.660299 ms  DeleteObjects: 0.030791 ms)
 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.762936 ms
+UnloadTime: 0.712473 ms
 
-Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 757.
-Total: 0.480399 ms (FindLiveObjects: 0.038774 ms CreateObjectMapping: 0.022238 ms MarkObjects: 0.317320 ms  DeleteObjects: 0.101496 ms)
+Unloading 34 unused Assets to reduce memory usage. Loaded Objects now: 782.
+Total: 0.579615 ms (FindLiveObjects: 0.047042 ms CreateObjectMapping: 0.023093 ms MarkObjects: 0.398859 ms  DeleteObjects: 0.110335 ms)
 
 File Read
  
@@ -280,8 +280,82 @@ Partida630
  
 (Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
 
+Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 0.711618 ms
+Reconstruido
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Alexis.CS_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_gyuy_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_la.buena.de.buenas_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_lola@lala_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_probando2_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_probandoAlexis_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina 14_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina 15_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina 23_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina.en.clinica_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina.prueba.clinica_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina.Y_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_Rutina.Z_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_rutinaDos_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+13_tur_sandwichRutina.xmlruta
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+Reconstruido
+ 
+(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/DebugBindings.gen.cpp Line: 51)
+
+
+Unloading 41 unused Assets to reduce memory usage. Loaded Objects now: 1528.
+Total: 1.154099 ms (FindLiveObjects: 0.150534 ms CreateObjectMapping: 0.036493 ms MarkObjects: 0.939416 ms  DeleteObjects: 0.027369 ms)
+
 Setting up 4 worker threads for Enlighten.
-  Thread -> id: 16b0 -> priority: 1 
-  Thread -> id: 1560 -> priority: 1 
-  Thread -> id: 2134 -> priority: 1 
-  Thread -> id: 2b74 -> priority: 1 
+  Thread -> id: 1dfc -> priority: 1 
+  Thread -> id: 2518 -> priority: 1 
+  Thread -> id: 1eb8 -> priority: 1 
+  Thread -> id: 78 -> priority: 1 

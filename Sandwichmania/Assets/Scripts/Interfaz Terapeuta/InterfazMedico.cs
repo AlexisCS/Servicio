@@ -392,7 +392,7 @@ public class InterfazMedico : MonoBehaviour {
 	}
 
 	public void BotonSiCerraSesion(){
-		SceneManager.LoadScene (0);
+		SceneManager.LoadScene (1);
 	}
 
 	public void BotonNoCerraSesion(){

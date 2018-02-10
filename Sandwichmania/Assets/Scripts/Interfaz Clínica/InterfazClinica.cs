@@ -91,7 +91,7 @@ public class InterfazClinica : MonoBehaviour {
 	}
 
 	public void DeseaCerrarSesion(){
-		SceneManager.LoadScene (0);
+		SceneManager.LoadScene (1);
 	}
 
 	public void NoDeseaCerrarSesion(){

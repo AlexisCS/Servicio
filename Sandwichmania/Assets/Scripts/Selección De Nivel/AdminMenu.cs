@@ -300,7 +300,7 @@ public class AdminMenu : MonoBehaviour {
 	}
 
 	public void LogOutYes(){
-		SceneManager.LoadScene (0);
+		SceneManager.LoadScene (1);
 	}
 
 	public void LogOutNo(){
